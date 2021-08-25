@@ -1,0 +1,28 @@
+{
+  "name": "pricepal",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "nodemon index"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bill-li1/PricePal.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bill-li1/PricePal/issues"
+  },
+  "homepage": "https://github.com/bill-li1/PricePal#readme",
+  "dependencies": {
+    "apollo-server": "^3.2.0",
+    "express": "^4.17.1",
+    "express-graphql": "^0.12.0",
+    "graphql": "^15.5.1",
+    "mongoose": "^5.13.8",
+    "nodemon": "^2.0.12"
+  }
+}
