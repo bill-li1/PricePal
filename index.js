@@ -23,8 +23,7 @@ const resolvers = {
   Query: {
     async getTransactions() {
       try {
-        const transactions = await Transaction.find();
-        return transactions;
+        return await Transaction.find();
       } catch (err) {
         throw new Error(err);
       }
