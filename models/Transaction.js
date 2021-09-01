@@ -17,8 +17,7 @@ const transactionSchema = new Schema({
     ],
     ref: "owers",
   },
-});
-
-transactionSchema.set("timestamps", true);
+},
+{ timestamps: true });
 
 module.exports = model("Transaction", transactionSchema);

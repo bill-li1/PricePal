@@ -8,6 +8,12 @@ module.exports = gql`
     date: String!
     description: String
     img: String
+    payer: User
+    owers: [{
+      User: User
+      Amount: String
+      Notes: String
+    }]
   }
 
   type User {
@@ -29,13 +35,14 @@ module.exports = gql`
 
   type Query {
     getTransactions: [Transaction]
-    # getTransaction(postId: ID!): 
+    # getTransactionsByUserId(userID: ID!): [Transaction]
+    getTransactionById(transactionId: ID!): Transaction
   }
 
   type Mutation {
     register(registerInput: RegisterInput): User!
     login(firstName: String!, lastName: String!, password: String!): User!
-    # createPost(body: String!): Post!
-    # deletePost(postId: ID!): String!
+    # createTransaction(): Transaction!
+    deleteTransaction(transactionId: ID!): String!
   }
 `;

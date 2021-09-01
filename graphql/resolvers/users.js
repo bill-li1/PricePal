@@ -72,9 +72,9 @@ module.exports = {
       // TODO: Make sure user doesnt already exist
       const user = await User.findOne({ email });
       if (user) {
-        throw new UserInputError('Username is taken', {
+        throw new UserInputError('Email is taken', {
           errors: {
-            username: 'This username is taken'
+            email: 'This email is taken'
           }
         });
       }
@@ -83,7 +83,8 @@ module.exports = {
 
       const newUser = new User({
         email,
-        username,
+        firstName,
+        lastName,
         password,
       });
 
