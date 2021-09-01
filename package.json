@@ -19,9 +19,11 @@
   "homepage": "https://github.com/bill-li1/PricePal#readme",
   "dependencies": {
     "apollo-server": "^3.2.0",
+    "bcryptjs": "^2.4.3",
     "express": "^4.17.1",
     "express-graphql": "^0.12.0",
     "graphql": "^15.5.1",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.13.8",
     "nodemon": "^2.0.12"
   }

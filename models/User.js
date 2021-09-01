@@ -1,12 +1,12 @@
 const { model, Schema } = require("mongoose");
 
 const userSchema = new Schema({
-  username: String,
-  password: String,
-  email: String,
-  createdAt: String,
-});
-
-userSchema.set("timestamps", true);
+  password: { type: String, required: true},
+  email: { type: String, required: true },
+  firstName: { type: String, required: true, trim: true },
+  lastName: { type: String, required: true, trim: true },
+  
+},
+{ timestamps: true });
 
 module.exports = model("User", userSchema);
