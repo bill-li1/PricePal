@@ -57,10 +57,12 @@ module.exports = {
 
       const newTransaction = new Transaction({
         title: body.title,
-        description: body.description,
         type: body.type,
+        date: new Date(),
+        description: body.description,
         img: body.img,
-        user: user.id,
+        payer: body.payer, 
+        owers: body.owers,
       });
 
       const transaction = await newTransaction.save();
