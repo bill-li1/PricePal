@@ -55,7 +55,7 @@ module.exports = {
       if (!valid) {
         throw new UserInputError('Errors', { errors });
       }
-      // TODO: Make sure user doesnt already exist
+      //Check user doesnt already exist
       const user = await User.findOne({ email });
       if (user) {
         throw new UserInputError('Email is taken', {

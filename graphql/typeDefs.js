@@ -35,6 +35,11 @@ module.exports = gql`
     email: String!
   }
 
+  input LoginInput {
+    email: String!
+    password: String!
+  }
+
   type Query {
     getTransactions: [Transaction]
     # getTransactionsByUserId(userID: ID!): [Transaction]
@@ -43,7 +48,7 @@ module.exports = gql`
 
   type Mutation {
     register(registerInput: RegisterInput): User!
-    login(firstName: String!, lastName: String!, password: String!): User!
+    login(loginInput: LoginInput): User!
     # TODO createTransaction Params
     createTransaction(body: String!): Transaction!
     deleteTransaction(transactionId: ID!): String!
