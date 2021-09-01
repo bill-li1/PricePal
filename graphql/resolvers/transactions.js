@@ -3,7 +3,6 @@ const { AuthenticationError } = require('apollo-server');
 const Transaction = require('../../models/Transaction');
 const checkAuth = require('../../util/check-auth');
 
-
 module.exports = {
   Query: {
     async getTransactions() {
@@ -13,7 +12,7 @@ module.exports = {
         throw new Error(err);
       }
     },
-    async getTransaction(_, { transactionId }) {
+    async getTransactionById(_, { transactionId }) {
       try {
         const transaction = await Transaction.findById(transactionId);
         if (transaction) {
@@ -25,37 +24,37 @@ module.exports = {
         throw new Error(err);
       }
     },
-    async getTransactionsByGroupId(_, { groupId }) {
-      try {
-        const transactions = await Transaction.find( { group: groupId });
-        console.log('group transactions with id ' + groupId+ ': ', transactions);
-        if (transactions) {
-          return transactions;
-        } else {
-          throw new Error('Transactions not found');
-        } 
-      } catch (err) {
-        throw new Error(err);
-      }
-    },
-    async getTransactionsByUserId(_, { userId }) { 
-      try {
-        const transactions = await Transaction.find( { dim_cm: { payer: userID, ower: userID } } );
-        console.log('transactions with the id' + userId + ': ', transactions);
-        if (transactions) {
-          return transactions;
-        } else {
-          throw new Error('Transactions not found');
-        }
-      } catch (err) {
-        throw new Error(err);
-      }
-    }
+    // async getTransactionsByGroupId(_, { groupId }) {
+    //   try {
+    //     const transactions = await Transaction.find({ group: groupId });
+    //     console.log('group transactions with id ' + groupId + ': ', transactions);
+    //     if (transactions) {
+    //       return transactions;
+    //     } else {
+    //       throw new Error('Transactions not found');
+    //     }
+    //   } catch (err) {
+    //     throw new Error(err);
+    //   }
+    // },
+    // async getTransactionsByUserId(_, { userId }) {
+    //   try {
+    //     const transactions = await Transaction.find({ dim_cm: { payer: userID, ower: userID } });
+    //     console.log('transactions with the id' + userId + ': ', transactions);
+    //     if (transactions) {
+    //       return transactions;
+    //     } else {
+    //       throw new Error('Transactions not found');
+    //     }
+    //   } catch (err) {
+    //     throw new Error(err);
+    //   }
+    // },
   },
   Mutation: {
     async createTransaction(_, body, context) {
       const user = checkAuth(context);
-      
+
       const newTransaction = new Transaction({
         title: body.title,
         description: body.description,
@@ -82,6 +81,6 @@ module.exports = {
       } catch (err) {
         throw new Error(err);
       }
-    }
+    },
   },
 };

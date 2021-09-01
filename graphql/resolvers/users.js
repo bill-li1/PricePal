@@ -2,10 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { UserInputError } = require('apollo-server');
 
-const {
-  validateRegisterInput,
-  validateLoginInput
-} = require('../../util/validators.js');
+const { validateRegisterInput, validateLoginInput } = require('../../util/validators.js');
 const { SECRET_KEY } = require('../../config');
 const User = require('../../models/User');
 
@@ -15,7 +12,7 @@ function generateToken(user) {
       id: user.id,
       email: user.email,
       firstName: user.firstName,
-      lastName: user.lastName
+      lastName: user.lastName,
     },
     SECRET_KEY,
     { expiresIn: '1h' }
@@ -49,23 +46,12 @@ module.exports = {
       return {
         ...user._doc,
         id: user._id,
-        token
+        token,
       };
     },
-    async register(
-      _,
-      {
-        registerInput: { firstName, lastName, email, password, confirmPassword }
-      }
-    ) {
+    async register(_, { registerInput: { firstName, lastName, email, password, confirmPassword } }) {
       // Validate user data
-      const { valid, errors } = validateRegisterInput(
-        firstName,
-        lastName,
-        email,
-        password,
-        confirmPassword
-      );
+      const { valid, errors } = validateRegisterInput(firstName, lastName, email, password, confirmPassword);
       if (!valid) {
         throw new UserInputError('Errors', { errors });
       }
@@ -74,8 +60,8 @@ module.exports = {
       if (user) {
         throw new UserInputError('Email is taken', {
           errors: {
-            email: 'This email is taken'
-          }
+            email: 'This email is taken',
+          },
         });
       }
       // hash password and create an auth token
@@ -95,8 +81,8 @@ module.exports = {
       return {
         ...res._doc,
         id: res._id,
-        token
+        token,
       };
-    }
-  }
+    },
+  },
 };

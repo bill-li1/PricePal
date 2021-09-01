@@ -1,6 +1,12 @@
 const { gql } = require('apollo-server');
 
 module.exports = gql`
+  type OwerInfo {
+    User: User
+    Amount: String,
+    Notes: String
+  }
+
   type Transaction {
     id: ID!
     title: String!
@@ -9,11 +15,7 @@ module.exports = gql`
     description: String
     img: String
     payer: User
-    owers: [{
-      User: User
-      Amount: String
-      Notes: String
-    }]
+    owers: [ OwerInfo ]
   }
 
   type User {
@@ -42,7 +44,8 @@ module.exports = gql`
   type Mutation {
     register(registerInput: RegisterInput): User!
     login(firstName: String!, lastName: String!, password: String!): User!
-    # createTransaction(): Transaction!
+    # TODO createTransaction Params
+    createTransaction(body: String!): Transaction!
     deleteTransaction(transactionId: ID!): String!
   }
 `;
