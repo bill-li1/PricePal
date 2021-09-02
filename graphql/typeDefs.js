@@ -2,7 +2,8 @@ const { gql } = require('apollo-server');
 
 module.exports = gql`
   type OwerInfo {
-    User: User
+    id: ID!
+    User: ID!
     Amount: String
     Notes: String
   }
@@ -15,7 +16,7 @@ module.exports = gql`
     description: String
     img: String
     payer: User
-    owers: [OwerInfo]
+    owers: User
   }
 
   type User {
@@ -24,7 +25,6 @@ module.exports = gql`
     token: String!
     firstName: String!
     lastName: String!
-    createdAt: String!
   }
 
   input RegisterInput {
@@ -46,8 +46,8 @@ module.exports = gql`
     date: String!
     description: String
     img: String
-    payer: ID
-    owers: [ID]
+    payer: ID!
+    owers: ID!
   }
 
   type Query {

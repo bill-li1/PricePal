@@ -1,6 +1,6 @@
 const { AuthenticationError } = require('apollo-server');
-
 const Transaction = require('../../models/Transaction');
+const User = require('../../models/User');
 const checkAuth = require('../../util/check-auth');
 
 module.exports = {
@@ -52,18 +52,23 @@ module.exports = {
     // },
   },
   Mutation: {
-    async createTransaction(_, body, context) {
+    async createTransaction(_, { transactionInput }, context) {
       const user = checkAuth(context);
 
+      const p = await User.findById(transactionInput.payer);
+
       const newTransaction = new Transaction({
-        title: body.title,
-        type: body.type,
-        date: new Date(),
-        description: body.description,
-        img: body.img,
-        payer: body.payer, 
-        owers: body.owers,
+        title: transactionInput.title,
+        type: transactionInput.type,
+        date: transactionInput.date,
+        description: transactionInput.description,
+        img: transactionInput.img,
+        payer: p,
+        owers: p,
       });
+
+      console.log(p);
+      console.log(newTransaction.payer);
 
       const transaction = await newTransaction.save();
 

@@ -1,14 +1,24 @@
 const { model, Schema } = require('mongoose');
 
+const userSchema = new Schema(
+  {
+    password: { type: String, required: true },
+    email: { type: String, required: true },
+    firstName: { type: String, required: true, trim: true },
+    lastName: { type: String, required: true, trim: true },
+  },
+  { timestamps: true }
+);
+
 const transactionSchema = new Schema(
   {
     title: { type: String, required: true, trim: true },
     type: { type: String, required: true, trim: true },
-    date: { type: Date, required: true },
+    date: { type: String, required: true },
     description: { type: String, required: true },
     img: { type: String, required: false },
-    payer: { type: Schema.Types.ObjectId, ref: 'payer' },
-    ower: {
+    payer: { type: userSchema, ref: 'payer' },
+    /* owers: {
       type: [
         {
           user: { type: Schema.Types.ObjectId, required: true },
@@ -18,6 +28,8 @@ const transactionSchema = new Schema(
       ],
       ref: 'owers',
     },
+  */
+    owers: { type: userSchema, ref: 'owers ' },
   },
   { timestamps: true }
 );
