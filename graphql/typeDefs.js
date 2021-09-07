@@ -16,7 +16,7 @@ module.exports = gql`
     description: String
     img: String
     payer: User
-    owers: User
+    owers: [OwerInfo]
   }
 
   type User {
@@ -47,7 +47,7 @@ module.exports = gql`
     description: String
     img: String
     payer: ID!
-    owers: ID!
+    owers: [ID]!
   }
 
   type Query {

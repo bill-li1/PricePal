@@ -24,32 +24,6 @@ module.exports = {
         throw new Error(err);
       }
     },
-    // async getTransactionsByGroupId(_, { groupId }) {
-    //   try {
-    //     const transactions = await Transaction.find({ group: groupId });
-    //     console.log('group transactions with id ' + groupId + ': ', transactions);
-    //     if (transactions) {
-    //       return transactions;
-    //     } else {
-    //       throw new Error('Transactions not found');
-    //     }
-    //   } catch (err) {
-    //     throw new Error(err);
-    //   }
-    // },
-    // async getTransactionsByUserId(_, { userId }) {
-    //   try {
-    //     const transactions = await Transaction.find({ dim_cm: { payer: userID, ower: userID } });
-    //     console.log('transactions with the id' + userId + ': ', transactions);
-    //     if (transactions) {
-    //       return transactions;
-    //     } else {
-    //       throw new Error('Transactions not found');
-    //     }
-    //   } catch (err) {
-    //     throw new Error(err);
-    //   }
-    // },
   },
   Mutation: {
     async createTransaction(_, { transactionInput }, context) {

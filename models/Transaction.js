@@ -1,6 +1,6 @@
 const { model, Schema } = require('mongoose');
 
-const userSchema = new Schema(
+export const userSchema = new Schema(
   {
     password: { type: String, required: true },
     email: { type: String, required: true },
@@ -10,6 +10,12 @@ const userSchema = new Schema(
   { timestamps: true }
 );
 
+const owerSchema = new Schema({
+  user: { type: userSchema, required: true },
+  amount: { type: Number, required: true },
+  notes: { type: String, required: true },
+});
+
 const transactionSchema = new Schema(
   {
     title: { type: String, required: true, trim: true },
@@ -18,18 +24,10 @@ const transactionSchema = new Schema(
     description: { type: String, required: true },
     img: { type: String, required: false },
     payer: { type: userSchema, ref: 'payer' },
-    /* owers: {
-      type: [
-        {
-          user: { type: Schema.Types.ObjectId, required: true },
-          amount: { type: Number, required: true },
-          notes: { type: String, required: true },
-        },
-      ],
+    owers: {
+      type: [owerSchema],
       ref: 'owers',
     },
-  */
-    owers: { type: userSchema, ref: 'owers ' },
   },
   { timestamps: true }
 );
