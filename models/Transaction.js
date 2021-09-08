@@ -12,7 +12,7 @@ const userSchema = new Schema(
 
 const owerSchema = new Schema({
   user: { type: userSchema, required: true },
-  amount: { type: Number, required: true },
+  amount: { type: String, required: true },
   notes: { type: String, required: false },
 });
 

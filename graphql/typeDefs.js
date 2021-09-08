@@ -5,7 +5,7 @@ module.exports = gql`
   type OwerInfo {
     id: ID!
     user: User!
-    amount: Number!
+    amount: String!
     notes: String
   }
 
@@ -53,7 +53,7 @@ module.exports = gql`
 
   input OwerInfoInput {
     user: ID!
-    amount:  Number!
+    amount:  String!
     notes: String
   }
 

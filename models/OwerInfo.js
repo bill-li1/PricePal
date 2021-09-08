@@ -14,7 +14,7 @@ const userSchema = new Schema(
 const owerInfoSchema = new Schema(
   {
     user: { type: userSchema, required: true },
-    amount: { type: Number, required: true },
+    amount: { type: String, required: true },
     notes: { type: String, required: false, trim: true },
   },
   { timestamps: true }
