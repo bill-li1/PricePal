@@ -1,6 +1,6 @@
 const { model, Schema } = require('mongoose');
 
-export const userSchema = new Schema(
+const userSchema = new Schema(
   {
     password: { type: String, required: true },
     email: { type: String, required: true },
@@ -13,7 +13,7 @@ export const userSchema = new Schema(
 const owerSchema = new Schema({
   user: { type: userSchema, required: true },
   amount: { type: Number, required: true },
-  notes: { type: String, required: true },
+  notes: { type: String, required: false },
 });
 
 const transactionSchema = new Schema(

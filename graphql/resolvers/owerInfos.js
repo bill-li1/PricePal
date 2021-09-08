@@ -1,24 +1,24 @@
 const { AuthenticationError } = require('apollo-server');
-const Transaction = require('../../models/Transaction');
+const OwerInfo = require('../../models/OwerInfo');
 const User = require('../../models/User');
 const checkAuth = require('../../util/check-auth');
 
 module.exports = {
   Query: {
-    async getTransactions() {
+    async getOwerInfos() {
       try {
-        return await Transaction.find();
+        return await OwerInfo.find();
       } catch (err) {
         throw new Error(err);
       }
     },
-    async getTransactionById(_, { transactionId }) {
+    async getOwerInfoById(_, { owerInfoId }) {
       try {
-        const transaction = await Transaction.findById(transactionId);
-        if (transaction) {
-          return transaction;
+        const owerInfo = await OwerInfo.findById(owerInfoId);
+        if (owerInfo) {
+          return owerInfo;
         } else {
-          throw new Error('Transaction not found');
+          throw new Error('OwerInfo not found');
         }
       } catch (err) {
         throw new Error(err);
@@ -26,47 +26,33 @@ module.exports = {
     },
   },
   Mutation: {
-    async createTransaction(_, { transactionInput }, context) {
+    async createOwerInfo(_, { owerInfoInput }, context) {
       const user = checkAuth(context);
-      const payerUser = await User.findById(transactionInput.payer);
+      // Save ID or User?
+      const owerUser = await User.findById(owerInfoInput.user);
+      console.log('owerUser:', owerUser);
 
-      //TODO change owers to array of users instead of singular user.
-      //update in typeDefs as well.
-      const owerUsers = await OwerInfo.find({
-        _id: {
-          $in: transactionInput.owers,
-        },
+      console.log('owerInfoInput',owerInfoInput);
+      const newOwerInfo = new OwerInfo ({
+        user: owerUser,
+        amount: owerInfoInput.amount,
+        notes: owerInfoInput.notes ? owerInfoInput.notes : 'No notes',
       });
 
-      console.log('transactionInput', transactionInput.owers);
-      console.log('owerUsers', owerUsers[0]);
-      console.log('payerUser', payerUser);
+      console.log('newOwerInfo',newOwerInfo)
 
-      const newTransaction = new Transaction({
-        title: transactionInput.title,
-        type: transactionInput.type,
-        date: transactionInput.date,
-        description: transactionInput.description,
-        img: transactionInput.img,
-        payer: payerUser,
-        owers: owerUsers,
-      });
-
-      const transaction = await newTransaction.save();
-      return transaction;
+      const owerInfo = await newOwerInfo.save()
+      console.log('owerInfo',owerInfo) 
+      return owerInfo;
     },
 
-    async deleteTransaction(_, { transactionId }, context) {
+    async deleteOwerInfo(_, { owerInfoId }, context) {
       const user = checkAuth(context);
 
       try {
-        const transaction = await Transaction.findById(transactionId);
-        if (user.id === transaction.payer.id) {
-          await transaction.delete();
-          return 'Transaction deleted successfully';
-        } else {
-          throw new AuthenticationError('Action not allowed');
-        }
+        const owerInfo = await OwerInfo.findById(owerInfoId);
+        await owerInfo.delete();
+        return 'owerInfo deleted successfully';
       } catch (err) {
         throw new Error(err);
       }

@@ -1,11 +1,12 @@
 const { gql } = require('apollo-server');
 
 module.exports = gql`
+
   type OwerInfo {
     id: ID!
-    User: ID!
-    Amount: String
-    Notes: String
+    user: User!
+    amount: Number!
+    notes: String
   }
 
   type Transaction {
@@ -50,10 +51,18 @@ module.exports = gql`
     owers: [ID]!
   }
 
+  input OwerInfoInput {
+    user: ID!
+    amount:  Number!
+    notes: String
+  }
+
   type Query {
     getTransactions: [Transaction]
     # getTransactionsByUserId(userID: ID!): [Transaction]
     getTransactionById(transactionId: ID!): Transaction
+    getOwerInfos: [OwerInfo]
+    getOwerInfoById(owerInfoId: ID!) : OwerInfo
   }
 
   type Mutation {
@@ -61,5 +70,7 @@ module.exports = gql`
     login(loginInput: LoginInput): User!
     createTransaction(transactionInput: TransactionInput!): Transaction!
     deleteTransaction(transactionId: ID!): String!
+    createOwerInfo(owerInfoInput: OwerInfoInput!): OwerInfo!
+    deleteOwerInfo(owerInfoId: ID!): String!
   }
 `;
