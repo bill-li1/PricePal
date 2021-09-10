@@ -45,15 +45,15 @@ module.exports = gql`
     title: String!
     type: String!
     date: String!
-    description: string
-    img: string
-    payer: id!
+    description: String
+    img: String
+    payer: ID!
     owers: [ID]!
   }
 
   input OwerInfoInput {
     user: ID!
-    amount:  String!
+    amount: String!
     notes: String
   }
 
