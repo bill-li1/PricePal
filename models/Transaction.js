@@ -1,10 +1,19 @@
 const { model, Schema } = require('mongoose');
-const { userSchema } = require('./User');
+
+const userSchema = new Schema(
+  {
+    password: { type: String, required: true },
+    email: { type: String, required: true },
+    firstName: { type: String, required: true, trim: true },
+    lastName: { type: String, required: true, trim: true },
+  },
+  { timestamps: true }
+);
 
 const owerSchema = new Schema({
   user: { type: userSchema, required: true },
-  amount: { type: Number, required: true },
-  notes: { type: String, required: true },
+  amount: { type: String, required: true },
+  notes: { type: String, required: false },
 });
 
 const transactionSchema = new Schema(
