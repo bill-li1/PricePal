@@ -3,9 +3,9 @@ const { gql } = require('apollo-server');
 module.exports = gql`
   type OwerInfo {
     id: ID!
-    User: ID!
-    Amount: String
-    Notes: String
+    user: User!
+    amount: String!
+    notes: String
   }
 
   type Transaction {
@@ -44,9 +44,9 @@ module.exports = gql`
     title: String!
     type: String!
     date: String!
-    description: String
-    img: String
-    payer: ID!
+    description: string
+    img: string
+    payer: id!
     owers: [ID]!
   }
 

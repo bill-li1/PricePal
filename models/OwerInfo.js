@@ -1,5 +1,5 @@
 const { model, Schema } = require('mongoose');
-const { userSchema } = require('./Transaction');
+const { userSchema } = require('./User');
 
 const owerInfoSchema = new Schema(
   {
