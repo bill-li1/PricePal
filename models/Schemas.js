@@ -13,7 +13,7 @@ const userSchema = new Schema(
 
 const owerInfoSchema = new Schema(
   {
-    user: { type: userSchema, required: true },
+    user: { type: Schema.Types.ObjectId, required: true },
     amount: { type: String, required: true },
     notes: { type: String, required: false, trim: true },
   },
@@ -27,7 +27,8 @@ const transactionSchema = new Schema(
     date: { type: String, required: true },
     description: { type: String, required: true },
     img: { type: String, required: false },
-    payer: { type: userSchema, ref: 'payer' },
+    payer: { type: Schema.Types.ObjectId, ref: 'payer' },
+    owersId: { type: [String], required: true },
     owers: {
       type: [owerInfoSchema],
       ref: 'owers',

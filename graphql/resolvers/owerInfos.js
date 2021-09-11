@@ -34,7 +34,7 @@ module.exports = {
 
       console.log('owerInfoInput',owerInfoInput);
       const newOwerInfo = new OwerInfo ({
-        user: owerUser,
+        user: owerInfoInput.user,
         amount: owerInfoInput.amount,
         notes: owerInfoInput.notes ? owerInfoInput.notes : 'No notes',
       });

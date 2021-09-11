@@ -17,6 +17,7 @@ module.exports = gql`
     description: String
     img: String
     payer: User
+    owersId: [ID]
     owers: [OwerInfo]
   }
 
@@ -69,7 +70,7 @@ module.exports = gql`
 
   type Query {
     getTransactions: [Transaction]
-    # getTransactionsByUserId(userID: ID!): [Transaction]
+    getTransactionsByUserId(userID: ID!): [Transaction]
     getTransactionById(transactionId: ID!): Transaction
     getOwerInfos: [OwerInfo]
     getOwerInfoById(owerInfoId: ID!) : OwerInfo

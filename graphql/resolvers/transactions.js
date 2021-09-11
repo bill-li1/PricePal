@@ -38,19 +38,19 @@ module.exports = {
     //     throw new Error(err);
     //   }
     // },
-    // async getTransactionsByUserId(_, { userId }) {
-    //   try {
-    //     const transactions = await Transaction.find({ dim_cm: { payer: userID, ower: userID } });
-    //     console.log('transactions with the id' + userId + ': ', transactions);
-    //     if (transactions) {
-    //       return transactions;
-    //     } else {
-    //       throw new Error('Transactions not found');
-    //     }
-    //   } catch (err) {
-    //     throw new Error(err);
-    //   }
-    // },
+    async getTransactionsByUserId(_, { userId }) {
+      try {
+        const transactions = await Transaction.find({ dim_cm: { payer: userId, owersId: userId } });
+        console.log('transactions with the id' + userId + ': ', transactions);
+        if (transactions) {
+          return transactions;
+        } else {
+          throw new Error('Transactions not found');
+        }
+      } catch (err) {
+        throw new Error(err);
+      }
+    },
   },
   Mutation: {
     async createTransaction(_, { transactionInput }, context) {
@@ -76,6 +76,7 @@ module.exports = {
         description: transactionInput.description,
         img: transactionInput.img,
         payer: payerUser,
+        owersId: transactionInput.owers,
         owers: owerUsers,
       });
 
