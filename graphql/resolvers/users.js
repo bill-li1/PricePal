@@ -22,6 +22,7 @@ function generateToken(user) {
 module.exports = {
   Mutation: {
     async login(_, { loginInput: { email, password } }) {
+      console.log('login');
       const { errors, valid } = validateLoginInput(email, password);
 
       if (!valid) {
@@ -49,7 +50,7 @@ module.exports = {
         token,
       };
     },
-    async register(_, { registerInput: { firstName, lastName, email, password, confirmPassword } }) {
+    async register(_, { registerInput: { firstName, lastName, email, password, confirmPassword, profileImg } }) {
       // Validate user data
       const { valid, errors } = validateRegisterInput(firstName, lastName, email, password, confirmPassword);
       if (!valid) {
@@ -72,10 +73,32 @@ module.exports = {
         firstName,
         lastName,
         password,
+        profileImg,
       });
 
       const res = await newUser.save();
 
+      const token = generateToken(res);
+
+      return {
+        ...res._doc,
+        id: res._id,
+        token,
+      };
+    },
+    async editUser(_, { editUserInput: { userId, firstName, lastName, password, profileImg } }) {
+      password = await bcrypt.hash(password, 12);
+      console.log('editUser');
+
+      const res = await User.findById(userId);
+      res.firstName = firstName;
+      res.lastName = lastName;
+      res.password = password;
+      res.profileImg = profileImg;
+      await res.save();
+
+      console.log('res', res);
+      console.log('res._doc', { ...res._doc });
       const token = generateToken(res);
 
       return {
