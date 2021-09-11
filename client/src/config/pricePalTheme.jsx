@@ -1,6 +1,6 @@
 import { createTheme } from "@material-ui/core";
 
-const PRIMARY_COLOR = "#e2a8fe";
+const PRIMARY_COLOR = "#7f34a0";
 const SECONDARY_COLOR = "#000000";
 const TEXT_COLOR_DARK = "#4b4b4b";
 const TEXT_COLOR_LIGHT = "#767676";
@@ -47,6 +47,38 @@ export const pricePalTheme = createTheme({
     },
     body2: {
       color: TEXT_COLOR_LIGHT,
+    },
+  },
+  components: {
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          borderRadius: 100,
+          textTransform: "none",
+        },
+      },
+      defaultProps: {
+        variant: "contained",
+      },
+    },
+    MuiTextField: {
+      defaultProps: {
+        margin: "normal",
+        fullWidth: true,
+      },
+    },
+    MuiFormControl: {
+      defaultProps: {
+        margin: "normal",
+        fullWidth: true,
+      },
+    },
+    MuiFormHelperText: {
+      styleOverrides: {
+        root: {
+          margin: "auto",
+        },
+      },
     },
   },
 });
