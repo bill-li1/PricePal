@@ -1,45 +1,56 @@
-import { Grid, makeStyles, TextField, Typography } from '@material-ui/core';
+import {
+  Button,
+  Dialog,
+  DialogContent,
+  DialogTitle,
+  Grid,
+  makeStyles,
+  TextField,
+  Typography,
+} from '@material-ui/core';
 
 const useStyles = makeStyles((theme) => ({
-  image: {
-    maxWidth: '100%',
-  },
   login: {
-    marginTop: 'auto',
-    marginBottom: 'auto',
-    marginLeft: theme.spacing(3),
+    margin: 'auto',
+    width: 300,
+    textAlign: 'center',
+  },
+  button: {
+    color: theme.palette.secondary.main,
   },
 }));
 export default function Home() {
   const styles = useStyles();
+
   return (
     <main>
-      <Grid container direction="row">
-        <Grid item xs={12} md={4}>
-          <img className={styles.image} alt="logo" src="/mockup.svg" />
-        </Grid>
-        <Grid item xs={12} md={6} className={styles.login}>
-          <Grid container direction="column" spacing={2}>
-            <Grid item>
-              <Typography variant="h1">Pay your way.</Typography>
-            </Grid>
-            <Grid item>
-              <TextField
-                variant="outlined"
-                placeholder="john.doe"
-                label="username"
-              />
-            </Grid>
-            <Grid item>
-              <TextField
-                variant="outlined"
-                placeholder="*********"
-                label="password"
-              />
+      <Dialog open={true} className={styles.login}>
+        <DialogTitle>
+          <Typography variant="h1">PricePal</Typography>
+        </DialogTitle>
+        <DialogContent>
+          <TextField
+            label="username"
+            placeholder="john.doe"
+            variant="outlined"
+            margin="normal"
+          />
+          <TextField
+            label="password"
+            placeholder="Enter your password"
+            variant="outlined"
+            margin="normal"
+            type="password"
+          />
+          <Grid container direction="row">
+            <Grid item xs={12}>
+              <Button fullWidth className={styles.button} color="primary">
+                Login
+              </Button>
             </Grid>
           </Grid>
-        </Grid>
-      </Grid>
+        </DialogContent>
+      </Dialog>
     </main>
   );
 }
