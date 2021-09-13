@@ -18,12 +18,21 @@ const useStyles = makeStyles((theme) => ({
   button: {
     color: theme.palette.secondary.main,
   },
+  image: {
+    width: '100%',
+    height: '100%',
+  },
 }));
 export default function Home() {
   const styles = useStyles();
 
   return (
     <main>
+      <img
+        alt="background"
+        src="https://access2eic.eu/wp-content/uploads/2020/09/ma4rket.jpg"
+        className={styles.image}
+      />
       <Dialog open={true} className={styles.login}>
         <DialogTitle>
           <Typography variant="h1">PricePal</Typography>
