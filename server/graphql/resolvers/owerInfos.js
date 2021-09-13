@@ -39,6 +39,7 @@ module.exports = {
     async createOwerInfo(_, { owerInfoInput }, context) {
       const user = checkAuth(context);
       // Save ID or User?
+      console.log('owerInfoInput.user', owerInfoInput.user);
       const newOwerInfo = new OwerInfo({
         user: owerInfoInput.user,
         amount: owerInfoInput.amount,

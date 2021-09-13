@@ -72,14 +72,14 @@ module.exports = {
 
       //TODO change owers to array of users instead of singular user.
       //update in typeDefs as well.
-      const owerUsers = await OwerInfo.find({
-        _id: {
-          $in: transactionInput.owers,
-        },
-      });
+      // const owerUsers = await OwerInfo.find({
+      //   _id: {
+      //     $in: transactionInput.owers,
+      //   },
+      // });
 
       console.log('transactionInput', transactionInput.owers);
-      console.log('owerUsers', owerUsers[0]);
+      // console.log('owerUsers', owerUsers);
 
       const newTransaction = new Transaction({
         title: transactionInput.title,
@@ -93,11 +93,13 @@ module.exports = {
       });
 
       const transaction = await newTransaction.save();
+
+
       return {
         ...transaction._doc,
         id: transaction._doc._id,
         payer: userHelper.bind(this, transaction._doc.payer),
-        owers: owerInfosHelper.bind(this, transaction._doc_owers),
+        owers: owerInfosHelper.bind(this, transaction._doc.owers),
       };
     },
 

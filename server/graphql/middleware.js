@@ -3,6 +3,7 @@ const User = require('../models/User');
 const OwerInfo = require('../models/OwerInfo');
 
 const owerInfosHelper = async (owerInfoIds) => {
+  console.log('owerInfoIds', owerInfoIds);
   try {
     const owerInfos = await OwerInfo.find({ _id: { $in: owerInfoIds } });
     return owerInfos.map((owerInfo) => ({
