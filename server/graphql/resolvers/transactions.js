@@ -69,7 +69,6 @@ module.exports = {
   Mutation: {
     async createTransaction(_, { transactionInput }, context) {
       const user = checkAuth(context);
-      const payerUser = await User.findById(transactionInput.payer);
 
       //TODO change owers to array of users instead of singular user.
       //update in typeDefs as well.
@@ -81,7 +80,6 @@ module.exports = {
 
       console.log('transactionInput', transactionInput.owers);
       console.log('owerUsers', owerUsers[0]);
-      console.log('payerUser', payerUser);
 
       const newTransaction = new Transaction({
         title: transactionInput.title,
@@ -89,14 +87,15 @@ module.exports = {
         date: transactionInput.date,
         description: transactionInput.description,
         img: transactionInput.img,
-        payer: payerUser,
+        payer: transactionInput.payer,
         owersId: transactionInput.owers,
-        owers: owerUsers,
+        owers: transactionInput.owers,
       });
 
       const transaction = await newTransaction.save();
       return {
         ...transaction._doc,
+        id: transaction._doc._id,
         payer: userHelper.bind(this, transaction._doc.payer),
         owers: owerInfosHelper.bind(this, transaction._doc_owers),
       };

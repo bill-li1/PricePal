@@ -11,6 +11,7 @@ module.exports = {
         const owerInfos = await OwerInfo.find();
         return owerInfos.map((owerInfo) => ({
           ...owerInfo._doc,
+          id: owerInfo._doc._id,
           user: userHelper.bind(this, owerInfo._doc.user),
         }));
       } catch (err) {
@@ -23,6 +24,7 @@ module.exports = {
         if (owerInfo) {
           return {
             ...owerInfo._doc,
+            id: owerInfo._doc._id,
             user: userHelper.bind(this, owerInfo._doc.user),
           };
         } else {
@@ -37,8 +39,6 @@ module.exports = {
     async createOwerInfo(_, { owerInfoInput }, context) {
       const user = checkAuth(context);
       // Save ID or User?
-      const owerUser = await User.findById(owerInfoInput.user);
-
       const newOwerInfo = new OwerInfo({
         user: owerInfoInput.user,
         amount: owerInfoInput.amount,
@@ -47,9 +47,9 @@ module.exports = {
       // console.log('newOwerInfo', newOwerInfo);
       try {
         const owerInfo = await newOwerInfo.save();
-        console.log('owerInfo', owerInfo);
         return {
           ...owerInfo._doc,
+          id: owerInfo._doc._id,
           user: userHelper.bind(this, owerInfoInput.user),
         };
       } catch (err) {
