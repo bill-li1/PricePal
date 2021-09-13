@@ -3,12 +3,18 @@ const Transaction = require('../../models/Transaction');
 const User = require('../../models/User');
 const OwerInfo = require('../../models/OwerInfo');
 const checkAuth = require('../../util/check-auth');
+const { userHelper, owerInfosHelper } = require('../middleware');
 
 module.exports = {
   Query: {
     async getTransactions() {
       try {
-        return await Transaction.find();
+        const transactions = await Transaction.find();
+        return transactions.map((transaction) => ({
+          ...transaction._doc,
+          payer: userHelper.bind(this, transaction._doc.payer),
+          owers: owerInfosHelper.bind(this, transaction._doc_owers),
+        }));
       } catch (err) {
         throw new Error(err);
       }
@@ -17,7 +23,11 @@ module.exports = {
       try {
         const transaction = await Transaction.findById(transactionId);
         if (transaction) {
-          return transaction;
+          return {
+            ...transaction._doc,
+            payer: userHelper.bind(this, transaction._doc.payer),
+            owers: owerInfosHelper.bind(this, transaction._doc_owers),
+          };
         } else {
           throw new Error('Transaction not found');
         }
@@ -43,7 +53,11 @@ module.exports = {
         const transactions = await Transaction.find({ dim_cm: { payer: userId, owersId: userId } });
         console.log('transactions with the id' + userId + ': ', transactions);
         if (transactions) {
-          return transactions;
+          return transactions.map((transaction) => ({
+            ...transaction._doc,
+            payer: userHelper.bind(this, transaction._doc.payer),
+            owers: owerInfosHelper.bind(this, transaction._doc_owers),
+          }));
         } else {
           throw new Error('Transactions not found');
         }
@@ -55,19 +69,17 @@ module.exports = {
   Mutation: {
     async createTransaction(_, { transactionInput }, context) {
       const user = checkAuth(context);
-      const payerUser = await User.findById(transactionInput.payer);
 
       //TODO change owers to array of users instead of singular user.
       //update in typeDefs as well.
-      const owerUsers = await OwerInfo.find({
-        _id: {
-          $in: transactionInput.owers,
-        },
-      });
+      // const owerUsers = await OwerInfo.find({
+      //   _id: {
+      //     $in: transactionInput.owers,
+      //   },
+      // });
 
       console.log('transactionInput', transactionInput.owers);
-      console.log('owerUsers', owerUsers[0]);
-      console.log('payerUser', payerUser);
+      // console.log('owerUsers', owerUsers);
 
       const newTransaction = new Transaction({
         title: transactionInput.title,
@@ -75,13 +87,20 @@ module.exports = {
         date: transactionInput.date,
         description: transactionInput.description,
         img: transactionInput.img,
-        payer: payerUser,
+        payer: transactionInput.payer,
         owersId: transactionInput.owers,
-        owers: owerUsers,
+        owers: transactionInput.owers,
       });
 
       const transaction = await newTransaction.save();
-      return transaction;
+
+
+      return {
+        ...transaction._doc,
+        id: transaction._doc._id,
+        payer: userHelper.bind(this, transaction._doc.payer),
+        owers: owerInfosHelper.bind(this, transaction._doc.owers),
+      };
     },
 
     async deleteTransaction(_, { transactionId }, context) {

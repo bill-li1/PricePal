@@ -8,16 +8,16 @@ const userSchema = new Schema(
     firstName: { type: String, required: true, trim: true },
     lastName: { type: String, required: true, trim: true },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const owerInfoSchema = new Schema(
   {
-    user: { type: Schema.Types.ObjectId, required: true },
+    user: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
     amount: { type: String, required: true },
     notes: { type: String, required: false, trim: true },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 const transactionSchema = new Schema(
@@ -27,14 +27,15 @@ const transactionSchema = new Schema(
     date: { type: String, required: true },
     description: { type: String, required: true },
     img: { type: String, required: false },
-    payer: { type: Schema.Types.ObjectId, ref: 'payer' },
+    payer: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
     owersId: { type: [String], required: true },
     owers: {
-      type: [owerInfoSchema],
-      ref: 'owers',
+      type: [Schema.Types.ObjectId],
+      required: true,
+      ref: 'OwerInfo',
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 exports.owerInfoSchema = owerInfoSchema;
