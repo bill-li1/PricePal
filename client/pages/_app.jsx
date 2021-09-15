@@ -2,6 +2,12 @@ import { makeStyles, MuiThemeProvider } from '@material-ui/core';
 import { pricePalTheme } from '../src/config/pricePalTheme';
 import Head from 'next/head';
 import { Header } from '../src/components/Header';
+import {
+  ApolloClient,
+  InMemoryCache,
+  createHttpLink,
+  ApolloProvider,
+} from '@apollo/client';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -11,8 +17,6 @@ const useStyles = makeStyles((theme) => ({
   },
   content: {
     flex: 1,
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(2),
   },
   '@global': {
     'html,body,main': {
@@ -32,6 +36,15 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const httpLink = createHttpLink({
+  uri: 'http://localhost:8000/',
+});
+
+const client = new ApolloClient({
+  link: httpLink,
+  cache: new InMemoryCache(),
+});
+
 function MyApp({ Component, pageProps }) {
   const styles = useStyles();
   return (
@@ -47,14 +60,16 @@ function MyApp({ Component, pageProps }) {
         />
         <title>PricePal</title>
       </Head>
-      <MuiThemeProvider theme={pricePalTheme}>
-        <div className={styles.root}>
-          <Header />
-          <div className={styles.content}>
-            <Component {...pageProps} />
+      <ApolloProvider client={client}>
+        <MuiThemeProvider theme={pricePalTheme}>
+          <div className={styles.root}>
+            <Header />
+            <div className={styles.content}>
+              <Component {...pageProps} />
+            </div>
           </div>
-        </div>
-      </MuiThemeProvider>
+        </MuiThemeProvider>
+      </ApolloProvider>
     </>
   );
 }

@@ -14,7 +14,7 @@ export default class MyDocument extends Document {
             content={pricePalTheme.palette.primary.main}
           />
         </Head>
-        <body>
+        <body style={{ padding: 0 }}>
           <Main />
           <NextScript />
         </body>

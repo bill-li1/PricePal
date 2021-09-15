@@ -47,6 +47,7 @@ export const pricePalTheme = createTheme({
     },
     body2: {
       color: TEXT_COLOR_LIGHT,
+      fontSize: '12px',
     },
   },
   props: {
