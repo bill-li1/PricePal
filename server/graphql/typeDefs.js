@@ -35,7 +35,6 @@ module.exports = gql`
     lastName: String!
     profileImg: String!
     password: String!
-    confirmPassword: String!
     email: String!
   }
 
