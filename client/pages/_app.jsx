@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const httpLink = createHttpLink({
-  uri: 'http://localhost:8000/',
+  uri: 'http://localhost:8000',
 });
 
 const client = new ApolloClient({

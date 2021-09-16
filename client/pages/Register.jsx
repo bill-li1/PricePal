@@ -36,10 +36,15 @@ export default function register() {
     lastName: '',
     password: '',
     confirmPassword: '',
+    profileImg: 'google.ca',
   });
+
   const [addUser, { loading }] = useMutation(REGISTER_USER, {
-    update(proxy, result) {
-      console.log(result);
+    onCompleted: (data) => {
+      console.log(data);
+    },
+    onError: (error) => {
+      console.log(error);
     },
     variables: values,
   });
@@ -52,14 +57,17 @@ export default function register() {
     event.preventDefault();
     try {
       // Check if user exists and auth stuff over here
-      addUser();
-      router.push('/dashboard');
+      console.log(values);
+      addUser({
+        variables: values,
+      });
+      // router.push('/dashboard');
     } catch (error) {
       console.log(error);
     }
   };
 
-  console.log(values);
+  // console.log(values);
 
   return (
     <main>
@@ -141,31 +149,14 @@ export default function register() {
 }
 
 const REGISTER_USER = gql`
-  mutation register(
-    $email: String!
-    $firstName: String!
-    $lastName: String!
-    $password: String!
-    $confirmPassword: String!
-    $profileImage: String!
-  ) {
-    register(
-      registerInput: {
-        email: $email
-        firstName: $firstName
-        lastName: $lastName
-        password: $password
-        confirmPassword: $confirmPassword
-        profileImage: $profileImage
-      }
-    ) {
+  mutation Mutation($registerInput: RegisterInput) {
+    register(registerInput: $registerInput) {
       id
       email
+      token
+      profileImg
       firstName
       lastName
-      profileImage
-      createdAt
-      token
     }
   }
 `;
