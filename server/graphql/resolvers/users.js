@@ -5,6 +5,8 @@ const { UserInputError } = require('apollo-server');
 const { validateRegisterInput, validateLoginInput } = require('../../util/validators.js');
 const { SECRET_KEY } = require('../../config');
 const User = require('../../models/User');
+const { groupsHelper } = require('../middleware');
+
 
 function generateToken(user) {
   return jwt.sign(
@@ -20,6 +22,23 @@ function generateToken(user) {
 }
 
 module.exports = {
+  Query: {
+    async getUserById(_, { userId }) {
+      try {
+        const user = await User.findById(userId);
+        if (user) {
+          return {
+            ...user._doc,
+            groups: groupsHelper.bind(this, transaction._doc.groups),
+          };
+        } else {
+          throw new Error('Transaction not found');
+        }
+      } catch (err) {
+        throw new Error(err); 
+      }
+    }
+  },
   Mutation: {
     async login(_, { loginInput: { email, password } }) {
       console.log('login');
@@ -86,6 +105,21 @@ module.exports = {
         token,
       };
     },
+    async addGroupToUser(_, { userId, groupId}){
+      const res = await User.findById(userId);
+      res.groups.push(groupId);
+      await res.save();
+
+      console.log('res', res);
+      console.log('res._doc', { ...res._doc });
+      const token = generateToken(res);
+
+      return {
+        ...res._doc,
+        id: res._id,
+        token,
+      };
+    },
     async editUser(_, { editUserInput: { userId, firstName, lastName, password, profileImg } }) {
       password = await bcrypt.hash(password, 12);
       console.log('editUser');
@@ -101,7 +135,7 @@ module.exports = {
       console.log('res._doc', { ...res._doc });
       const token = generateToken(res);
 
-      return {
+      return { 
         ...res._doc,
         id: res._id,
         token,

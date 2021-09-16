@@ -33,7 +33,33 @@ const userHelper = async (userId) => {
     const user = await User.findById(userId);
     return {
       ...user._doc,
+      groups: groupsHelper.bind(this, user._doc.groups)
     };
+  } catch (err) {
+    throw new Error(err);
+  }
+};
+
+const groupsHelper = async (groupIds) => {
+  try {
+    const groups = await Group.find({ _id: { $in: owerInfoIds } });
+
+    return groupIds.map(async (groupId) => {
+      const group = await Group.findById(groupId)
+
+      return {
+        ...group._doc,
+        users: multiUsersHelper.bind(this, group._doc.users)
+      }
+    });
+  } catch (err) {
+    throw new Error(err);
+  }
+};
+
+const multiUsersHelper = async (userIds) => {
+  try {
+    return userIds.map((user) => {userHelper(user)});
   } catch (err) {
     throw new Error(err);
   }
@@ -42,3 +68,4 @@ const userHelper = async (userId) => {
 exports.owerInfosHelper = owerInfosHelper;
 exports.transactionHelper = transactionHelper;
 exports.userHelper = userHelper;
+exports.groupsHelper = groupsHelper;
