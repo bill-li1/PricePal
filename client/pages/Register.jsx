@@ -10,8 +10,7 @@ import {
 } from '@material-ui/core';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { useMutation } from '@apollo/client';
-import gql from 'graphql-tag';
+import { useMutation, gql } from '@apollo/client';
 
 const useStyles = makeStyles((theme) => ({
   login: {
@@ -31,13 +30,13 @@ export default function register() {
   const styles = useStyles();
   const router = useRouter();
   const [values, setValues] = useState({
-    email: '',
     firstName: '',
     lastName: '',
-    password: '',
-    confirmPassword: '',
     profileImg: 'google.ca',
+    password: '',
+    email: '',
   });
+  const [confirmPassword, setConfirmPassword] = useState();
 
   const [addUser, { loading }] = useMutation(REGISTER_USER, {
     onCompleted: (data) => {
@@ -46,7 +45,6 @@ export default function register() {
     onError: (error) => {
       console.log(error);
     },
-    variables: values,
   });
 
   const onChange = (event) => {
@@ -59,7 +57,9 @@ export default function register() {
       // Check if user exists and auth stuff over here
       console.log(values);
       addUser({
-        variables: values,
+        variables: {
+          registerRegisterInput: values,
+        },
       });
       // router.push('/dashboard');
     } catch (error) {
@@ -87,6 +87,7 @@ export default function register() {
               placeholder="john.doe@gmail.com"
               variant="outlined"
               margin="normal"
+              type="text"
               name="email"
               value={values.email}
               onChange={onChange}
@@ -96,6 +97,7 @@ export default function register() {
               placeholder="John"
               variant="outlined"
               margin="normal"
+              type="text"
               name="firstName"
               value={values.firstName}
               onChange={onChange}
@@ -105,6 +107,7 @@ export default function register() {
               placeholder="Doe"
               variant="outlined"
               margin="normal"
+              type="text"
               name="lastName"
               value={values.lastName}
               onChange={onChange}
@@ -126,8 +129,7 @@ export default function register() {
               margin="normal"
               type="password"
               name="confirmPassword"
-              value={values.confirmPassword}
-              onChange={onChange}
+              value={confirmPassword}
             />
             <Grid container direction="row">
               <Grid item xs={12}>
@@ -149,8 +151,8 @@ export default function register() {
 }
 
 const REGISTER_USER = gql`
-  mutation Mutation($registerInput: RegisterInput) {
-    register(registerInput: $registerInput) {
+  mutation Mutation($registerRegisterInput: RegisterInput) {
+    register(registerInput: $registerRegisterInput) {
       id
       email
       token
