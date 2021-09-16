@@ -50,9 +50,9 @@ module.exports = {
         token,
       };
     },
-    async register(_, { registerInput: { firstName, lastName, email, password, confirmPassword, profileImg } }) {
+    async register(_, { registerInput: { firstName, lastName, email, password, profileImg } }) {
       // Validate user data
-      const { valid, errors } = validateRegisterInput(firstName, lastName, email, password, confirmPassword);
+      const { valid, errors } = validateRegisterInput(firstName, lastName, email, password);
       if (!valid) {
         throw new UserInputError('Errors', { errors });
       }
