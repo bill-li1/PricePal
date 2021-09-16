@@ -61,7 +61,7 @@ export default function register() {
           registerRegisterInput: values,
         },
       });
-      // router.push('/dashboard');
+      router.push('/dashboard');
     } catch (error) {
       console.log(error);
     }
