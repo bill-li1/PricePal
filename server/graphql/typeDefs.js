@@ -91,15 +91,15 @@ module.exports = gql`
 
   type Query {
     getTransactions: [Transaction]
-    getTransactionsByUserId(userID: ID!): [Transaction]
+    getTransactionsByUserId(userId: ID!): [Transaction]
     getTransactionById(transactionId: ID!): Transaction
-
-    getGroupById(groupID: ID!): Group
 
     getOwerInfos: [OwerInfo]
     getOwerInfoById(owerInfoId: ID!) : OwerInfo
-  }
 
+    getGroupById(groupId: ID!): Group
+  }
+    
   type Mutation {
     register(registerInput: RegisterInput): User!
     login(loginInput: LoginInput): User!
@@ -114,7 +114,6 @@ module.exports = gql`
 
     createGroup(groupInput: GroupInput!) : Group!
     editGroup(groupId: ID!, groupInput: GroupInput!): Group!
-    getGroupById(groupId: ID!) : Group!
     archiveGroup(groupId: ID!) : Group!
   }
 `;

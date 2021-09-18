@@ -105,12 +105,13 @@ module.exports = {
       };
     },
     async addGroupToUser(_, { userId, groupId }) {
+      console.log('userId, groupId:', userId, groupId);
       const res = await User.findById(userId);
       res.groups.push(groupId);
       await res.save();
 
-      console.log('res', res);
-      console.log('res._doc', { ...res._doc });
+      // console.log('res', res);
+      // console.log('res._doc', { ...res._doc });
       const token = generateToken(res);
 
       return {

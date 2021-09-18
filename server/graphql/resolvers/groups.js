@@ -8,12 +8,14 @@ const { multiUsersHelper } = require('../middleware');
 
 module.exports = {
   Query: {
-    async getGroupById(_, { groupID }, context) {
+    async getGroupById(_, { groupId }, context) {
       try {
-        const group = await Group.find(group);
+        const group = await Group.findById(groupId)
+        console.log('group', group)
         return {
-            ... group._doc,
-            users: multiUsersHelper.bind(this, group._doc.users),
+          ...group._doc,
+          id: group._doc._id,
+          users: multiUsersHelper.bind(this, group._doc.users),
         }
       } catch (err) {
         throw new Error(err);
@@ -22,7 +24,7 @@ module.exports = {
   },
   Mutation: {
     async createGroup(_, { groupInput }, context) {
-      const user = await checkAuth(context);
+      const user = checkAuth(context);
       const newGroup = new Group({
         title: groupInput.title,
         description: groupInput.description,

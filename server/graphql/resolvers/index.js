@@ -1,7 +1,7 @@
 const transactionsResolvers = require('./transactions');
 const usersResolvers = require('./users');
 const owerInfoResolvers = require ('./owerInfos')
-const groupResolvers = require ('./groups.js')
+const groupResolvers = require ('./groups')
 
 module.exports = {
   Query: {
