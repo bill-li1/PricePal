@@ -48,7 +48,7 @@ const groupSchema = new Schema(
   {
     title: { type: String, required: true, trim: true },
     description: { type: String, required: true },
-    img: { type: String, required: false },
+    bannerImg: { type: String, required: false },
     code: { type: String, required: false },
     locked: { type: Boolean, required: false },
     active: { type: Boolean, required: false },

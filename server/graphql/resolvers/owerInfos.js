@@ -2,7 +2,7 @@ const { AuthenticationError } = require('apollo-server');
 const OwerInfo = require('../../models/OwerInfo');
 const User = require('../../models/User');
 const checkAuth = require('../../util/check-auth');
-const { userHelper } = require('../middleware');
+const { userHelper } = require('../binder');
 
 module.exports = {
   Query: {
