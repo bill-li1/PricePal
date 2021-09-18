@@ -11,6 +11,9 @@ import {
 import Link from 'next/link';
 import { useState } from 'react';
 import { useRouter } from 'next/router';
+import gql from 'graphql-tag';
+import { useMutation } from '@apollo/client';
+import { Alert } from '@material-ui/lab';
 
 const useStyles = makeStyles((theme) => ({
   login: {
@@ -26,6 +29,9 @@ const useStyles = makeStyles((theme) => ({
     cursor: 'pointer',
     marginTop: theme.spacing(1),
   },
+  error: {
+    fontSize: '12px',
+  },
 }));
 
 export function Login(open) {
@@ -35,15 +41,31 @@ export function Login(open) {
     email: '',
     password: '',
   });
-  console.log(values);
+  const [errors, setErrors] = useState({});
+
+  const [loginUser, { loading }] = useMutation(LOGIN_USER, {
+    onCompleted: (data) => {
+      console.log(data);
+      router.push('/dashboard');
+    },
+    onError: (error) => {
+      setErrors(error.graphQLErrors[0].extensions.errors);
+    },
+  });
+
   const onChange = (event) => {
     setValues({ ...values, [event.target.name]: event.target.value });
   };
 
   const onSubmit = (event) => {
     event.preventDefault();
+    setErrors({});
     try {
-      router.push('/dashboard');
+      loginUser({
+        variables: {
+          loginLoginInput: values,
+        },
+      });
     } catch (error) {
       console.log(error);
     }
@@ -85,6 +107,16 @@ export function Login(open) {
                 Login
               </Button>
             </Grid>
+            <Grid item xs={12}>
+              {Object.keys(errors).length > 0 &&
+                Object.values(errors).map((err) => {
+                  return (
+                    <Alert severity="error" key={err}>
+                      <Typography className={styles.error}>{err}</Typography>
+                    </Alert>
+                  );
+                })}
+            </Grid>
             <Grid item xs={12} className={styles.forgotPassword}>
               <Link href="/Register">
                 <Typography variant="body2">
@@ -103,3 +135,16 @@ export function Login(open) {
     </Dialog>
   );
 }
+
+const LOGIN_USER = gql`
+  mutation Mutation($loginLoginInput: LoginInput) {
+    login(loginInput: $loginLoginInput) {
+      id
+      email
+      token
+      profileImg
+      firstName
+      lastName
+    }
+  }
+`;

@@ -11,6 +11,7 @@ import {
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import { useMutation, gql } from '@apollo/client';
+import { Alert } from '@material-ui/lab';
 
 const useStyles = makeStyles((theme) => ({
   login: {
@@ -36,14 +37,17 @@ export default function register() {
     password: '',
     email: '',
   });
-  const [confirmPassword, setConfirmPassword] = useState();
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [errors, setErrors] = useState({});
+  const [passwordError, setPasswordError] = useState('');
 
   const [addUser, { loading }] = useMutation(REGISTER_USER, {
     onCompleted: (data) => {
       console.log(data);
+      router.push('/dashboard');
     },
     onError: (error) => {
-      console.log(error);
+      setErrors(error.graphQLErrors[0].extensions.errors);
     },
   });
 
@@ -53,21 +57,22 @@ export default function register() {
 
   const onSubmit = (event) => {
     event.preventDefault();
+    setErrors({});
+    setPasswordError('');
     try {
+      if (confirmPassword !== values.password) {
+        setPasswordError('Password does not match');
+      }
       // Check if user exists and auth stuff over here
-      console.log(values);
       addUser({
         variables: {
           registerRegisterInput: values,
         },
       });
-      router.push('/dashboard');
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      console.log(err);
     }
   };
-
-  // console.log(values);
 
   return (
     <main>
@@ -89,6 +94,7 @@ export default function register() {
               margin="normal"
               type="text"
               name="email"
+              error={errors.hasOwnProperty('email') ? true : false}
               value={values.email}
               onChange={onChange}
             />
@@ -119,6 +125,7 @@ export default function register() {
               margin="normal"
               type="password"
               name="password"
+              error={passwordError.length !== 0 ? true : false}
               value={values.password}
               onChange={onChange}
             />
@@ -129,7 +136,9 @@ export default function register() {
               margin="normal"
               type="password"
               name="confirmPassword"
+              error={passwordError.length !== 0 ? true : false}
               value={confirmPassword}
+              onChange={(event) => setConfirmPassword(event.target.value)}
             />
             <Grid container direction="row">
               <Grid item xs={12}>
@@ -141,6 +150,19 @@ export default function register() {
                 >
                   Register
                 </Button>
+                <Grid item xs={12}>
+                  {Object.keys(errors).length > 0 &&
+                    Object.values(errors).map((err) => {
+                      return (
+                        <Alert severity="error" key={err}>
+                          {err}
+                        </Alert>
+                      );
+                    })}
+                  {passwordError && (
+                    <Alert severity="error">{passwordError}</Alert>
+                  )}
+                </Grid>
               </Grid>
             </Grid>
           </form>
