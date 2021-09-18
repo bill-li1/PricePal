@@ -7,7 +7,6 @@ const { SECRET_KEY } = require('../../config');
 const User = require('../../models/User');
 const { groupsHelper } = require('../middleware');
 
-
 function generateToken(user) {
   return jwt.sign(
     {
@@ -35,9 +34,9 @@ module.exports = {
           throw new Error('Transaction not found');
         }
       } catch (err) {
-        throw new Error(err); 
+        throw new Error(err);
       }
-    }
+    },
   },
   Mutation: {
     async login(_, { loginInput: { email, password } }) {
@@ -105,7 +104,7 @@ module.exports = {
         token,
       };
     },
-    async addGroupToUser(_, { userId, groupId}){
+    async addGroupToUser(_, { userId, groupId }) {
       const res = await User.findById(userId);
       res.groups.push(groupId);
       await res.save();
@@ -135,7 +134,7 @@ module.exports = {
       console.log('res._doc', { ...res._doc });
       const token = generateToken(res);
 
-      return { 
+      return {
         ...res._doc,
         id: res._id,
         token,
