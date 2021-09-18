@@ -104,15 +104,17 @@ module.exports = gql`
     register(registerInput: RegisterInput): User!
     login(loginInput: LoginInput): User!
     editUser(editUserInput: EditUserInput): User!
-    
+    addGroupToUser(groupId: ID, userId: ID): User!
+
     createTransaction(transactionInput: TransactionInput!): Transaction!
     deleteTransaction(transactionId: ID!): String!
+
     createOwerInfo(owerInfoInput: OwerInfoInput!): OwerInfo!
     deleteOwerInfo(owerInfoId: ID!): String!
 
     createGroup(groupInput: GroupInput!) : Group!
     editGroup(groupId: ID!, groupInput: GroupInput!): Group!
-    deleteGroup(groupId: ID!) : Group!
-    addGroupToUser(groupId: ID, userId: ID): Group!
+    getGroupById(groupId: ID!) : Group!
+    archiveGroup(groupId: ID!) : Group!
   }
 `;

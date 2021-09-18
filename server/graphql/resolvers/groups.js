@@ -6,9 +6,6 @@ const Group = require('../../models/Group');
 const checkAuth = require('../../util/check-auth');
 const { multiUsersHelper } = require('../middleware');
 
-// getGroupById(groupID: ID!): Group
-// createGroup(creatGroupInput: CreateGroupInput!) : Group!
-// editGroup(editGroupInput: EditGroupInput): Group!
 module.exports = {
   Query: {
     async getGroupById(_, { groupID }, context) {
@@ -45,9 +42,7 @@ module.exports = {
       };
     },
 
-    async editGroup(_, { groupId, groupInput }, context) {
-      const user = checkAuth(context);
-
+    async editGroup(_, { groupId, groupInput }) {
       const group = await Group.findById(groupId);
 
       group.title = groupInput.title
@@ -63,16 +58,16 @@ module.exports = {
       return {
         ...group._doc,
         id: group._doc._id,
-        users: multiUserHelper.bind(this, group._doc.users),
+        users: multiUsersHelper.bind(this, group._doc.users),
       };
     },
 
-    async deleteGroup(_, { groupId }, context) {
-      const user = checkAuth(context);
+    async archiveGroup(_, { groupId }) {
       try {
         const group = await Group.findById(groupId);
-        await group.delete();
-        return 'Group deleted successfully';
+        group.active = false;
+        await group.save();
+        return 'Group archived successfully';
       } catch (err) {
         throw new Error(err);
       }
