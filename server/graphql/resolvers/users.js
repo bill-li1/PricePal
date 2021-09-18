@@ -99,13 +99,12 @@ module.exports = {
       newUser.groups = [];
       
       const res = await newUser.save();
-
       const token = generateToken(res);
 
       return {
         ...res._doc,
         id: res._id,
-        groups: groupsHelper.bind(this, user._doc.groups),
+        groups: [],
         token,
       };
     },
