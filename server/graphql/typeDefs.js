@@ -1,7 +1,6 @@
 const { gql } = require('apollo-server');
 
 module.exports = gql`
-
   type OwerInfo {
     id: ID!
     user: User!
@@ -85,4 +84,4 @@ module.exports = gql`
     createOwerInfo(owerInfoInput: OwerInfoInput!): OwerInfo!
     deleteOwerInfo(owerInfoId: ID!): String!
   }
-`;
+`
