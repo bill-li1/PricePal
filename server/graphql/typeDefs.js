@@ -15,7 +15,7 @@ module.exports = gql`
     date: String!
     description: String
     img: String
-    group: [Group]!
+    group: Group!
     payer: User
     owerIds: [ID]!
     owerInfos: [OwerInfo]!
@@ -28,7 +28,7 @@ module.exports = gql`
     profileImg: String!
     firstName: String!
     lastName: String!
-    groups: [ Group]!
+    groups: [Group]!
   }
 
   type Group {
@@ -92,6 +92,7 @@ module.exports = gql`
 
   type Query {
     getTransactionsByUserId(userId: ID!): [Transaction]
+    getTransactionsByGroupId(groupId: ID!): Transaction
     getTransactionById(transactionId: ID!): Transaction
 
     getOwerInfos: [OwerInfo]
@@ -109,9 +110,9 @@ module.exports = gql`
     createTransaction(transactionInput: TransactionInput!): Transaction! #completed?
     deleteTransaction(transactionId: ID!): String! #completed?
 
-    createOwerInfo(owerInfoInput: OwerInfoInput!): OwerInfo! #completed?
-    editOwerInfo(owerInfoId: ID!, owerInfoInput: OwerInfoInput!): OwerInfo! #completed?
-    deleteOwerInfo(owerInfoId: ID!): String! #completed?
+    createOwerInfo(owerInfoInput: OwerInfoInput!): OwerInfo! #completed, tested
+    editOwerInfo(owerInfoId: ID!, owerInfoInput: OwerInfoInput!): OwerInfo! #completed, tested
+    deleteOwerInfo(owerInfoId: ID!): String! #completed, tested
 
     createGroup(groupInput: GroupInput!): Group! #completed, tested
     editGroup(groupId: ID!, groupInput: GroupInput!): Group! #completed, tested

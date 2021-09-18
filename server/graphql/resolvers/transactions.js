@@ -3,7 +3,7 @@ const Transaction = require('../../models/Transaction');
 const User = require('../../models/User');
 const OwerInfo = require('../../models/OwerInfo');
 const checkAuth = require('../../util/check-auth');
-const { userHelper, owerInfosHelper } = require('../binder');
+const { userHelper, owerInfosHelper, groupHelper } = require('../binder');
 
 module.exports = {
   Query: {
@@ -23,6 +23,26 @@ module.exports = {
         throw new Error(err);
       }
     },
+    async getTransactionsByUserId(_, { userId }) {
+      try {
+        const transactions = await Transaction.find({ dim_cm: { payer: userId, owerIds: userId } });
+        // const transactions = await Transaction.find({ payer: userId });
+        console.log('transactions with the id ' + userId + ': ', transactions);
+        if (transactions) {
+          return transactions.map((transaction) => ({
+            ...transaction._doc,
+            id: transaction._id,
+            group: groupHelper.bind(this, transaction._doc.group),
+            payer: userHelper.bind(this, transaction._doc.payer),
+            owerInfos: owerInfosHelper.bind(this, transaction._doc.owerInfos),
+          }));
+        } else {
+          throw new Error('Transactions not found');
+        }
+      } catch (err) {
+        throw new Error(err);
+      }
+    },
     // async getTransactionsByGroupId(_, { groupId }) {
     //   try {
     //     const transactions = await Transaction.find({ group: groupId });
@@ -36,23 +56,6 @@ module.exports = {
     //     throw new Error(err);
     //   }
     // },
-    async getTransactionsByUserId(_, { userId }) {
-      try {
-        const transactions = await Transaction.find({ dim_cm: { payer: userId, owerIds: userId } });
-        console.log('transactions with the id' + userId + ': ', transactions);
-        if (transactions) {
-          return transactions.map((transaction) => ({
-            ...transaction._doc,
-            payer: userHelper.bind(this, transaction._doc.payer),
-            owerInfos: owerInfosHelper.bind(this, transaction._doc.owerInfos),
-          }));
-        } else {
-          throw new Error('Transactions not found');
-        }
-      } catch (err) {
-        throw new Error(err);
-      }
-    },
   },
   Mutation: {
     async createTransaction(_, { transactionInput }, context) {
@@ -78,6 +81,7 @@ module.exports = {
         id: transaction._doc._id,
         payer: userHelper.bind(this, transaction._doc.payer),
         owerInfos: owerInfosHelper.bind(this, transaction._doc.owerInfos),
+        group: groupHelper.bind(this, transaction._doc.group)
       };
     },
 

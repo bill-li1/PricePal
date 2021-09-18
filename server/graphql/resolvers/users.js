@@ -6,7 +6,7 @@ const { validateRegisterInput, validateLoginInput } = require('../../util/valida
 const { SECRET_KEY } = require('../../config');
 const User = require('../../models/User');
 const Group = require('../../models/Group');
-const { groupsHelper } = require('../binder');
+const { multiGroupsHelper } = require('../binder');
 
 function generateToken(user) {
   return jwt.sign(
@@ -66,7 +66,7 @@ module.exports = {
       return {
         ...user._doc,
         id: user._id,
-        groups: groupsHelper.bind(this, user._doc.groups),
+        groups: multiGroupsHelper.bind(this, user._doc.groups),
         token,
       };
     },
@@ -131,7 +131,7 @@ module.exports = {
       return {
         ...user._doc,
         id: user._id,
-        groups: groupsHelper.bind(this, user._doc.groups),
+        groups: multiGroupsHelper.bind(this, user._doc.groups),
         token,
       };
     },
@@ -151,7 +151,7 @@ module.exports = {
       return {
         ...res._doc,
         id: res._id,
-        groups: groupsHelper.bind(this, res._doc.groups),
+        groups: multiGroupsHelper.bind(this, res._doc.groups),
         token,
       };
     },

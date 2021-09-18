@@ -37,7 +37,7 @@ const userHelper = async (userId) => {
     return {
       ...user._doc,
       id: user._doc._id,
-      groups: groupsHelper.bind(this, user._doc.groups),
+      groups: multiGroupsHelper.bind(this, user._doc.groups),
     };
   } catch (err) {
     throw new Error(err);
@@ -71,7 +71,7 @@ const groupHelper = async (groupId) => {
   }
 };
 
-const groupsHelper = async (groupIds) => {
+const multiGroupsHelper = async (groupIds) => {
   console.log('groupIds', groupIds);
 
   try {
@@ -87,4 +87,5 @@ exports.owerInfosHelper = owerInfosHelper;
 exports.transactionHelper = transactionHelper;
 exports.userHelper = userHelper;
 exports.multiUsersHelper = multiUsersHelper;
-exports.groupsHelper = groupsHelper;
+exports.multiGroupsHelper = multiGroupsHelper;
+exports.groupHelper = groupHelper;
