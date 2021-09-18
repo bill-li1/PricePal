@@ -9,11 +9,12 @@ import {
   Typography,
 } from '@material-ui/core';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { useRouter } from 'next/router';
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/client';
 import { Alert } from '@material-ui/lab';
+import { AuthContext } from '../context/auth';
 
 const useStyles = makeStyles((theme) => ({
   login: {
@@ -35,6 +36,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export function Login(open) {
+  const context = useContext(AuthContext);
   const styles = useStyles();
   const router = useRouter();
   const [values, setValues] = useState({
@@ -44,8 +46,9 @@ export function Login(open) {
   const [errors, setErrors] = useState({});
 
   const [loginUser, { loading }] = useMutation(LOGIN_USER, {
-    onCompleted: (data) => {
-      console.log(data);
+    update(_, { data: { login: userData } }) {
+      console.log(userData);
+      context.login(userData);
       router.push('/dashboard');
     },
     onError: (error) => {
