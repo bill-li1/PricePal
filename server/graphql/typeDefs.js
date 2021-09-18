@@ -15,9 +15,10 @@ module.exports = gql`
     date: String!
     description: String
     img: String
+    groupId: ID!
     payer: User
-    owersId: [ID]
-    owers: [OwerInfo]
+    owerIds: [ID]!
+    owerInfos: [OwerInfo]!
   }
 
   type User {
@@ -69,7 +70,9 @@ module.exports = gql`
     description: String
     img: String
     payer: ID!
-    owers: [ID]!
+    groupId: ID!
+    owerIds: [ID]! # users
+    owerInfos: [ID]! # owerInfos
   }
 
   input OwerInfoInput {

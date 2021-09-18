@@ -27,15 +27,15 @@ const owerInfoSchema = new Schema(
 
 const transactionSchema = new Schema(
   {
-    groupId: { type: Schema.Types.ObjectId, required: true, ref: 'Group' }, // currently not a connection
     title: { type: String, required: true, trim: true },
     type: { type: String, required: true, trim: true },
     date: { type: String, required: true },
     description: { type: String, required: true },
     img: { type: String, required: false },
+    groupId: { type: Schema.Types.ObjectId, required: true, ref: 'Group' }, // currently not a connection
     payer: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
-    owersId: { type: [String], required: true },
-    owers: {
+    owerIds: { type: [Schema.Types.ObjectId], required: true },
+    owerInfos: {
       type: [Schema.Types.ObjectId],
       required: true,
       ref: 'OwerInfo',

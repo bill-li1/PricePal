@@ -7,7 +7,6 @@ module.exports = {
     async getGroupById(_, { groupId }, context) {
       try {
         const group = await Group.findById(groupId)
-        console.log('group', group)
         return {
           ...group._doc,
           id: group._doc._id,
@@ -62,7 +61,6 @@ module.exports = {
     async setGroupActive(_, { groupId, active }) {
       try {
         const group = await Group.findById(groupId);
-        console.log('group', group)
         group.active = active;
         await group.save();
         return {

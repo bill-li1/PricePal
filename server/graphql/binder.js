@@ -9,6 +9,7 @@ const owerInfosHelper = async (owerInfoIds) => {
     const owerInfos = await OwerInfo.find({ _id: { $in: owerInfoIds } });
     return owerInfos.map((owerInfo) => ({
       ...owerInfo._doc,
+      id: owerInfo._doc._id,
       user: userHelper.bind(this, owerInfo._doc.user),
     }));
   } catch (err) {
@@ -22,7 +23,7 @@ const transactionHelper = async (transactionId) => {
     return {
       ...transaction._doc,
       payer: userHelper.bind(this, transaction._doc.payer),
-      owers: owerInfosHelper.bind(this, transaction._doc.owers),
+      owerInfos: owerInfosHelper.bind(this, transaction._doc.owers),
     };
   } catch (err) {
     throw new Error(err);

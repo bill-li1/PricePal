@@ -13,7 +13,7 @@ module.exports = {
         return transactions.map((transaction) => ({
           ...transaction._doc,
           payer: userHelper.bind(this, transaction._doc.payer),
-          owers: owerInfosHelper.bind(this, transaction._doc_owers),
+          owerInfos: owerInfosHelper.bind(this, transaction._doc.owerInfos),
         }));
       } catch (err) {
         throw new Error(err);
@@ -26,7 +26,7 @@ module.exports = {
           return {
             ...transaction._doc,
             payer: userHelper.bind(this, transaction._doc.payer),
-            owers: owerInfosHelper.bind(this, transaction._doc_owers),
+            owerInfos: owerInfosHelper.bind(this, transaction._doc.owerInfos),
           };
         } else {
           throw new Error('Transaction not found');
@@ -50,13 +50,13 @@ module.exports = {
     // },
     async getTransactionsByUserId(_, { userId }) {
       try {
-        const transactions = await Transaction.find({ dim_cm: { payer: userId, owersId: userId } });
+        const transactions = await Transaction.find({ dim_cm: { payer: userId, owerIds: userId } });
         console.log('transactions with the id' + userId + ': ', transactions);
         if (transactions) {
           return transactions.map((transaction) => ({
             ...transaction._doc,
             payer: userHelper.bind(this, transaction._doc.payer),
-            owers: owerInfosHelper.bind(this, transaction._doc_owers),
+            owerInfos: owerInfosHelper.bind(this, transaction._doc.owerInfos),
           }));
         } else {
           throw new Error('Transactions not found');
@@ -69,16 +69,7 @@ module.exports = {
   Mutation: {
     async createTransaction(_, { transactionInput }, context) {
       const user = checkAuth(context);
-      //TODO change owers to array of users instead of singular user.
-      //update in typeDefs as well.
-      // const owerUsers = await OwerInfo.find({
-      //   _id: {
-      //     $in: transactionInput.owers,
-      //   },
-      // });
-
-      console.log('transactionInput', transactionInput.owers);
-      // console.log('owerUsers', owerUsers);
+      console.log('transactionInput', transactionInput.owerIds);
 
       const newTransaction = new Transaction({
         title: transactionInput.title,
@@ -86,19 +77,19 @@ module.exports = {
         date: transactionInput.date,
         description: transactionInput.description,
         img: transactionInput.img,
+        groupId: transactionInput.groupId, 
         payer: transactionInput.payer,
-        owersId: transactionInput.owers,
-        owers: transactionInput.owers,
+        owerIds: transactionInput.owerIds,
+        owerInfos: transactionInput.owerInfos,
       });
 
       const transaction = await newTransaction.save();
-
 
       return {
         ...transaction._doc,
         id: transaction._doc._id,
         payer: userHelper.bind(this, transaction._doc.payer),
-        owers: owerInfosHelper.bind(this, transaction._doc.owers),
+        owerInfos: owerInfosHelper.bind(this, transaction._doc.owerInfos),
       };
     },
 
