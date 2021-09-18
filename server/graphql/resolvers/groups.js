@@ -1,7 +1,3 @@
-const { AuthenticationError } = require('apollo-server');
-const Transaction = require('../../models/Transaction');
-const User = require('../../models/User');
-const OwerInfo = require('../../models/OwerInfo');
 const Group = require('../../models/Group');
 const checkAuth = require('../../util/check-auth');
 const { multiUsersHelper } = require('../middleware');
@@ -63,26 +59,17 @@ module.exports = {
         users: multiUsersHelper.bind(this, group._doc.users),
       };
     },
-
-    async addUserToGroup(_, { groupId, userId }) {
-      const group = await Group.findById(groupId);
-      group.users.push(userId);
-      
-      await group.save();
-
-      return {
-        ...group._doc,
-        id: group._doc._id,
-        users: multiUsersHelper.bind(this, group._doc.users),
-      };
-    },
-
-    async archiveGroup(_, { groupId }) {
+    async setGroupActive(_, { groupId, active }) {
       try {
         const group = await Group.findById(groupId);
-        group.active = false;
+        console.log('group', group)
+        group.active = active;
         await group.save();
-        return 'Group archived successfully';
+        return {
+          ...group._doc,
+          id: group._doc._id,
+          users: multiUsersHelper.bind(this, group._doc.users),
+        };
       } catch (err) {
         throw new Error(err);
       }

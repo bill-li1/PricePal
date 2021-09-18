@@ -101,20 +101,19 @@ module.exports = gql`
   }
     
   type Mutation {
-    register(registerInput: RegisterInput): User!
-    login(loginInput: LoginInput): User!
-    editUser(editUserInput: EditUserInput): User!
-    addGroupToUser(groupId: ID, userId: ID): User!
+    register(registerInput: RegisterInput): User! #completed, tested
+    login(loginInput: LoginInput): User! #completed, tested
+    editUser(editUserInput: EditUserInput): User! #completed, tested
+    addGroupUser(groupId: ID, userId: ID): User! #completed
 
-    createTransaction(transactionInput: TransactionInput!): Transaction!
-    deleteTransaction(transactionId: ID!): String!
+    createTransaction(transactionInput: TransactionInput!): Transaction! #completed?
+    deleteTransaction(transactionId: ID!): String! #completed?
 
-    createOwerInfo(owerInfoInput: OwerInfoInput!): OwerInfo!
-    deleteOwerInfo(owerInfoId: ID!): String!
+    createOwerInfo(owerInfoInput: OwerInfoInput!): OwerInfo! #completed?
+    deleteOwerInfo(owerInfoId: ID!): String! #completed?
 
-    createGroup(groupInput: GroupInput!): Group!
-    editGroup(groupId: ID!, groupInput: GroupInput!): Group!
-    addUserToGroup(groupId: ID!, userId: ID!): Group!
-    archiveGroup(groupId: ID!): Group!
+    createGroup(groupInput: GroupInput!): Group! #completed, tested
+    editGroup(groupId: ID!, groupInput: GroupInput!): Group! #completed, tested
+    setGroupActive(groupId: ID!, active: Boolean!): Group! #completed
   }
 `;

@@ -5,6 +5,7 @@ const { UserInputError } = require('apollo-server');
 const { validateRegisterInput, validateLoginInput } = require('../../util/validators.js');
 const { SECRET_KEY } = require('../../config');
 const User = require('../../models/User');
+const Group = require('../../models/Group');
 const { groupsHelper } = require('../middleware');
 
 function generateToken(user) {
@@ -104,19 +105,21 @@ module.exports = {
         token,
       };
     },
-    async addGroupToUser(_, { userId, groupId }) {
-      console.log('userId, groupId:', userId, groupId);
-      const res = await User.findById(userId);
-      res.groups.push(groupId);
+    async addGroupUser(_, { groupId, userId }) {
+      // console.log('userId, groupId:', userId, groupId);
+      const user = await User.findById(userId);
+      user.groups.push(groupId);
       await res.save();
 
-      // console.log('res', res);
-      // console.log('res._doc', { ...res._doc });
+      const group = await Group.findById(groupId);
+      group.users.push(userId);
+      await group.save();
+
       const token = generateToken(res);
 
       return {
-        ...res._doc,
-        id: res._id,
+        ...user._doc,
+        id: user._id,
         token,
       };
     },
