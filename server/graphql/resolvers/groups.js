@@ -25,23 +25,23 @@ module.exports = {
   },
   Mutation: {
     async createGroup(_, { groupInput }, context) {
-      const user = checkAuth(context);
+      const user = await checkAuth(context);
       const newGroup = new Group({
         title: groupInput.title,
         description: groupInput.description,
-        bannerImg: groupInput.img,
+        bannerImg: groupInput.bannerImg,
         code: groupInput.code,
         locked: groupInput.locked,
         active: groupInput.active,
-        users: groupInput.users,
+        users: [user.id],
       });
 
       const group = await newGroup.save();
-
+      
       return {
         ...group._doc,
         id: group._doc._id,
-        users: multiUserHelper.bind(this, group._doc.users),
+        users: multiUsersHelper.bind(this, group._doc.users),
       };
     },
 
@@ -52,7 +52,7 @@ module.exports = {
 
       group.title = groupInput.title
       group.description = groupInput.description
-      group.bannerImg = groupInput.img
+      group.bannerImg = groupInput.bannerImg
       group.code = groupInput.code
       group.locked = groupInput.locked
       group.active = groupInput.active

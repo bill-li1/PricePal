@@ -41,9 +41,9 @@ const userHelper = async (userId) => {
 };
 
 const groupsHelper = async (groupIds) => {
-  try {
-    const groups = await Group.find({ _id: { $in: owerInfoIds } });
+  console.log('groupIds', groupIds)
 
+  try {
     return groupIds.map(async (groupId) => {
       const group = await Group.findById(groupId)
 
@@ -58,8 +58,13 @@ const groupsHelper = async (groupIds) => {
 };
 
 const multiUsersHelper = async (userIds) => {
+  console.log('multiUser userIds', userIds)
   try {
-    return userIds.map((user) => {userHelper(user)});
+    return await userIds.map(async (user) => {
+      const newUser = await userHelper(user)
+      console.log('newUser', newUser)
+      return newUser
+    });
   } catch (err) {
     throw new Error(err);
   }
@@ -68,4 +73,5 @@ const multiUsersHelper = async (userIds) => {
 exports.owerInfosHelper = owerInfosHelper;
 exports.transactionHelper = transactionHelper;
 exports.userHelper = userHelper;
+exports.multiUsersHelper = multiUsersHelper;
 exports.groupsHelper = groupsHelper;

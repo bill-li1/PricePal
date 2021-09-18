@@ -69,7 +69,6 @@ module.exports = {
   Mutation: {
     async createTransaction(_, { transactionInput }, context) {
       const user = checkAuth(context);
-
       //TODO change owers to array of users instead of singular user.
       //update in typeDefs as well.
       // const owerUsers = await OwerInfo.find({
