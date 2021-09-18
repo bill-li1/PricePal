@@ -47,7 +47,8 @@ const userHelper = async (userId) => {
 const multiUsersHelper = async (userIds) => {
   try {
     return await userIds.map(async (user) => {
-      return await userHelper(user);
+      const newUser = await userHelper(user)
+      return newUser
     });
   } catch (err) {
     throw new Error(err);

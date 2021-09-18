@@ -115,6 +115,9 @@ module.exports = {
       if (!user.groups.includes(groupId)) {
         user.groups.push(groupId);
         await user.save();
+      } 
+      else {
+        throw new Error('User already exists in group')
       }
 
       const group = await Group.findById(groupId);

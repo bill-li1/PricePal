@@ -104,12 +104,13 @@ module.exports = gql`
     register(registerInput: RegisterInput): User! #completed, tested
     login(loginInput: LoginInput): User! #completed, tested
     editUser(editUserInput: EditUserInput): User! #completed, tested
-    addGroupUser(groupId: ID, userId: ID): User! #completed
+    addGroupUser(groupId: ID, userId: ID): User! #completed, tested
 
     createTransaction(transactionInput: TransactionInput!): Transaction! #completed?
     deleteTransaction(transactionId: ID!): String! #completed?
 
     createOwerInfo(owerInfoInput: OwerInfoInput!): OwerInfo! #completed?
+    editOwerInfo(owerInfoId: ID!, owerInfoInput: OwerInfoInput!): OwerInfo! #completed?
     deleteOwerInfo(owerInfoId: ID!): String! #completed?
 
     createGroup(groupInput: GroupInput!): Group! #completed, tested

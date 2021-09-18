@@ -28,9 +28,9 @@ module.exports = {
         }
         return code
       }
-      let code = generateCode()
-      let existingGroup = await Group.findOne({ code: code });
-      while(existingGroup) {
+      let code;
+      let existingGroup;
+      while(existingGroup || !code) {
         code = generateCode()
         existingGroup = await Group.findOne({ code: code });
       }

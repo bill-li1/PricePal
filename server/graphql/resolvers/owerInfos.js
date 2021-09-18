@@ -38,14 +38,12 @@ module.exports = {
   Mutation: {
     async createOwerInfo(_, { owerInfoInput }, context) {
       const user = checkAuth(context);
-      // Save ID or User?
       console.log('owerInfoInput.user', owerInfoInput.user);
       const newOwerInfo = new OwerInfo({
         user: owerInfoInput.user,
         amount: owerInfoInput.amount,
         notes: owerInfoInput.notes ? owerInfoInput.notes : 'No notes',
       });
-      // console.log('newOwerInfo', newOwerInfo);
       try {
         const owerInfo = await newOwerInfo.save();
         return {
@@ -56,6 +54,20 @@ module.exports = {
       } catch (err) {
         throw new Error(err);
       }
+    },
+    async editOwerInfo(_, { owerInfoId, owerInfoInput }, context) {
+      const user = checkAuth(context);
+
+      const owerInfo = await OwerInfo.findById(owerInfoId);
+      owerInfo.amount = owerInfoInput.amount;
+      owerInfo.notes = owerInfoInput.notes ? owerInfoInput.notes : owerInfo.notes;
+      await owerInfo.save();
+
+      return {
+        ...owerInfo._doc,
+        id: owerInfo._id,
+        user: userHelper.bind(this, owerInfo._doc.user),
+      };
     },
     async deleteOwerInfo(_, { owerInfoId }, context) {
       const user = checkAuth(context);
