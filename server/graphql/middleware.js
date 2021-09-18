@@ -2,7 +2,8 @@ const Transaction = require('../models/Transaction');
 const User = require('../models/User');
 const OwerInfo = require('../models/OwerInfo');
 
-export const owerInfosHelper = async (owerInfoIds) => {
+const owerInfosHelper = async (owerInfoIds) => {
+  console.log('owerInfoIds', owerInfoIds);
   try {
     const owerInfos = await OwerInfo.find({ _id: { $in: owerInfoIds } });
     return owerInfos.map((owerInfo) => ({
@@ -14,7 +15,7 @@ export const owerInfosHelper = async (owerInfoIds) => {
   }
 };
 
-export const transactionHelper = async (transactionId) => {
+const transactionHelper = async (transactionId) => {
   try {
     const transaction = await Transaction.findById(transactionId);
     return {
@@ -27,13 +28,44 @@ export const transactionHelper = async (transactionId) => {
   }
 };
 
-export const userHelper = async (userId) => {
+const userHelper = async (userId) => {
   try {
     const user = await User.findById(userId);
     return {
       ...user._doc,
+      groups: groupsHelper.bind(this, user._doc.groups)
     };
   } catch (err) {
     throw new Error(err);
   }
 };
+
+const groupsHelper = async (groupIds) => {
+  try {
+    const groups = await Group.find({ _id: { $in: owerInfoIds } });
+
+    return groupIds.map(async (groupId) => {
+      const group = await Group.findById(groupId)
+
+      return {
+        ...group._doc,
+        users: multiUsersHelper.bind(this, group._doc.users)
+      }
+    });
+  } catch (err) {
+    throw new Error(err);
+  }
+};
+
+const multiUsersHelper = async (userIds) => {
+  try {
+    return userIds.map((user) => {userHelper(user)});
+  } catch (err) {
+    throw new Error(err);
+  }
+};
+
+exports.owerInfosHelper = owerInfosHelper;
+exports.transactionHelper = transactionHelper;
+exports.userHelper = userHelper;
+exports.groupsHelper = groupsHelper;

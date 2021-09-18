@@ -5,6 +5,7 @@ const { UserInputError } = require('apollo-server');
 const { validateRegisterInput, validateLoginInput } = require('../../util/validators.js');
 const { SECRET_KEY } = require('../../config');
 const User = require('../../models/User');
+const { groupsHelper } = require('../middleware');
 
 function generateToken(user) {
   return jwt.sign(
@@ -15,11 +16,28 @@ function generateToken(user) {
       lastName: user.lastName,
     },
     SECRET_KEY,
-    { expiresIn: '9h' }
+    { expiresIn: '9h' },
   );
 }
 
 module.exports = {
+  Query: {
+    async getUserById(_, { userId }) {
+      try {
+        const user = await User.findById(userId);
+        if (user) {
+          return {
+            ...user._doc,
+            groups: groupsHelper.bind(this, transaction._doc.groups),
+          };
+        } else {
+          throw new Error('Transaction not found');
+        }
+      } catch (err) {
+        throw new Error(err);
+      }
+    },
+  },
   Mutation: {
     async login(_, { loginInput: { email, password } }) {
       console.log('login');
@@ -50,9 +68,9 @@ module.exports = {
         token,
       };
     },
-    async register(_, { registerInput: { firstName, lastName, email, password, confirmPassword, profileImg } }) {
+    async register(_, { registerInput: { firstName, lastName, email, password, profileImg } }) {
       // Validate user data
-      const { valid, errors } = validateRegisterInput(firstName, lastName, email, password, confirmPassword);
+      const { valid, errors } = validateRegisterInput(firstName, lastName, email, password);
       if (!valid) {
         throw new UserInputError('Errors', { errors });
       }
@@ -78,6 +96,21 @@ module.exports = {
 
       const res = await newUser.save();
 
+      const token = generateToken(res);
+
+      return {
+        ...res._doc,
+        id: res._id,
+        token,
+      };
+    },
+    async addGroupToUser(_, { userId, groupId }) {
+      const res = await User.findById(userId);
+      res.groups.push(groupId);
+      await res.save();
+
+      console.log('res', res);
+      console.log('res._doc', { ...res._doc });
       const token = generateToken(res);
 
       return {

@@ -7,6 +7,11 @@ const userSchema = new Schema(
     profileImg: { type: String, required: true },
     firstName: { type: String, required: true, trim: true },
     lastName: { type: String, required: true, trim: true },
+    groups: {
+      type: [Schema.Types.ObjectId],
+      required: true,
+      ref: 'Group',
+    },
   },
   { timestamps: true },
 );
@@ -22,6 +27,7 @@ const owerInfoSchema = new Schema(
 
 const transactionSchema = new Schema(
   {
+    groupId: { type: Schema.Types.ObjectId, required: true, ref: 'Group' }, // currently not a connection
     title: { type: String, required: true, trim: true },
     type: { type: String, required: true, trim: true },
     date: { type: String, required: true },
@@ -38,6 +44,25 @@ const transactionSchema = new Schema(
   { timestamps: true },
 );
 
+const groupSchema = new Schema(
+  {
+    title: { type: String, required: true, trim: true },
+    description: { type: String, required: true },
+    img: { type: String, required: false },
+    code: { type: String, required: false },
+    locked: { type: Boolean, required: false },
+    active: { type: Boolean, required: false },
+    users: {
+      // connection
+      type: [Schema.Types.ObjectId],
+      required: true,
+      ref: 'User',
+    },
+  },
+  { timestamps: true },
+);
+
 exports.owerInfoSchema = owerInfoSchema;
 exports.userSchema = userSchema;
 exports.transactionSchema = transactionSchema;
+exports.groupSchema = groupSchema;

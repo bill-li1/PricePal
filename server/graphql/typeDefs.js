@@ -27,6 +27,18 @@ module.exports = gql`
     profileImg: String!
     firstName: String!
     lastName: String!
+    groups: [ Group]!
+  }
+
+  type Group {
+    id: ID!
+    title: String!
+    description: String
+    bannerImg: String!
+    code: String!
+    locked: Boolean!
+    active: Boolean!
+    users: [User]!
   }
 
   input RegisterInput {
@@ -34,7 +46,6 @@ module.exports = gql`
     lastName: String!
     profileImg: String!
     password: String!
-    confirmPassword: String!
     email: String!
   }
 
@@ -67,10 +78,23 @@ module.exports = gql`
     notes: String
   }
 
+  input GroupInput {
+    title: String!
+    description: String
+    bannerImg: String!
+    code: String!
+    locked: Boolean!
+    active: Boolean!
+    users: [ID]!
+  }
+
   type Query {
     getTransactions: [Transaction]
     getTransactionsByUserId(userID: ID!): [Transaction]
     getTransactionById(transactionId: ID!): Transaction
+
+    getGroupById(groupID: ID!): Group
+
     getOwerInfos: [OwerInfo]
     getOwerInfoById(owerInfoId: ID!) : OwerInfo
   }
@@ -79,9 +103,15 @@ module.exports = gql`
     register(registerInput: RegisterInput): User!
     login(loginInput: LoginInput): User!
     editUser(editUserInput: EditUserInput): User!
+    
     createTransaction(transactionInput: TransactionInput!): Transaction!
     deleteTransaction(transactionId: ID!): String!
     createOwerInfo(owerInfoInput: OwerInfoInput!): OwerInfo!
     deleteOwerInfo(owerInfoId: ID!): String!
+
+    createGroup(groupInput: GroupInput!) : Group!
+    editGroup(groupId: ID!, groupInput: GroupInput!): Group!
+    deleteGroup(groupId: ID!) : Group!
+    addGroupToUser(groupId: ID, userId: ID): Group!
   }
 `
