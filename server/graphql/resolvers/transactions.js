@@ -7,18 +7,6 @@ const { userHelper, owerInfosHelper } = require('../binder');
 
 module.exports = {
   Query: {
-    async getTransactions() {
-      try {
-        const transactions = await Transaction.find();
-        return transactions.map((transaction) => ({
-          ...transaction._doc,
-          payer: userHelper.bind(this, transaction._doc.payer),
-          owerInfos: owerInfosHelper.bind(this, transaction._doc.owerInfos),
-        }));
-      } catch (err) {
-        throw new Error(err);
-      }
-    },
     async getTransactionById(_, { transactionId }) {
       try {
         const transaction = await Transaction.findById(transactionId);
@@ -77,7 +65,7 @@ module.exports = {
         date: transactionInput.date,
         description: transactionInput.description,
         img: transactionInput.img,
-        groupId: transactionInput.groupId, 
+        group: transactionInput.group, 
         payer: transactionInput.payer,
         owerIds: transactionInput.owerIds,
         owerInfos: transactionInput.owerInfos,

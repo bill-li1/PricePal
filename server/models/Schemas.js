@@ -32,7 +32,7 @@ const transactionSchema = new Schema(
     date: { type: String, required: true },
     description: { type: String, required: true },
     img: { type: String, required: false },
-    groupId: { type: Schema.Types.ObjectId, required: true, ref: 'Group' }, // currently not a connection
+    group: { type: Schema.Types.ObjectId, required: true, ref: 'Group' }, // currently not a connection
     payer: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
     owerIds: { type: [Schema.Types.ObjectId], required: true },
     owerInfos: {

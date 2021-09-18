@@ -15,7 +15,7 @@ module.exports = gql`
     date: String!
     description: String
     img: String
-    groupId: ID!
+    group: [Group]!
     payer: User
     owerIds: [ID]!
     owerInfos: [OwerInfo]!
@@ -70,7 +70,7 @@ module.exports = gql`
     description: String
     img: String
     payer: ID!
-    groupId: ID!
+    group: ID!
     owerIds: [ID]! # users
     owerInfos: [ID]! # owerInfos
   }
@@ -85,14 +85,12 @@ module.exports = gql`
     title: String!
     description: String
     bannerImg: String!
-    code: String!
     locked: Boolean!
     active: Boolean!
-    users: [ID]!
+    users: [ID]
   }
 
   type Query {
-    getTransactions: [Transaction]
     getTransactionsByUserId(userId: ID!): [Transaction]
     getTransactionById(transactionId: ID!): Transaction
 
