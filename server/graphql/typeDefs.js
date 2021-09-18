@@ -15,9 +15,10 @@ module.exports = gql`
     date: String!
     description: String
     img: String
+    group: Group!
     payer: User
-    owersId: [ID]
-    owers: [OwerInfo]
+    owerIds: [ID]!
+    owerInfos: [OwerInfo]!
   }
 
   type User {
@@ -27,7 +28,7 @@ module.exports = gql`
     profileImg: String!
     firstName: String!
     lastName: String!
-    groups: [ Group]!
+    groups: [Group]!
   }
 
   type Group {
@@ -69,7 +70,9 @@ module.exports = gql`
     description: String
     img: String
     payer: ID!
-    owers: [ID]!
+    group: ID!
+    owerIds: [ID]! # users
+    owerInfos: [ID]! # owerInfos
   }
 
   input OwerInfoInput {
@@ -82,15 +85,14 @@ module.exports = gql`
     title: String!
     description: String
     bannerImg: String!
-    code: String!
     locked: Boolean!
     active: Boolean!
-    users: [ID]!
+    users: [ID]
   }
 
   type Query {
-    getTransactions: [Transaction]
     getTransactionsByUserId(userId: ID!): [Transaction]
+    getTransactionsByGroupId(groupId: ID!): Transaction
     getTransactionById(transactionId: ID!): Transaction
 
     getOwerInfos: [OwerInfo]
@@ -103,13 +105,14 @@ module.exports = gql`
     register(registerInput: RegisterInput): User! #completed, tested
     login(loginInput: LoginInput): User! #completed, tested
     editUser(editUserInput: EditUserInput): User! #completed, tested
-    addGroupUser(groupId: ID, userId: ID): User! #completed
+    addGroupUser(groupId: ID, userId: ID): User! #completed, tested
 
     createTransaction(transactionInput: TransactionInput!): Transaction! #completed?
     deleteTransaction(transactionId: ID!): String! #completed?
 
-    createOwerInfo(owerInfoInput: OwerInfoInput!): OwerInfo! #completed?
-    deleteOwerInfo(owerInfoId: ID!): String! #completed?
+    createOwerInfo(owerInfoInput: OwerInfoInput!): OwerInfo! #completed, tested
+    editOwerInfo(owerInfoId: ID!, owerInfoInput: OwerInfoInput!): OwerInfo! #completed, tested
+    deleteOwerInfo(owerInfoId: ID!): String! #completed, tested
 
     createGroup(groupInput: GroupInput!): Group! #completed, tested
     editGroup(groupId: ID!, groupInput: GroupInput!): Group! #completed, tested

@@ -47,9 +47,10 @@ export default function register() {
     update(_, { data: { register: userData } }) {
       console.log(userData);
       context.login(userData);
-      router.push('/dashboard')
+      router.push('/dashboard');
     },
     onError: (error) => {
+      console.log(error);
       setErrors(error.graphQLErrors[0].extensions.errors);
     },
   });
@@ -65,13 +66,13 @@ export default function register() {
     try {
       if (confirmPassword !== values.password) {
         setPasswordError('Password does not match');
+      } else {
+        addUser({
+          variables: {
+            registerRegisterInput: values,
+          },
+        });
       }
-      // Check if user exists and auth stuff over here
-      addUser({
-        variables: {
-          registerRegisterInput: values,
-        },
-      });
     } catch (err) {
       console.log(err);
     }
@@ -97,7 +98,7 @@ export default function register() {
               margin="normal"
               type="text"
               name="email"
-              error={errors.hasOwnProperty('email') ? true : false}
+              error={errors && errors.hasOwnProperty('email') ? true : false}
               value={values.email}
               onChange={onChange}
             />
@@ -154,7 +155,8 @@ export default function register() {
                   Register
                 </Button>
                 <Grid item xs={12}>
-                  {Object.keys(errors).length > 0 &&
+                  {errors &&
+                    Object.keys(errors).length > 0 &&
                     Object.values(errors).map((err) => {
                       return (
                         <Alert severity="error" key={err}>

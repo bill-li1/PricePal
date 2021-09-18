@@ -6,7 +6,7 @@ const { validateRegisterInput, validateLoginInput } = require('../../util/valida
 const { SECRET_KEY } = require('../../config');
 const User = require('../../models/User');
 const Group = require('../../models/Group');
-const { groupsHelper } = require('../binder');
+const { multiGroupsHelper } = require('../binder');
 
 function generateToken(user) {
   return jwt.sign(
@@ -66,7 +66,7 @@ module.exports = {
       return {
         ...user._doc,
         id: user._id,
-        groups: groupsHelper.bind(this, user._doc.groups),
+        groups: multiGroupsHelper.bind(this, user._doc.groups),
         token,
       };
     },
@@ -97,9 +97,11 @@ module.exports = {
       });
 
       newUser.groups = [];
-      
+
       const res = await newUser.save();
       const token = generateToken(res);
+
+      console.log(user._doc.groups);
 
       return {
         ...res._doc,
@@ -110,13 +112,16 @@ module.exports = {
     },
     async addGroupUser(_, { groupId, userId }) {
       const user = await User.findById(userId);
-      if(!user.groups.includes(groupId)){
+      if (!user.groups.includes(groupId)) {
         user.groups.push(groupId);
         await user.save();
+      } 
+      else {
+        throw new Error('User already exists in group')
       }
 
       const group = await Group.findById(groupId);
-      if(!group.users.includes(userId)){
+      if (!group.users.includes(userId)) {
         group.users.push(userId);
         await group.save();
       }
@@ -126,7 +131,7 @@ module.exports = {
       return {
         ...user._doc,
         id: user._id,
-        groups: groupsHelper.bind(this, user._doc.groups),
+        groups: multiGroupsHelper.bind(this, user._doc.groups),
         token,
       };
     },
@@ -146,7 +151,7 @@ module.exports = {
       return {
         ...res._doc,
         id: res._id,
-        groups: groupsHelper.bind(this, res._doc.groups),
+        groups: multiGroupsHelper.bind(this, res._doc.groups),
         token,
       };
     },

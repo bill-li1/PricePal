@@ -9,6 +9,7 @@ const owerInfosHelper = async (owerInfoIds) => {
     const owerInfos = await OwerInfo.find({ _id: { $in: owerInfoIds } });
     return owerInfos.map((owerInfo) => ({
       ...owerInfo._doc,
+      id: owerInfo._doc._id,
       user: userHelper.bind(this, owerInfo._doc.user),
     }));
   } catch (err) {
@@ -21,8 +22,9 @@ const transactionHelper = async (transactionId) => {
     const transaction = await Transaction.findById(transactionId);
     return {
       ...transaction._doc,
+      id: transaction._doc._id,
       payer: userHelper.bind(this, transaction._doc.payer),
-      owers: owerInfosHelper.bind(this, transaction._doc.owers),
+      owerInfos: owerInfosHelper.bind(this, transaction._doc.owers),
     };
   } catch (err) {
     throw new Error(err);
@@ -34,7 +36,8 @@ const userHelper = async (userId) => {
     const user = await User.findById(userId);
     return {
       ...user._doc,
-      groups: groupsHelper.bind(this, user._doc.groups)
+      id: user._doc._id,
+      groups: multiGroupsHelper.bind(this, user._doc.groups),
     };
   } catch (err) {
     throw new Error(err);
@@ -45,7 +48,6 @@ const multiUsersHelper = async (userIds) => {
   try {
     return await userIds.map(async (user) => {
       const newUser = await userHelper(user)
-      // console.log('newUser', newUser)
       return newUser
     });
   } catch (err) {
@@ -53,17 +55,28 @@ const multiUsersHelper = async (userIds) => {
   }
 };
 
-const groupsHelper = async (groupIds) => {
-  console.log('groupIds', groupIds)
+const groupHelper = async (groupId) => {
+  console.log('groupId', groupId);
 
   try {
-    return await groupIds.map(async (groupId, idx) => {
-      const group = await Group.findById(groupId)
-      console.log('found group '+ idx +': ', group)
-      return {
-        ...group._doc,
-        users: multiUsersHelper.bind(this, group._doc.users)
-      }
+    const group = await Group.findById(groupId);
+    // console.log('found group: ', group)
+    return {
+      ...group._doc,
+      id: group._doc._id,
+      users: multiUsersHelper.bind(this, group._doc.users),
+    };
+  } catch (err) {
+    throw new Error(err);
+  }
+};
+
+const multiGroupsHelper = async (groupIds) => {
+  console.log('groupIds', groupIds);
+
+  try {
+    return await groupIds.map(async (groupId) => {
+      return await groupHelper(groupId); 
     });
   } catch (err) {
     throw new Error(err);
@@ -74,4 +87,5 @@ exports.owerInfosHelper = owerInfosHelper;
 exports.transactionHelper = transactionHelper;
 exports.userHelper = userHelper;
 exports.multiUsersHelper = multiUsersHelper;
-exports.groupsHelper = groupsHelper;
+exports.multiGroupsHelper = multiGroupsHelper;
+exports.groupHelper = groupHelper;

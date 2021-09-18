@@ -7,7 +7,6 @@ module.exports = {
     async getGroupById(_, { groupId }, context) {
       try {
         const group = await Group.findById(groupId)
-        console.log('group', group)
         return {
           ...group._doc,
           id: group._doc._id,
@@ -20,12 +19,27 @@ module.exports = {
   },
   Mutation: {
     async createGroup(_, { groupInput }, context) {
+      const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+      const generateNum = () => {return Math.floor(Math.random() * 62)}
+      const generateCode = () => {
+        let code = ''
+        for(var i = 0; i < 6; i ++){
+          code += characters[generateNum()]
+        }
+        return code
+      }
+      let code;
+      let existingGroup;
+      while(existingGroup || !code) {
+        code = generateCode()
+        existingGroup = await Group.findOne({ code: code });
+      }
       const user = checkAuth(context);
       const newGroup = new Group({
         title: groupInput.title,
-        description: groupInput.description,
+        description: groupInput.description ? groupInput.description : "",
         bannerImg: groupInput.bannerImg,
-        code: groupInput.code,
+        code: code,
         locked: groupInput.locked,
         active: groupInput.active,
         users: [user.id],
@@ -44,12 +58,12 @@ module.exports = {
       const group = await Group.findById(groupId);
 
       group.title = groupInput.title
-      group.description = groupInput.description
+      group.description = groupInput.description ? groupInput.description : group.description
       group.bannerImg = groupInput.bannerImg
-      group.code = groupInput.code
+      // group.code = groupInput.code
       group.locked = groupInput.locked
       group.active = groupInput.active
-      group.users = groupInput.users
+      group.users = groupInput.users ? groupInput.users : group.users
 
       await group.save();
 
@@ -62,7 +76,6 @@ module.exports = {
     async setGroupActive(_, { groupId, active }) {
       try {
         const group = await Group.findById(groupId);
-        console.log('group', group)
         group.active = active;
         await group.save();
         return {

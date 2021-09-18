@@ -3,22 +3,10 @@ const Transaction = require('../../models/Transaction');
 const User = require('../../models/User');
 const OwerInfo = require('../../models/OwerInfo');
 const checkAuth = require('../../util/check-auth');
-const { userHelper, owerInfosHelper } = require('../binder');
+const { userHelper, owerInfosHelper, groupHelper } = require('../binder');
 
 module.exports = {
   Query: {
-    async getTransactions() {
-      try {
-        const transactions = await Transaction.find();
-        return transactions.map((transaction) => ({
-          ...transaction._doc,
-          payer: userHelper.bind(this, transaction._doc.payer),
-          owers: owerInfosHelper.bind(this, transaction._doc_owers),
-        }));
-      } catch (err) {
-        throw new Error(err);
-      }
-    },
     async getTransactionById(_, { transactionId }) {
       try {
         const transaction = await Transaction.findById(transactionId);
@@ -26,10 +14,30 @@ module.exports = {
           return {
             ...transaction._doc,
             payer: userHelper.bind(this, transaction._doc.payer),
-            owers: owerInfosHelper.bind(this, transaction._doc_owers),
+            owerInfos: owerInfosHelper.bind(this, transaction._doc.owerInfos),
           };
         } else {
           throw new Error('Transaction not found');
+        }
+      } catch (err) {
+        throw new Error(err);
+      }
+    },
+    async getTransactionsByUserId(_, { userId }) {
+      try {
+        const transactions = await Transaction.find({ dim_cm: { payer: userId, owerIds: userId } });
+        // const transactions = await Transaction.find({ payer: userId });
+        console.log('transactions with the id ' + userId + ': ', transactions);
+        if (transactions) {
+          return transactions.map((transaction) => ({
+            ...transaction._doc,
+            id: transaction._id,
+            group: groupHelper.bind(this, transaction._doc.group),
+            payer: userHelper.bind(this, transaction._doc.payer),
+            owerInfos: owerInfosHelper.bind(this, transaction._doc.owerInfos),
+          }));
+        } else {
+          throw new Error('Transactions not found');
         }
       } catch (err) {
         throw new Error(err);
@@ -48,37 +56,11 @@ module.exports = {
     //     throw new Error(err);
     //   }
     // },
-    async getTransactionsByUserId(_, { userId }) {
-      try {
-        const transactions = await Transaction.find({ dim_cm: { payer: userId, owersId: userId } });
-        console.log('transactions with the id' + userId + ': ', transactions);
-        if (transactions) {
-          return transactions.map((transaction) => ({
-            ...transaction._doc,
-            payer: userHelper.bind(this, transaction._doc.payer),
-            owers: owerInfosHelper.bind(this, transaction._doc_owers),
-          }));
-        } else {
-          throw new Error('Transactions not found');
-        }
-      } catch (err) {
-        throw new Error(err);
-      }
-    },
   },
   Mutation: {
     async createTransaction(_, { transactionInput }, context) {
       const user = checkAuth(context);
-      //TODO change owers to array of users instead of singular user.
-      //update in typeDefs as well.
-      // const owerUsers = await OwerInfo.find({
-      //   _id: {
-      //     $in: transactionInput.owers,
-      //   },
-      // });
-
-      console.log('transactionInput', transactionInput.owers);
-      // console.log('owerUsers', owerUsers);
+      console.log('transactionInput', transactionInput.owerIds);
 
       const newTransaction = new Transaction({
         title: transactionInput.title,
@@ -86,19 +68,20 @@ module.exports = {
         date: transactionInput.date,
         description: transactionInput.description,
         img: transactionInput.img,
+        group: transactionInput.group, 
         payer: transactionInput.payer,
-        owersId: transactionInput.owers,
-        owers: transactionInput.owers,
+        owerIds: transactionInput.owerIds,
+        owerInfos: transactionInput.owerInfos,
       });
 
       const transaction = await newTransaction.save();
-
 
       return {
         ...transaction._doc,
         id: transaction._doc._id,
         payer: userHelper.bind(this, transaction._doc.payer),
-        owers: owerInfosHelper.bind(this, transaction._doc.owers),
+        owerInfos: owerInfosHelper.bind(this, transaction._doc.owerInfos),
+        group: groupHelper.bind(this, transaction._doc.group)
       };
     },
 
