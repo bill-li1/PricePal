@@ -9,9 +9,10 @@ import {
   Typography,
 } from '@material-ui/core';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { useMutation, gql } from '@apollo/client';
 import { Alert } from '@material-ui/lab';
+import { AuthContext } from '../src/context/auth';
 
 const useStyles = makeStyles((theme) => ({
   login: {
@@ -29,6 +30,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 export default function register() {
   const styles = useStyles();
+  const context = useContext(AuthContext);
   const router = useRouter();
   const [values, setValues] = useState({
     firstName: '',
@@ -42,9 +44,10 @@ export default function register() {
   const [passwordError, setPasswordError] = useState('');
 
   const [addUser, { loading }] = useMutation(REGISTER_USER, {
-    onCompleted: (data) => {
-      console.log(data);
-      router.push('/dashboard');
+    update(_, { data: { register: userData } }) {
+      console.log(userData);
+      context.login(userData);
+      router.push('/dashboard')
     },
     onError: (error) => {
       setErrors(error.graphQLErrors[0].extensions.errors);

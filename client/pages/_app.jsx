@@ -2,6 +2,7 @@ import { makeStyles, MuiThemeProvider } from '@material-ui/core';
 import { pricePalTheme } from '../src/config/pricePalTheme';
 import Head from 'next/head';
 import { Header } from '../src/components/Header';
+import { AuthProvider } from '../src/context/auth';
 import {
   ApolloClient,
   InMemoryCache,
@@ -61,14 +62,16 @@ function MyApp({ Component, pageProps }) {
         <title>PricePal</title>
       </Head>
       <ApolloProvider client={client}>
-        <MuiThemeProvider theme={pricePalTheme}>
-          <div className={styles.root}>
-            <Header />
-            <div className={styles.content}>
-              <Component {...pageProps} />
+        <AuthProvider>
+          <MuiThemeProvider theme={pricePalTheme}>
+            <div className={styles.root}>
+              <Header />
+              <div className={styles.content}>
+                <Component {...pageProps} />
+              </div>
             </div>
-          </div>
-        </MuiThemeProvider>
+          </MuiThemeProvider>
+        </AuthProvider>
       </ApolloProvider>
     </>
   );
