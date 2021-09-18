@@ -114,6 +114,6 @@ module.exports = gql`
 
     createGroup(groupInput: GroupInput!): Group! #completed, tested
     editGroup(groupId: ID!, groupInput: GroupInput!): Group! #completed, tested
-    setGroupActive(groupId: ID!, active: Boolean!): Group! #completed
+    setGroupActive(groupId: ID!, active: Boolean!): Group! #completed, tested
   }
 `;

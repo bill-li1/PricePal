@@ -1,6 +1,6 @@
 const Group = require('../../models/Group');
 const checkAuth = require('../../util/check-auth');
-const { multiUsersHelper } = require('../middleware');
+const { multiUsersHelper } = require('../binder');
 
 module.exports = {
   Query: {

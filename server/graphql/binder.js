@@ -55,10 +55,10 @@ const multiUsersHelper = async (userIds) => {
 
 const groupsHelper = async (groupIds) => {
   try {
-    console.log('groupIds', groupIds)
+    // console.log('groupIds', groupIds)
     return await groupIds.map(async (groupId, idx) => {
       const group = await Group.findById(groupId)
-      console.log('found group '+ idx +': ', group)
+      // console.log('found group '+ idx +': ', group)
       return {
         ...group._doc,
         users: multiUsersHelper.bind(this, group._doc.users)

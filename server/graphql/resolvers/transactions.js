@@ -3,7 +3,7 @@ const Transaction = require('../../models/Transaction');
 const User = require('../../models/User');
 const OwerInfo = require('../../models/OwerInfo');
 const checkAuth = require('../../util/check-auth');
-const { userHelper, owerInfosHelper } = require('../middleware');
+const { userHelper, owerInfosHelper } = require('../binder');
 
 module.exports = {
   Query: {
