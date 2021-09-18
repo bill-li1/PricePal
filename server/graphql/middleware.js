@@ -1,6 +1,7 @@
 const Transaction = require('../models/Transaction');
 const User = require('../models/User');
 const OwerInfo = require('../models/OwerInfo');
+const Group = require('../models/Group');
 
 const owerInfosHelper = async (owerInfoIds) => {
   console.log('owerInfoIds', owerInfoIds);
@@ -40,30 +41,28 @@ const userHelper = async (userId) => {
   }
 };
 
-const groupsHelper = async (groupIds) => {
-  console.log('groupIds', groupIds)
-
+const multiUsersHelper = async (userIds) => {
   try {
-    return groupIds.map(async (groupId) => {
-      const group = await Group.findById(groupId)
-
-      return {
-        ...group._doc,
-        users: multiUsersHelper.bind(this, group._doc.users)
-      }
+    return await userIds.map(async (user) => {
+      const newUser = await userHelper(user)
+      // console.log('newUser', newUser)
+      return newUser
     });
   } catch (err) {
     throw new Error(err);
   }
 };
 
-const multiUsersHelper = async (userIds) => {
-  console.log('multiUser userIds', userIds)
+const groupsHelper = async (groupIds) => {
   try {
-    return await userIds.map(async (user) => {
-      const newUser = await userHelper(user)
-      console.log('newUser', newUser)
-      return newUser
+    console.log('groupIds', groupIds)
+    return await groupIds.map(async (groupId, idx) => {
+      const group = await Group.findById(groupId)
+      console.log('found group '+ idx +': ', group)
+      return {
+        ...group._doc,
+        users: multiUsersHelper.bind(this, group._doc.users)
+      }
     });
   } catch (err) {
     throw new Error(err);
