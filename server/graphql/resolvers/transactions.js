@@ -3,7 +3,7 @@ const Transaction = require('../../models/Transaction');
 const User = require('../../models/User');
 const OwerInfo = require('../../models/OwerInfo');
 const checkAuth = require('../../util/check-auth');
-const { userHelper, owerInfosHelper } = require('../middleware');
+const { userHelper, owerInfosHelper } = require('../binder');
 
 module.exports = {
   Query: {
@@ -69,7 +69,6 @@ module.exports = {
   Mutation: {
     async createTransaction(_, { transactionInput }, context) {
       const user = checkAuth(context);
-
       //TODO change owers to array of users instead of singular user.
       //update in typeDefs as well.
       // const owerUsers = await OwerInfo.find({

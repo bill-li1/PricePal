@@ -5,7 +5,8 @@ const { UserInputError } = require('apollo-server');
 const { validateRegisterInput, validateLoginInput } = require('../../util/validators.js');
 const { SECRET_KEY } = require('../../config');
 const User = require('../../models/User');
-const { groupsHelper } = require('../middleware');
+const Group = require('../../models/Group');
+const { groupsHelper } = require('../binder');
 
 function generateToken(user) {
   return jwt.sign(
@@ -21,23 +22,23 @@ function generateToken(user) {
 }
 
 module.exports = {
-  Query: {
-    async getUserById(_, { userId }) {
-      try {
-        const user = await User.findById(userId);
-        if (user) {
-          return {
-            ...user._doc,
-            groups: groupsHelper.bind(this, transaction._doc.groups),
-          };
-        } else {
-          throw new Error('Transaction not found');
-        }
-      } catch (err) {
-        throw new Error(err);
-      }
-    },
-  },
+  // Query: {
+  //   async getUserById(_, { userId }) {
+  //     try {
+  //       const user = await User.findById(userId);
+  //       if (user) {
+  //         return {
+  //           ...user._doc,
+  //           groups: groupsHelper.bind(this, transaction._doc.groups),
+  //         };
+  //       } else {
+  //         throw new Error('Transaction not found');
+  //       }
+  //     } catch (err) {
+  //       throw new Error(err);
+  //     }
+  //   },
+  // },
   Mutation: {
     async login(_, { loginInput: { email, password } }) {
       console.log('login');
@@ -65,6 +66,7 @@ module.exports = {
       return {
         ...user._doc,
         id: user._id,
+        groups: groupsHelper.bind(this, user._doc.groups),
         token,
       };
     },
@@ -94,6 +96,8 @@ module.exports = {
         profileImg,
       });
 
+      newUser.groups = [];
+      
       const res = await newUser.save();
 
       const token = generateToken(res);
@@ -101,21 +105,29 @@ module.exports = {
       return {
         ...res._doc,
         id: res._id,
+        groups: groupsHelper.bind(this, user._doc.groups),
         token,
       };
     },
-    async addGroupToUser(_, { userId, groupId }) {
-      const res = await User.findById(userId);
-      res.groups.push(groupId);
-      await res.save();
+    async addGroupUser(_, { groupId, userId }) {
+      const user = await User.findById(userId);
+      if(!user.groups.includes(groupId)){
+        user.groups.push(groupId);
+        await user.save();
+      }
 
-      console.log('res', res);
-      console.log('res._doc', { ...res._doc });
-      const token = generateToken(res);
+      const group = await Group.findById(groupId);
+      if(!group.users.includes(userId)){
+        group.users.push(userId);
+        await group.save();
+      }
+
+      const token = generateToken(user);
 
       return {
-        ...res._doc,
-        id: res._id,
+        ...user._doc,
+        id: user._id,
+        groups: groupsHelper.bind(this, user._doc.groups),
         token,
       };
     },
@@ -130,13 +142,12 @@ module.exports = {
       res.profileImg = profileImg;
       await res.save();
 
-      console.log('res', res);
-      console.log('res._doc', { ...res._doc });
       const token = generateToken(res);
 
       return {
         ...res._doc,
         id: res._id,
+        groups: groupsHelper.bind(this, res._doc.groups),
         token,
       };
     },
