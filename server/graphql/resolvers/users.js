@@ -97,9 +97,11 @@ module.exports = {
       });
 
       newUser.groups = [];
-      
+
       const res = await newUser.save();
       const token = generateToken(res);
+
+      console.log(user._doc.groups);
 
       return {
         ...res._doc,
@@ -110,13 +112,13 @@ module.exports = {
     },
     async addGroupUser(_, { groupId, userId }) {
       const user = await User.findById(userId);
-      if(!user.groups.includes(groupId)){
+      if (!user.groups.includes(groupId)) {
         user.groups.push(groupId);
         await user.save();
       }
 
       const group = await Group.findById(groupId);
-      if(!group.users.includes(userId)){
+      if (!group.users.includes(userId)) {
         group.users.push(userId);
         await group.save();
       }
