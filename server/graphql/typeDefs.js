@@ -112,8 +112,9 @@ module.exports = gql`
     createOwerInfo(owerInfoInput: OwerInfoInput!): OwerInfo!
     deleteOwerInfo(owerInfoId: ID!): String!
 
-    createGroup(groupInput: GroupInput!) : Group!
+    createGroup(groupInput: GroupInput!): Group!
     editGroup(groupId: ID!, groupInput: GroupInput!): Group!
-    archiveGroup(groupId: ID!) : Group!
+    addUserToGroup(groupId: ID!, userId: ID!): Group!
+    archiveGroup(groupId: ID!): Group!
   }
 `;

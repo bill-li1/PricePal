@@ -64,6 +64,19 @@ module.exports = {
       };
     },
 
+    async addUserToGroup(_, { groupId, userId }) {
+      const group = await Group.findById(groupId);
+      group.users.push(userId);
+      
+      await group.save();
+
+      return {
+        ...group._doc,
+        id: group._doc._id,
+        users: multiUsersHelper.bind(this, group._doc.users),
+      };
+    },
+
     async archiveGroup(_, { groupId }) {
       try {
         const group = await Group.findById(groupId);
