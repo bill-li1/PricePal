@@ -18,6 +18,7 @@ const useStyles = makeStyles((theme) => ({
   },
   content: {
     flex: 1,
+    padding: theme.spacing(2),
   },
   '@global': {
     'html,body,main': {

@@ -40,13 +40,28 @@ export function CreateGroupForm(props) {
   const [addGroup, { loading }] = useMutation(CREATE_GROUP, {
     update(_, { data: { createGroup: groupData } }) {
       console.log(groupData);
-      context.login(groupData);
+      addGroupToUser({
+        variables: {
+          addGroupUserGroupId: groupData.id,
+          addGroupUserUserId: user.id,
+        },
+      });
     },
     onError: (error) => {
       console.log(JSON.stringify(error, null, 2));
       if (error.graphQLErrors[0].extensions) {
         setErrors(error.graphQLErrors[0].extensions.errors);
       }
+    },
+  });
+
+  const [addGroupToUser] = useMutation(ADD_GROUP_TO_USER, {
+    update(_, { data: { addGroupToUser: data } }) {
+      console.log(data);
+    },
+    onError: (error) => {
+      console.log(JSON.stringify(error, null, 2));
+      setErrors(error.graphQLErrors[0].extensions.errors);
     },
   });
 
@@ -149,6 +164,14 @@ const CREATE_GROUP = gql`
       bannerImg
       locked
       active
+    }
+  }
+`;
+
+const ADD_GROUP_TO_USER = gql`
+  mutation Mutation($addGroupUserGroupId: ID, $addGroupUserUserId: ID) {
+    addGroupUser(groupId: $addGroupUserGroupId, userId: $addGroupUserUserId) {
+      id
     }
   }
 `;
