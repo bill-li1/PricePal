@@ -44,6 +44,7 @@ export default function Dashboard() {
       getUserByIdUserId: user.id,
     },
   });
+
   return (
     <section className={styles.root}>
       <Grid container alignItems="center" justifyContent="center">
