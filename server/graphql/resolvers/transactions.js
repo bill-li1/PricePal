@@ -13,6 +13,8 @@ module.exports = {
         if (transaction) {
           return {
             ...transaction._doc,
+            id: transaction._id,
+            group: groupHelper.bind(this, transaction._doc.group),
             payer: userHelper.bind(this, transaction._doc.payer),
             owerInfos: owerInfosHelper.bind(this, transaction._doc.owerInfos),
           };
@@ -27,7 +29,6 @@ module.exports = {
       try {
         const transactions = await Transaction.find( { "$or": [{payer: userId}, {owerIds: userId} ]} );
         // const transactions = await Transaction.find({ payer: userId });
-        console.log('transactions with the id ' + userId + ': ', transactions);
         if (transactions) {
           return transactions.map((transaction) => ({
             ...transaction._doc,
@@ -45,9 +46,9 @@ module.exports = {
     },
     async getTransactionsByGroupId(_, { groupId }) {
       try {
-        const transactions = await Transaction.find( { "$or": [{payer: userId}, {owerIds: userId} ]} );
-        // const transactions = await Transaction.find({ payer: userId });
-        console.log('transactions with the id ' + userId + ': ', transactions);
+        console.log('groupId', groupId)
+        const transactions = await Transaction.find( {group: groupId } );
+        console.log('transactions', transactions)
         if (transactions) {
           return transactions.map((transaction) => ({
             ...transaction._doc,
@@ -91,7 +92,26 @@ module.exports = {
         group: groupHelper.bind(this, transaction._doc.group)
       };
     },
+    async editTransaction(_, { transactionId, transactionInput }, context) {
+      // const user = checkAuth(context);
+      const transaction = await Transaction.findById(transactionId);
 
+      transaction.title = transactionInput.title
+      transaction.date = transactionInput.date
+      transaction.description = transactionInput.description
+      transaction.img = transactionInput.img
+      transaction.payer = transactionInput.payer
+
+      await transaction.save();
+
+      return {
+        ...transaction._doc,
+        id: transaction._doc._id,
+        payer: userHelper.bind(this, transaction._doc.payer),
+        owerInfos: owerInfosHelper.bind(this, transaction._doc.owerInfos),
+        group: groupHelper.bind(this, transaction._doc.group)
+      };
+    },
     async deleteTransaction(_, { transactionId }, context) {
       // const user = checkAuth(context);
 
