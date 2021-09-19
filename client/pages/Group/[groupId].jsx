@@ -1,32 +1,28 @@
-
-// @ts-ignore
-import { Button, makeStyles, TextField } from '@material-ui/core';
+// @ts-nocheck
+import { makeStyles } from '@material-ui/core';
 import { useRouter } from 'next/router';
 import { useState, useContext } from 'react';
 import { useQuery, gql } from '@apollo/client';
-import { Alert } from '@material-ui/lab';
-import { AuthContext } from '../src/context/auth';
-// import { ExpenseCard } from 'components/Expenses/ExpenseCard';
-import { ExpensePreview } from 'components/Expenses/ExpensePreview';
-// import { useEffect } from 'react';
+import { AuthContext } from '../../src/context/auth';
 
 export default function register() {
   const styles = useStyles();
   const [group, setGroup] = useState({});
+  const [errors, setErrors] = useState({});
   const [transactions, setTransactions] = useState([]);
-  const groupId = '6145666142748e62305a65ff';
-  const context = useContext(AuthContext);
   const router = useRouter();
+  const { groupId } = router.query;
+  const context = useContext(AuthContext);
 
   const { loading } = useQuery(GROUP_TRANSACTIONS, {
     variables: { getTransactionsByGroupIdGroupId: groupId },
     onCompleted: (data) => {
       setTransactions(data.getTransactionsByGroupId);
-      console.log('data', data.getTransactionsByGroupId);
+      console.log('data', data.getTransactionsByGroupId)
     },
     onError: (error) => {
       console.log('ploop', error);
-    },
+    }
   });
 
   useQuery(GROUP_INFO, {
@@ -35,19 +31,23 @@ export default function register() {
       setGroup(data.getGroupById);
     },
     onError: (error) => {
-      console.log(error);
-      setErrors(error.graphQLErrors[0].extensions.errors);
+      console.log(JSON.stringify(error, null, 2));
+      setErrors(error.grahQLErrors[0].extensions.errors);
     },
   });
 
   const [showInput, setShowInput] = useState(false);
   const [inputValue, setInput] = useState('');
 
+
   return (
     <div className={styles.mainWrapper}>
       <div className={styles.mainContent}>
         <div className={styles.mainWrapper1}>
-          <div className={styles.mainBgImage}>
+          <div
+            className={styles.mainBgImage}
+            style={{ backgroundImage: `url(${group.bannerImg})` }}
+          >
             <div className={styles.mainEmptyStyles} />
           </div>
           <div className={styles.mainText}>
@@ -65,31 +65,19 @@ export default function register() {
           <p>Members</p>
           <ul>
             {group.users?.map((user, idx) => {
-              return <li key={idx}>{user.firstName + ' ' + user.lastName}</li>;
+              return <li key = {idx}>{user.firstName + ' ' + user.lastName}</li>;
             })}
           </ul>
         </div>
         <div className={styles.mainAnnouncements}>
-          <p
-            onClick={() => {
-              console.log('transactions', transactions);
-            }}
-          >
-            ASDF
-          </p>
-          <p
-            onClick={() => {
-              console.log('group', group);
-            }}
-          >
-            group
-          </p>
-          {transactions?.map((transaction) => {
-            console.log(transactions);
-            return <div style={{margin: '22'}}>
-            <ExpensePreview transaction={transaction} />
-            </div>;
-          })}
+        <p onClick = {() => {console.log('transactions', transactions)}}>ASDF</p>
+        <p onClick = {() => {console.log('group', group)}}>group</p>
+          <ul>
+            {transactions?.map((transaction) => {
+              console.log(transactions);
+              return <ExpensePreview transaction={transaction}/>;
+            })}
+          </ul>
         </div>
       </div>
     </div>
@@ -145,7 +133,7 @@ const GROUP_TRANSACTIONS = gql`
       }
     }
   }
-`;
+`; 
 
 const useStyles = makeStyles((theme) => ({
   mainWrapper: {
@@ -167,8 +155,6 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
   },
   mainBgImage: {
-    backgroundImage:
-      'url(https://gstatic.com/classroom/themes/img_backtoschool.jpg)',
     backgroundSize: 'cover',
     height: '100%',
     left: '0',
