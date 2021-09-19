@@ -57,10 +57,9 @@ export default function Dashboard() {
               data.getUserById &&
               data.getUserById.groups &&
               data.getUserById.groups.map((group) => {
-                console.log(group);
                 return (
                   <Grid item xs={12} md={4}>
-                    <GroupCard groupId={group.id} />
+                    <GroupCard group={group} />
                   </Grid>
                 );
               })}
@@ -84,6 +83,11 @@ const GET_USER = gql`
       lastName
       groups {
         id
+        title
+        description
+        bannerImg
+        active
+        locked
       }
     }
   }

@@ -11,6 +11,7 @@ import { makeStyles } from '@material-ui/styles';
 import gql from 'graphql-tag';
 import LockIcon from '@material-ui/icons/Lock';
 import LockOpenIcon from '@material-ui/icons/LockOpen';
+import Link from 'next/link';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -30,44 +31,32 @@ const useStyles = makeStyles((theme) => ({
 
 export function GroupCard(props) {
   const styles = useStyles();
-
-  const { loading, data } = useQuery(GET_GROUP, {
-    onError: (error) => {
-      console.log(JSON.stringify(error, null, 2));
-    },
-    variables: {
-      getGroupByIdGroupId: props.groupId,
-    },
-  });
-  if (!data) {
-    return <h1>Could not get group data</h1>;
-  }
-  console.log('groupId', props.groupId);
-  console.log('data', data);
-
-  const groupData = data.getGroupById;
+  const { group } = props;
   return (
-    <Card className={styles.root}>
-      <CardActionArea>
-        <CardMedia className={styles.media} image={groupData.bannerImg} />
-        <CardContent>
-          <Typography variant="h1">
-            <Grid container alignItems="center" className={styles.container}>
-              {groupData.title}
-              <div className={styles.space} />
-              {groupData.locked ? <LockIcon /> : <LockOpenIcon />}
-            </Grid>
-          </Typography>
-          <Typography variant="subtitle1">{groupData.description}</Typography>
-        </CardContent>
-      </CardActionArea>
-    </Card>
+    <Link href={`/Group/${group.id}`}>
+      <Card className={styles.root}>
+        <CardActionArea>
+          <CardMedia className={styles.media} image={group.bannerImg} />
+          <CardContent>
+            <Typography variant="h1">
+              <Grid container alignItems="center" className={styles.container}>
+                {group.title}
+                <div className={styles.space} />
+                {group.locked ? <LockIcon /> : <LockOpenIcon />}
+              </Grid>
+            </Typography>
+            <Typography variant="subtitle1">{group.description}</Typography>
+          </CardContent>
+        </CardActionArea>
+      </Card>
+    </Link>
   );
 }
 
 const GET_GROUP = gql`
   query Query($getGroupByIdGroupId: ID!) {
     getGroupById(groupId: $getGroupByIdGroupId) {
+      id
       title
       description
       bannerImg
