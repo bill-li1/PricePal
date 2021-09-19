@@ -34,6 +34,8 @@ const transactionHelper = async (transactionId) => {
 const userHelper = async (userId) => {
   try {
     const user = await User.findById(userId);
+    console.log('userHelper id + User', userId, user)
+
     return {
       ...user._doc,
       id: user._doc._id,
@@ -56,11 +58,9 @@ const multiUsersHelper = async (userIds) => {
 };
 
 const groupHelper = async (groupId) => {
-  console.log('groupId', groupId);
-
   try {
     const group = await Group.findById(groupId);
-    // console.log('found group: ', group)
+    console.log('groupHelper group: ', group)
     return {
       ...group._doc,
       id: group._doc._id,

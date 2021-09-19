@@ -30,6 +30,7 @@ module.exports = {
         const transactions = await Transaction.find( { "$or": [{payer: userId}, {owerIds: userId} ]} );
         // const transactions = await Transaction.find({ payer: userId });
         if (transactions) {
+          console.log('transactions', transactions)
           return transactions.map((transaction) => ({
             ...transaction._doc,
             id: transaction._id,
@@ -50,6 +51,7 @@ module.exports = {
         const transactions = await Transaction.find( {group: groupId } );
         console.log('transactions', transactions)
         if (transactions) {
+          console.log('doc',transactions[0]._doc)
           return transactions.map((transaction) => ({
             ...transaction._doc,
             id: transaction._id,

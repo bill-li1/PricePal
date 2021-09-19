@@ -126,6 +126,33 @@ module.exports = {
         await group.save();
       }
 
+
+      // const token = generateToken(user);
+
+      return {
+        ...user._doc,
+        id: user._id,
+        groups: multiGroupsHelper.bind(this, user._doc.groups),
+        // token,
+      };
+    },
+
+    async addGroupUserByCode(_, { code, userId }) {
+      const groupRes = await Group.find({code});
+      const group = groupRes[0];
+      const user = await User.findById(userId);
+
+      if (!user.groups.includes(group._id)) {
+        user.groups.push(group._id);
+        await user.save();
+      } 
+      else {
+        throw new Error('User already exists in group')
+      }
+      if (!group.users.includes(userId)) {
+        group.users.push(userId);
+        await group.save();
+      }
       // const token = generateToken(user);
 
       return {

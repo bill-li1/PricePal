@@ -108,6 +108,7 @@ module.exports = gql`
     login(loginInput: LoginInput): User! #completed, tested
     editUser(editUserInput: EditUserInput): User! #completed, tested
     addGroupUser(groupId: ID, userId: ID): User! #completed, tested
+    addGroupUserByCode(code: String, userId: ID): User! #completed, tested
 
     createTransaction(transactionInput: TransactionInput!): Transaction! #completed, tested
     editTransaction(transactionId: ID!, transactionInput: TransactionInput!): Transaction! #completed, tested
