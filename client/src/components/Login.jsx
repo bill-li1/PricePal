@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export function Login(open) {
+export function Login(props) {
   const context = useContext(AuthContext);
   const styles = useStyles();
   const router = useRouter();
@@ -49,9 +49,10 @@ export function Login(open) {
     update(_, { data: { login: userData } }) {
       console.log(userData);
       context.login(userData);
-      router.push('/dashboard');
+      router.push('/Dashboard');
     },
     onError: (error) => {
+      console.log(JSON.stringify(error, null, 2));
       setErrors(error.graphQLErrors[0].extensions.errors);
     },
   });
@@ -73,8 +74,9 @@ export function Login(open) {
       console.log(error);
     }
   };
+
   return (
-    <Dialog open={open} className={styles.login}>
+    <Dialog open={props.open} className={styles.login}>
       <DialogTitle>
         <Typography variant="h1">PricePal</Typography>
       </DialogTitle>
@@ -144,7 +146,6 @@ const LOGIN_USER = gql`
     login(loginInput: $loginLoginInput) {
       id
       email
-      token
       profileImg
       firstName
       lastName

@@ -13,6 +13,8 @@ module.exports = {
         if (transaction) {
           return {
             ...transaction._doc,
+            id: transaction._id,
+            group: groupHelper.bind(this, transaction._doc.group),
             payer: userHelper.bind(this, transaction._doc.payer),
             owerInfos: owerInfosHelper.bind(this, transaction._doc.owerInfos),
           };
@@ -25,9 +27,8 @@ module.exports = {
     },
     async getTransactionsByUserId(_, { userId }) {
       try {
-        const transactions = await Transaction.find({ dim_cm: { payer: userId, owerIds: userId } });
+        const transactions = await Transaction.find( { "$or": [{payer: userId}, {owerIds: userId} ]} );
         // const transactions = await Transaction.find({ payer: userId });
-        console.log('transactions with the id ' + userId + ': ', transactions);
         if (transactions) {
           return transactions.map((transaction) => ({
             ...transaction._doc,
@@ -43,23 +44,30 @@ module.exports = {
         throw new Error(err);
       }
     },
-    // async getTransactionsByGroupId(_, { groupId }) {
-    //   try {
-    //     const transactions = await Transaction.find({ group: groupId });
-    //     console.log('group transactions with id ' + groupId + ': ', transactions);
-    //     if (transactions) {
-    //       return transactions;
-    //     } else {
-    //       throw new Error('Transactions not found');
-    //     }
-    //   } catch (err) {
-    //     throw new Error(err);
-    //   }
-    // },
+    async getTransactionsByGroupId(_, { groupId }) {
+      try {
+        console.log('groupId', groupId)
+        const transactions = await Transaction.find( {group: groupId } );
+        console.log('transactions', transactions)
+        if (transactions) {
+          return transactions.map((transaction) => ({
+            ...transaction._doc,
+            id: transaction._id,
+            group: groupHelper.bind(this, transaction._doc.group),
+            payer: userHelper.bind(this, transaction._doc.payer),
+            owerInfos: owerInfosHelper.bind(this, transaction._doc.owerInfos),
+          }));
+        } else {
+          throw new Error('Transactions not found');
+        }
+      } catch (err) {
+        throw new Error(err);
+      }
+    },
   },
   Mutation: {
     async createTransaction(_, { transactionInput }, context) {
-      const user = checkAuth(context);
+      // const user = checkAuth(context);
       console.log('transactionInput', transactionInput.owerIds);
 
       const newTransaction = new Transaction({
@@ -84,9 +92,28 @@ module.exports = {
         group: groupHelper.bind(this, transaction._doc.group)
       };
     },
+    async editTransaction(_, { transactionId, transactionInput }, context) {
+      // const user = checkAuth(context);
+      const transaction = await Transaction.findById(transactionId);
 
+      transaction.title = transactionInput.title
+      transaction.date = transactionInput.date
+      transaction.description = transactionInput.description
+      transaction.img = transactionInput.img
+      transaction.payer = transactionInput.payer
+
+      await transaction.save();
+
+      return {
+        ...transaction._doc,
+        id: transaction._doc._id,
+        payer: userHelper.bind(this, transaction._doc.payer),
+        owerInfos: owerInfosHelper.bind(this, transaction._doc.owerInfos),
+        group: groupHelper.bind(this, transaction._doc.group)
+      };
+    },
     async deleteTransaction(_, { transactionId }, context) {
-      const user = checkAuth(context);
+      // const user = checkAuth(context);
 
       try {
         const transaction = await Transaction.findById(transactionId);

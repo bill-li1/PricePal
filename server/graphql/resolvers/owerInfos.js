@@ -37,7 +37,7 @@ module.exports = {
   },
   Mutation: {
     async createOwerInfo(_, { owerInfoInput }, context) {
-      const user = checkAuth(context);
+      // const user = checkAuth(context);
       console.log('owerInfoInput.user', owerInfoInput.user);
       const newOwerInfo = new OwerInfo({
         user: owerInfoInput.user,
@@ -56,7 +56,7 @@ module.exports = {
       }
     },
     async editOwerInfo(_, { owerInfoId, owerInfoInput }, context) {
-      const user = checkAuth(context);
+      // const user = checkAuth(context);
 
       const owerInfo = await OwerInfo.findById(owerInfoId);
       owerInfo.amount = owerInfoInput.amount;
@@ -70,7 +70,7 @@ module.exports = {
       };
     },
     async deleteOwerInfo(_, { owerInfoId }, context) {
-      const user = checkAuth(context);
+      // const user = checkAuth(context);
       try {
         const owerInfo = await OwerInfo.findById(owerInfoId);
         await owerInfo.delete();

@@ -7,7 +7,8 @@ module.exports = {
   Query: {
     ...transactionsResolvers.Query,
     ...owerInfoResolvers.Query,
-    ...groupResolvers.Query
+    ...groupResolvers.Query,
+    ...usersResolvers.Query
   },
   Mutation: {
     ...usersResolvers.Mutation,

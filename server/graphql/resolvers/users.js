@@ -22,23 +22,23 @@ function generateToken(user) {
 }
 
 module.exports = {
-  // Query: {
-  //   async getUserById(_, { userId }) {
-  //     try {
-  //       const user = await User.findById(userId);
-  //       if (user) {
-  //         return {
-  //           ...user._doc,
-  //           groups: groupsHelper.bind(this, transaction._doc.groups),
-  //         };
-  //       } else {
-  //         throw new Error('Transaction not found');
-  //       }
-  //     } catch (err) {
-  //       throw new Error(err);
-  //     }
-  //   },
-  // },
+  Query: {
+    async getUserById(_, { userId }) {
+      try {
+        const user = await User.findById(userId);
+        if (user) {
+          return {
+            ...user._doc,
+            groups: groupsHelper.bind(this, user._doc.groups),
+          };
+        } else {
+          throw new Error('User not found');
+        }
+      } catch (err) {
+        throw new Error(err);
+      }
+    },
+  },
   Mutation: {
     async login(_, { loginInput: { email, password } }) {
       console.log('login');
@@ -61,13 +61,13 @@ module.exports = {
         throw new UserInputError('Wrong credentials', { errors });
       }
 
-      const token = generateToken(user);
+      // const token = generateToken(user);
 
       return {
         ...user._doc,
         id: user._id,
         groups: multiGroupsHelper.bind(this, user._doc.groups),
-        token,
+        // token,
       };
     },
     async register(_, { registerInput: { firstName, lastName, email, password, profileImg } }) {
@@ -99,7 +99,7 @@ module.exports = {
       newUser.groups = [];
 
       const res = await newUser.save();
-      const token = generateToken(res);
+      // const token = generateToken(res);
 
       console.log(user._doc.groups);
 
@@ -107,7 +107,7 @@ module.exports = {
         ...res._doc,
         id: res._id,
         groups: [],
-        token,
+        // token,
       };
     },
     async addGroupUser(_, { groupId, userId }) {
@@ -126,13 +126,13 @@ module.exports = {
         await group.save();
       }
 
-      const token = generateToken(user);
+      // const token = generateToken(user);
 
       return {
         ...user._doc,
         id: user._id,
         groups: multiGroupsHelper.bind(this, user._doc.groups),
-        token,
+        // token,
       };
     },
     async editUser(_, { editUserInput: { userId, firstName, lastName, password, profileImg } }) {
@@ -146,7 +146,7 @@ module.exports = {
       res.profileImg = profileImg;
       await res.save();
 
-      const token = generateToken(res);
+      // const token = generateToken(res);
 
       return {
         ...res._doc,
