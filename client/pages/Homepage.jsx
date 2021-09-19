@@ -1,16 +1,18 @@
-// @ts-nocheck
 import { Button, makeStyles, TextField } from '@material-ui/core';
 import { useRouter } from 'next/router';
 import { useState, useContext } from 'react';
 import { useQuery, gql } from '@apollo/client';
 import { Alert } from '@material-ui/lab';
 import { AuthContext } from '../src/context/auth';
+// import { ExpenseCard } from 'components/Expenses/ExpenseCard';
+import { ExpensePreview } from 'components/ExpensePreview';
+// import { useEffect } from 'react';
 
 export default function register() {
   const styles = useStyles();
   const [group, setGroup] = useState({});
   const [transactions, setTransactions] = useState([]);
-  const groupId = '6145672e61d9396dc4b726a8';
+  const groupId = '6145666142748e62305a65ff';
   const context = useContext(AuthContext);
   const router = useRouter();
 
@@ -18,7 +20,11 @@ export default function register() {
     variables: { getTransactionsByGroupIdGroupId: groupId },
     onCompleted: (data) => {
       setTransactions(data.getTransactionsByGroupId);
+      console.log('data', data.getTransactionsByGroupId)
     },
+    onError: (error) => {
+      console.log('ploop', error);
+    }
   });
 
   useQuery(GROUP_INFO, {
@@ -34,6 +40,7 @@ export default function register() {
 
   const [showInput, setShowInput] = useState(false);
   const [inputValue, setInput] = useState('');
+
 
   return (
     <div className={styles.mainWrapper}>
@@ -56,16 +63,18 @@ export default function register() {
         <div className={styles.mainStatus}>
           <p>Members</p>
           <ul>
-            {group.users?.map((user) => {
-              return <li>{user.firstName + ' ' + user.lastName}</li>;
+            {group.users?.map((user, idx) => {
+              return <li key = {idx}>{user.firstName + ' ' + user.lastName}</li>;
             })}
           </ul>
         </div>
         <div className={styles.mainAnnouncements}>
+        <p onClick = {() => {console.log('transactions', transactions)}}>ASDF</p>
+        <p onClick = {() => {console.log('group', group)}}>group</p>
           <ul>
             {transactions?.map((transaction) => {
               console.log(transactions);
-              return <li>{transaction.title}</li>;
+              return <ExpensePreview transaction={transaction}/>;
             })}
           </ul>
         </div>
@@ -123,7 +132,7 @@ const GROUP_TRANSACTIONS = gql`
       }
     }
   }
-`;
+`; 
 
 const useStyles = makeStyles((theme) => ({
   mainWrapper: {
