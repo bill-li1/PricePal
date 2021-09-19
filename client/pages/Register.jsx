@@ -50,10 +50,8 @@ export default function register() {
       router.push('/Dashboard');
     },
     onError: (error) => {
-      console.log(error);
-      if (error.graphQLErrors[0].extensions) {
-        setErrors(error.graphQLErrors[0].extensions.errors);
-      }
+      console.log(JSON.stringify(error, null, 2));
+      setErrors(error.graphQLErrors[0].extensions.errors);
     },
   });
 
@@ -182,9 +180,7 @@ export default function register() {
 const REGISTER_USER = gql`
   mutation Mutation($registerRegisterInput: RegisterInput) {
     register(registerInput: $registerRegisterInput) {
-      id
       email
-      token
       profileImg
       firstName
       lastName
