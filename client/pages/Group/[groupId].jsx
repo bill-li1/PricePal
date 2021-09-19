@@ -1,18 +1,18 @@
 // @ts-nocheck
-import { Button, makeStyles, TextField } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core';
 import { useRouter } from 'next/router';
 import { useState, useContext } from 'react';
 import { useQuery, gql } from '@apollo/client';
-import { Alert } from '@material-ui/lab';
-import { AuthContext } from '../src/context/auth';
+import { AuthContext } from '../../src/context/auth';
 
 export default function register() {
   const styles = useStyles();
   const [group, setGroup] = useState({});
+  const [errors, setErrors] = useState({});
   const [transactions, setTransactions] = useState([]);
-  const groupId = '6145672e61d9396dc4b726a8';
-  const context = useContext(AuthContext);
   const router = useRouter();
+  const { groupId } = router.query;
+  const context = useContext(AuthContext);
 
   const { loading } = useQuery(GROUP_TRANSACTIONS, {
     variables: { getTransactionsByGroupIdGroupId: groupId },
@@ -27,7 +27,7 @@ export default function register() {
       setGroup(data.getGroupById);
     },
     onError: (error) => {
-      console.log(error);
+      console.log(JSON.stringify(error, null, 2));
       setErrors(error.grahQLErrors[0].extensions.errors);
     },
   });
@@ -39,7 +39,10 @@ export default function register() {
     <div className={styles.mainWrapper}>
       <div className={styles.mainContent}>
         <div className={styles.mainWrapper1}>
-          <div className={styles.mainBgImage}>
+          <div
+            className={styles.mainBgImage}
+            style={{ backgroundImage: `url(${group.bannerImg})` }}
+          >
             <div className={styles.mainEmptyStyles} />
           </div>
           <div className={styles.mainText}>
@@ -145,8 +148,6 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
   },
   mainBgImage: {
-    backgroundImage:
-      'url(https://gstatic.com/classroom/themes/img_backtoschool.jpg)',
     backgroundSize: 'cover',
     height: '100%',
     left: '0',
