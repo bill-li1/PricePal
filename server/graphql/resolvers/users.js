@@ -139,6 +139,9 @@ module.exports = {
     async addGroupUserByCode(_, { code, userId }) {
       const groupRes = await Group.find({code});
       const group = groupRes[0];
+      if (!group) {
+        throw new Error('Code does not exist')
+      }
       const user = await User.findById(userId);
 
       if (!user.groups.includes(group._id)) {
