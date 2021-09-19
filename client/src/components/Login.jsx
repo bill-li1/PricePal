@@ -49,7 +49,7 @@ export function Login(props) {
     update(_, { data: { login: userData } }) {
       // console.log(userData);
       context.login(userData);
-      router.push('/Dashboard');
+      router.push('/dashboard');
     },
     onError: (error) => {
       console.log(JSON.stringify(error, null, 2));
