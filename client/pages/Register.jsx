@@ -51,7 +51,9 @@ export default function register() {
     },
     onError: (error) => {
       console.log(error);
-      setErrors(error.graphQLErrors[0].extensions.errors);
+      if (error.graphQLErrors[0].extensions) {
+        setErrors(error.graphQLErrors[0].extensions.errors);
+      }
     },
   });
 

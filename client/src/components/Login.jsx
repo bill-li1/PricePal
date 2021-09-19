@@ -52,7 +52,10 @@ export function Login(props) {
       router.push('/Dashboard');
     },
     onError: (error) => {
-      setErrors(error.graphQLErrors[0].extensions.errors);
+      console.log(error);
+      if (error.graphQLErrors[0].extensions) {
+        setErrors(error.graphQLErrors[0].extensions.errors);
+      }
     },
   });
 
