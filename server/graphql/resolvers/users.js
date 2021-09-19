@@ -29,7 +29,7 @@ module.exports = {
         if (user) {
           return {
             ...user._doc,
-            groups: groupsHelper.bind(this, user._doc.groups),
+            groups: multiGroupsHelper.bind(this, user._doc.groups),
           };
         } else {
           throw new Error('User not found');
@@ -101,7 +101,7 @@ module.exports = {
       const res = await newUser.save();
       // const token = generateToken(res);
 
-      console.log(user._doc.groups);
+      console.log(res);
 
       return {
         ...res._doc,
@@ -115,9 +115,8 @@ module.exports = {
       if (!user.groups.includes(groupId)) {
         user.groups.push(groupId);
         await user.save();
-      } 
-      else {
-        throw new Error('User already exists in group')
+      } else {
+        throw new Error('User already exists in group');
       }
 
       const group = await Group.findById(groupId);

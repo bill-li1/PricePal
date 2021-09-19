@@ -32,7 +32,9 @@ export function Header() {
             </Link>
             <div className={styles.space} />
             {user ? (
-              <Button onClick={logout}>Logout</Button>
+              <Link href="/">
+                <Button onClick={logout}>Logout</Button>
+              </Link>
             ) : (
               <Link href="/">
                 <Button>Login</Button>
