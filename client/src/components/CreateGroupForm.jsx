@@ -17,14 +17,13 @@ import { useContext, useState } from 'react';
 export function CreateGroupForm(props) {
   const context = useContext(AuthContext);
   const { user } = context;
-  console.log(user);
   const [values, setValues] = useState({
     title: '',
     description: '',
     bannerImg: 'google.ca',
     locked: false,
     active: true,
-    users: [user.id],
+    users: user ? [user.id] : null,
   });
   const [errors, setErrors] = useState({});
 
@@ -44,7 +43,7 @@ export function CreateGroupForm(props) {
       context.login(groupData);
     },
     onError: (error) => {
-      console.log(error);
+      console.log(JSON.stringify(error, null, 2));
       if (error.graphQLErrors[0].extensions) {
         setErrors(error.graphQLErrors[0].extensions.errors);
       }
@@ -61,6 +60,7 @@ export function CreateGroupForm(props) {
           createGroupGroupInput: values,
         },
       });
+      props.onClose();
     } catch (err) {
       console.log(err);
     }

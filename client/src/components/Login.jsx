@@ -52,10 +52,8 @@ export function Login(props) {
       router.push('/Dashboard');
     },
     onError: (error) => {
-      console.log(error);
-      if (error.graphQLErrors[0].extensions) {
-        setErrors(error.graphQLErrors[0].extensions.errors);
-      }
+      console.log(JSON.stringify(error, null, 2));
+      setErrors(error.graphQLErrors[0].extensions.errors);
     },
   });
 
@@ -76,6 +74,7 @@ export function Login(props) {
       console.log(error);
     }
   };
+
   return (
     <Dialog open={props.open} className={styles.login}>
       <DialogTitle>
@@ -147,7 +146,6 @@ const LOGIN_USER = gql`
     login(loginInput: $loginLoginInput) {
       id
       email
-      token
       profileImg
       firstName
       lastName
