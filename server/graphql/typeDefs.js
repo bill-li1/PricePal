@@ -91,11 +91,11 @@ module.exports = gql`
   }
 
   type Query {
-    getTransactionsByUserId(userId: ID!): [Transaction]
-    getTransactionsByGroupId(groupId: ID!): Transaction
-    getTransactionById(transactionId: ID!): Transaction 
+    getTransactionsByUserId(userId: ID!): [Transaction] # completed, tested
+    getTransactionsByGroupId(groupId: ID!): [Transaction] # completed, tested
+    getTransactionById(transactionId: ID!): Transaction # completed, tested
 
-    getOwerInfos: [OwerInfo]
+    getOwerInfos: [OwerInfo] 
     getOwerInfoById(owerInfoId: ID!) : OwerInfo
 
     getGroupById(groupId: ID!): Group
@@ -107,8 +107,8 @@ module.exports = gql`
     editUser(editUserInput: EditUserInput): User! #completed, tested
     addGroupUser(groupId: ID, userId: ID): User! #completed, tested
 
-    createTransaction(transactionInput: TransactionInput!): Transaction! #completed?
-    # edit transaction
+    createTransaction(transactionInput: TransactionInput!): Transaction! #completed, tested
+    editTransaction(transactionId: ID!, transactionInput: TransactionInput!): Transaction! #completed, tested
     deleteTransaction(transactionId: ID!): String! #completed?
 
     createOwerInfo(owerInfoInput: OwerInfoInput!): OwerInfo! #completed, tested
