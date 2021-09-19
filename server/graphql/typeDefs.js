@@ -98,6 +98,8 @@ module.exports = gql`
     getOwerInfos: [OwerInfo] 
     getOwerInfoById(owerInfoId: ID!) : OwerInfo
 
+    getUserById(userId: ID!): User!
+
     getGroupById(groupId: ID!): Group
   }
     

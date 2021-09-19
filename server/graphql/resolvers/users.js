@@ -22,23 +22,23 @@ function generateToken(user) {
 }
 
 module.exports = {
-  // Query: {
-  //   async getUserById(_, { userId }) {
-  //     try {
-  //       const user = await User.findById(userId);
-  //       if (user) {
-  //         return {
-  //           ...user._doc,
-  //           groups: groupsHelper.bind(this, transaction._doc.groups),
-  //         };
-  //       } else {
-  //         throw new Error('Transaction not found');
-  //       }
-  //     } catch (err) {
-  //       throw new Error(err);
-  //     }
-  //   },
-  // },
+  Query: {
+    async getUserById(_, { userId }) {
+      try {
+        const user = await User.findById(userId);
+        if (user) {
+          return {
+            ...user._doc,
+            groups: groupsHelper.bind(this, user._doc.groups),
+          };
+        } else {
+          throw new Error('User not found');
+        }
+      } catch (err) {
+        throw new Error(err);
+      }
+    },
+  },
   Mutation: {
     async login(_, { loginInput: { email, password } }) {
       console.log('login');
