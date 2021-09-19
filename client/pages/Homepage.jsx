@@ -1,17 +1,137 @@
-import { Button, Avatar, Textfield, makeStyles, TextField, Input } from '@material-ui/core';
+// @ts-nocheck
+import { Button, makeStyles, TextField } from '@material-ui/core';
 import { useRouter } from 'next/router';
 import { useState, useContext } from 'react';
-import { useMutation, useQuery, gql } from '@apollo/client';
+import { useQuery, gql } from '@apollo/client';
 import { Alert } from '@material-ui/lab';
 import { AuthContext } from '../src/context/auth';
+
+export default function register() {
+  const styles = useStyles();
+  const [group, setGroup] = useState({});
+  const [transactions, setTransactions] = useState([]);
+  const groupId = '6145672e61d9396dc4b726a8';
+  const context = useContext(AuthContext);
+  const router = useRouter();
+
+  const { loading } = useQuery(GROUP_TRANSACTIONS, {
+    variables: { getTransactionsByGroupIdGroupId: groupId },
+    onCompleted: (data) => {
+      setTransactions(data.getTransactionsByGroupId);
+    },
+  });
+
+  useQuery(GROUP_INFO, {
+    variables: { getGroupByIdGroupId: groupId },
+    onCompleted: (data) => {
+      setGroup(data.getGroupById);
+    },
+    onError: (error) => {
+      console.log(error);
+      setErrors(error.grahQLErrors[0].extensions.errors);
+    },
+  });
+
+  const [showInput, setShowInput] = useState(false);
+  const [inputValue, setInput] = useState('');
+
+  return (
+    <div className={styles.mainWrapper}>
+      <div className={styles.mainContent}>
+        <div className={styles.mainWrapper1}>
+          <div className={styles.mainBgImage}>
+            <div className={styles.mainEmptyStyles} />
+          </div>
+          <div className={styles.mainText}>
+            <h1 className={styles.mainHeading}>{group.title}</h1>
+            <div className={styles.mainSection}>{group.description}</div>
+            <div className={styles.mainWrapper2}>
+              <em className={styles.mainCode}>Group Code:</em>
+              <div className={styles.mainCode}>{group.code}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className={styles.mainAnnounce}>
+        <div className={styles.mainStatus}>
+          <p>Members</p>
+          <ul>
+            {group.users?.map((user) => {
+              return <li>{user.firstName + ' ' + user.lastName}</li>;
+            })}
+          </ul>
+        </div>
+        <div className={styles.mainAnnouncements}>
+          <ul>
+            {transactions?.map((transaction) => {
+              console.log(transactions);
+              return <li>{transaction.title}</li>;
+            })}
+          </ul>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+const GROUP_INFO = gql`
+  query Query($getGroupByIdGroupId: ID!) {
+    getGroupById(groupId: $getGroupByIdGroupId) {
+      title
+      description
+      bannerImg
+      code
+      locked
+      active
+      users {
+        email
+        profileImg
+        firstName
+        lastName
+      }
+    }
+  }
+`;
+
+const GROUP_TRANSACTIONS = gql`
+  query Query($getTransactionsByGroupIdGroupId: ID!) {
+    getTransactionsByGroupId(groupId: $getTransactionsByGroupIdGroupId) {
+      title
+      type
+      date
+      description
+      img
+      payer {
+        id
+        email
+        firstName
+        profileImg
+        lastName
+      }
+      owerIds
+      owerInfos {
+        id
+        user {
+          id
+          email
+          profileImg
+          firstName
+          lastName
+        }
+        notes
+        amount
+      }
+    }
+  }
+`;
 
 const useStyles = makeStyles((theme) => ({
   mainWrapper: {
     margin: '0 auto',
     display: 'flex',
     flexDirection: 'column',
-    width: 'calc(100 % - 2 * 1.5rem)',
-    maxWidth: '62.5rem',
+    width: 'calc(100% - 1.5rem)',
+    maxWidth: '82.5rem',
   },
   mainContent: {
     marginTop: '1.5rem',
@@ -25,7 +145,8 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
   },
   mainBgImage: {
-    backgroundImage: 'url(https://gstatic.com/classroom/themes/img_backtoschool.jpg)',
+    backgroundImage:
+      'url(https://gstatic.com/classroom/themes/img_backtoschool.jpg)',
     backgroundSize: 'cover',
     height: '100%',
     left: '0',
@@ -49,21 +170,13 @@ const useStyles = makeStyles((theme) => ({
   mainHeading: {
     fontFamily: 'Google Sans, Roboto, Arial, sans - serif',
     fontSize: '2.25rem',
-    fontWeight: '500',
     lineHeight: '2.75rem',
     color: '#fff',
     margin: '0',
   },
-  mainOverflow: {
-    textOverflow: 'ellipsis',
-    overflow: 'hidden',
-    whiteSpace: 'nowrap',
-    display: 'block',
-  },
   mainSection: {
     fontFamily: 'Google Sans, Roboto, Arial, sans - serif',
     fontSize: '1.375rem',
-    fontWeight: '400',
     lineHeight: '1.75rem',
     color: '#fff',
   },
@@ -73,45 +186,29 @@ const useStyles = makeStyles((theme) => ({
     marginTop: '0.5rem',
   },
   mainCode: {
-    fontWeight: '500',
     fontStyle: 'normal',
   },
   mainAnnounce: {
     display: 'flex',
-    /* justify-content: center; */
+    justifyContent: 'center',
     flexShrink: '0',
     marginTop: '1rem',
   },
   mainAnnouncements: {
     padding: '1rem',
     overflow: 'hidden',
-    margin: '-2.4rem',
     marginLeft: '1rem',
-    /* margin-top: 1.5rem; */
+    width: '100%',
   },
   mainSubText: {
     marginTop: '1.5rem',
     color: '#807373',
-    fontWeight: '400',
   },
   mainStatus: {
     border: '1.5px solid #dadce0',
     padding: '20px',
     borderRadius: '10px',
-    width: '10vw',
-    height: '15vh',
-  },
-  mainAnnouncementsWrapper: {
-    borderRadius: '0.5rem',
-    overflow: 'hidden',
-    minHeight: '4.5rem',
-    marginBottom: '1.5rem',
-    marginTop: '1.5rem',
-  },
-  mainAncContent: {
-    padding: '30px',
-    width: '70vw',
-    color: 'rgba(0, 0, 0, 0.549)',
+    width: '20vw',
   },
   mainWrapper100: {
     display: 'flex!important',
@@ -135,99 +232,3 @@ const useStyles = makeStyles((theme) => ({
     margin: '0',
   },
 }));
-
-export default function register() {
-  const styles = useStyles();
-  const context = useContext(AuthContext);
-  const router = useRouter();
-
-  const [showInput, setShowInput] = useState(false);
-  const [inputValue, setInput] = useState("");
-
-  return (
-    <div className={styles.test}>
-      <div className={styles.mainWrapper}>
-        <div className={styles.mainContent}>
-          <div className={styles.mainWrapper1}>
-            <div className={styles.mainBgImage}>
-              <div className={styles.mainEmptyStyles} />
-            </div>
-            <div className={styles.mainText}>
-              <h1 className={styles.mainHeading}>
-                Group 1
-              </h1>
-              <div className={styles.mainSection}>
-                Section 1
-              </div>
-              <div className={styles.mainWrapper2}>
-                <em className={styles.mainCode}>Class Code :</em>
-                <div className={styles.mainCode}>AW8T2</div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div className={styles.mainAnnounce}>
-          <div className={styles.mainStatus}>
-            <p>Upcoming</p>
-            <p className={styles.mainSubText}>No work due</p>
-          </div>
-          <div className={styles.mainAnnouncements}>
-            <div className={styles.mainAnnouncementsWrapper}>
-              <div className={styles.mainAncContent}>
-                {showInput ? (
-                  <div className={styles.mainForm}>
-                    <TextField
-                      id="filled-multiline-flexible"
-                      multiline
-                      label="Announce Something to class"
-                      variant="filled"
-                      value={inputValue}
-                      onChange={(e) => setInput(e.target.value)}
-                    />
-                    <div className={styles.mainButtons}>
-                      <input
-                        color='primary'
-                        type='file'
-                      />
-                      <div>
-                        <Button onClick={() => setShowInput(false)}>
-                          Cancel
-                        </Button>
-                        <Button
-                          color='primary'
-                          variant='contained'
-                        >
-                          Post
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                ) : (
-                    <div
-                      className={styles.mainWrapper100}
-                      onClick={() => setShowInput(true)}
-                    >
-                      <div>Announce Something to class</div>
-                    </div>
-                  )}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div >
-    </div >
-  );
-}
-
-const REGISTER_USER = gql`
-  mutation Mutation($registerRegisterInput: RegisterInput) {
-    register(registerInput: $registerRegisterInput) {
-      id
-      email
-      token
-      profileImg
-      firstName
-      lastName
-    }
-  }
-`;
