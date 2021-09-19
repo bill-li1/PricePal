@@ -93,7 +93,7 @@ module.exports = gql`
   type Query {
     getTransactionsByUserId(userId: ID!): [Transaction]
     getTransactionsByGroupId(groupId: ID!): Transaction
-    getTransactionById(transactionId: ID!): Transaction
+    getTransactionById(transactionId: ID!): Transaction 
 
     getOwerInfos: [OwerInfo]
     getOwerInfoById(owerInfoId: ID!) : OwerInfo
@@ -108,6 +108,7 @@ module.exports = gql`
     addGroupUser(groupId: ID, userId: ID): User! #completed, tested
 
     createTransaction(transactionInput: TransactionInput!): Transaction! #completed?
+    # edit transaction
     deleteTransaction(transactionId: ID!): String! #completed?
 
     createOwerInfo(owerInfoInput: OwerInfoInput!): OwerInfo! #completed, tested

@@ -25,7 +25,7 @@ module.exports = {
     },
     async getTransactionsByUserId(_, { userId }) {
       try {
-        const transactions = await Transaction.find({ dim_cm: { payer: userId, owerIds: userId } });
+        const transactions = await Transaction.find( { "$or": [{payer: userId}, {owerIds: userId} ]} );
         // const transactions = await Transaction.find({ payer: userId });
         console.log('transactions with the id ' + userId + ': ', transactions);
         if (transactions) {
