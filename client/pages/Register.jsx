@@ -47,7 +47,7 @@ export default function register() {
     update(_, { data: { register: userData } }) {
       console.log(userData);
       context.login(userData);
-      router.push('/dashboard');
+      router.push('/Dashboard');
     },
     onError: (error) => {
       console.log(error);

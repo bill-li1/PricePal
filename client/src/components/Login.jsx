@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export function Login(open) {
+export function Login(props) {
   const context = useContext(AuthContext);
   const styles = useStyles();
   const router = useRouter();
@@ -49,7 +49,7 @@ export function Login(open) {
     update(_, { data: { login: userData } }) {
       console.log(userData);
       context.login(userData);
-      router.push('/dashboard');
+      router.push('/Dashboard');
     },
     onError: (error) => {
       setErrors(error.graphQLErrors[0].extensions.errors);
@@ -74,7 +74,7 @@ export function Login(open) {
     }
   };
   return (
-    <Dialog open={open} className={styles.login}>
+    <Dialog open={props.open} className={styles.login}>
       <DialogTitle>
         <Typography variant="h1">PricePal</Typography>
       </DialogTitle>
