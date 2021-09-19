@@ -10,8 +10,10 @@ import {
   TextField,
   Typography,
 } from '@material-ui/core';
+import { Alert } from '@material-ui/lab';
 import { AuthContext } from 'context/auth';
 import gql from 'graphql-tag';
+import router from 'next/router';
 import { useContext, useState } from 'react';
 
 export function CreateGroupForm(props) {
@@ -40,29 +42,30 @@ export function CreateGroupForm(props) {
 
   const [addGroup, { loading }] = useMutation(CREATE_GROUP, {
     update(_, { data: { createGroup: groupData } }) {
-      console.log(groupData);
+      console.log('createGroup', groupData);
       addGroupToUser({
         variables: {
           addGroupUserGroupId: groupData.id,
           addGroupUserUserId: user.id,
         },
       });
+      props.updateGroups(groupData);
     },
     onError: (error) => {
-      console.log(JSON.stringify(error, null, 2));
-      if (error.graphQLErrors[0].extensions) {
-        setErrors(error.graphQLErrors[0].extensions.errors);
-      }
+      // console.log('1', JSON.stringify(error, null, 2));
+      // console.log(error.graphQLErrors[0].extensions.exception.errors);
+      setErrors(error.graphQLErrors[0].extensions.exception.errors);
     },
   });
 
   const [addGroupToUser] = useMutation(ADD_GROUP_TO_USER, {
-    update(_, { data: { addGroupToUser: data } }) {
-      console.log(data);
+    update(_, { data: { addGroupUser: data } }) {
+      props.onClose();
+      console.log('addGroupUser', data);
     },
     onError: (error) => {
       console.log(JSON.stringify(error, null, 2));
-      setErrors(error.graphQLErrors[0].extensions.errors);
+      setErrors(error.graphQLErrors[0].extensions.exception.errors);
     },
   });
 
@@ -76,7 +79,6 @@ export function CreateGroupForm(props) {
           createGroupGroupInput: values,
         },
       });
-      props.onClose();
     } catch (err) {
       console.log(err);
     }
@@ -148,6 +150,18 @@ export function CreateGroupForm(props) {
                 Create Group
               </Button>
             </Grid>
+            <Grid item xs={12}>
+              {Object.keys(errors).length > 0 &&
+                Object.values(errors).map((err) => {
+                  return (
+                    <Alert severity="error" key={err}>
+                      <Typography style={{ fontSize: '12px' }}>
+                        {err.message}
+                      </Typography>
+                    </Alert>
+                  );
+                })}
+            </Grid>
           </Grid>
         </form>
       </DialogContent>
@@ -173,6 +187,10 @@ const ADD_GROUP_TO_USER = gql`
   mutation Mutation($addGroupUserGroupId: ID, $addGroupUserUserId: ID) {
     addGroupUser(groupId: $addGroupUserGroupId, userId: $addGroupUserUserId) {
       id
+      email
+      profileImg
+      firstName
+      lastName
     }
   }
 `;

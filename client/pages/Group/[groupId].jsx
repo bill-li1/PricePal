@@ -4,6 +4,7 @@ import { useRouter } from 'next/router';
 import { useState, useContext } from 'react';
 import { useQuery, gql } from '@apollo/client';
 import { AuthContext } from '../../src/context/auth';
+import { Loading } from 'components/Loading';
 
 export default function register() {
   const styles = useStyles();
@@ -14,26 +15,26 @@ export default function register() {
   const { groupId } = router.query;
   const context = useContext(AuthContext);
 
-  const { loading } = useQuery(GROUP_TRANSACTIONS, {
-    variables: { getTransactionsByGroupIdGroupId: groupId },
-    onCompleted: (data) => {
-      setTransactions(data.getTransactionsByGroupId);
-    },
-  });
+  if (groupId) {
+    const { loading } = useQuery(GROUP_TRANSACTIONS, {
+      variables: { getTransactionsByGroupIdGroupId: groupId },
+      onCompleted: (data) => {
+        setTransactions(data.getTransactionsByGroupId);
+      },
+    });
 
-  useQuery(GROUP_INFO, {
-    variables: { getGroupByIdGroupId: groupId },
-    onCompleted: (data) => {
-      setGroup(data.getGroupById);
-    },
-    onError: (error) => {
-      console.log(JSON.stringify(error, null, 2));
-      setErrors(error.grahQLErrors[0].extensions.errors);
-    },
-  });
-
-  const [showInput, setShowInput] = useState(false);
-  const [inputValue, setInput] = useState('');
+    useQuery(GROUP_INFO, {
+      variables: { getGroupByIdGroupId: groupId },
+      onCompleted: (data) => {
+        setGroup(data.getGroupById);
+      },
+      onError: (error) => {
+        console.log('here', JSON.stringify(error, null, 2));
+        console.log('here', error);
+        setErrors(error.grahQLErrors[0].extensions.errors);
+      },
+    });
+  }
 
   return (
     <div className={styles.mainWrapper}>
@@ -100,30 +101,6 @@ const GROUP_TRANSACTIONS = gql`
   query Query($getTransactionsByGroupIdGroupId: ID!) {
     getTransactionsByGroupId(groupId: $getTransactionsByGroupIdGroupId) {
       title
-      type
-      date
-      description
-      img
-      payer {
-        id
-        email
-        firstName
-        profileImg
-        lastName
-      }
-      owerIds
-      owerInfos {
-        id
-        user {
-          id
-          email
-          profileImg
-          firstName
-          lastName
-        }
-        notes
-        amount
-      }
     }
   }
 `;
