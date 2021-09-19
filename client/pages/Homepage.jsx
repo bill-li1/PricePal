@@ -10,10 +10,18 @@ export default function register() {
   const styles = useStyles();
   const [group, setGroup] = useState({});
   const [transactions, setTransactions] = useState([]);
-  const groupId = '6145674f61d9396dc4b726ab';
+  const groupId = '6145672e61d9396dc4b726a8';
   const context = useContext(AuthContext);
   const router = useRouter();
-  const { loading } = useQuery(GROUP_INFO, {
+
+  const { loading } = useQuery(GROUP_TRANSACTIONS, {
+    variables: { getTransactionsByGroupIdGroupId: groupId },
+    onCompleted: (data) => {
+      setTransactions(data.getTransactionsByGroupId);
+    },
+  });
+
+  useQuery(GROUP_INFO, {
     variables: { getGroupByIdGroupId: groupId },
     onCompleted: (data) => {
       setGroup(data.getGroupById);
@@ -49,49 +57,17 @@ export default function register() {
           <p>Members</p>
           <ul>
             {group.users?.map((user) => {
-              return (
-                <li>
-                  {user.firstName + " " + user.lastName}
-                </li>
-              );
+              return <li>{user.firstName + ' ' + user.lastName}</li>;
             })}
           </ul>
         </div>
         <div className={styles.mainAnnouncements}>
-          <div className={styles.mainAnnouncementsWrapper}>
-            <div className={styles.mainAncContent}>
-              {showInput ? (
-                <div className={styles.mainForm}>
-                  <TextField
-                    id="filled-multiline-flexible"
-                    multiline
-                    label="Announce Something to class"
-                    variant="filled"
-                    value={inputValue}
-                    onChange={(e) => setInput(e.target.value)}
-                  />
-                  <div className={styles.mainButtons}>
-                    <TextField variant="outlined" color="primary" type="file" />
-                    <div>
-                      <Button onClick={() => setShowInput(false)}>
-                        Cancel
-                      </Button>
-                      <Button color="primary" variant="contained">
-                        Post
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              ) : (
-                  <div
-                    className={styles.mainWrapper100}
-                    onClick={() => setShowInput(true)}
-                  >
-                    <div>Announce Something to class</div>
-                  </div>
-                )}
-            </div>
-          </div>
+          <ul>
+            {transactions?.map((transaction) => {
+              console.log(transactions);
+              return <li>{transaction.title}</li>;
+            })}
+          </ul>
         </div>
       </div>
     </div>
@@ -112,6 +88,38 @@ const GROUP_INFO = gql`
         profileImg
         firstName
         lastName
+      }
+    }
+  }
+`;
+
+const GROUP_TRANSACTIONS = gql`
+  query Query($getTransactionsByGroupIdGroupId: ID!) {
+    getTransactionsByGroupId(groupId: $getTransactionsByGroupIdGroupId) {
+      title
+      type
+      date
+      description
+      img
+      payer {
+        id
+        email
+        firstName
+        profileImg
+        lastName
+      }
+      owerIds
+      owerInfos {
+        id
+        user {
+          id
+          email
+          profileImg
+          firstName
+          lastName
+        }
+        notes
+        amount
       }
     }
   }
@@ -190,6 +198,7 @@ const useStyles = makeStyles((theme) => ({
     padding: '1rem',
     overflow: 'hidden',
     marginLeft: '1rem',
+    width: '100%',
   },
   mainSubText: {
     marginTop: '1.5rem',
@@ -200,18 +209,6 @@ const useStyles = makeStyles((theme) => ({
     padding: '20px',
     borderRadius: '10px',
     width: '20vw',
-  },
-  mainAnnouncementsWrapper: {
-    borderRadius: '0.5rem',
-    overflow: 'hidden',
-    minHeight: '4.5rem',
-    marginBottom: '1.5rem',
-    marginTop: '1.5rem',
-  },
-  mainAncContent: {
-    padding: '30px',
-    width: '70vw',
-    color: 'rgba(0, 0, 0, 0.549)',
   },
   mainWrapper100: {
     display: 'flex!important',
