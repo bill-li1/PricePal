@@ -26,7 +26,7 @@ export function CreateGroupForm(props) {
       'https://material-ui.com/static/images/cards/contemplative-reptile.jpg',
     locked: false,
     active: true,
-    users: user ? [user.id] : null,
+    users: user ? user.id : null,
   });
   const [errors, setErrors] = useState({});
 

@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {
   Button,
   Checkbox,
@@ -17,7 +18,7 @@ import { useQuery, gql, useMutation } from '@apollo/client';
 import { AuthContext } from '../../src/context/auth';
 import { LockRounded } from '@material-ui/icons';
 import { Alert } from '@material-ui/lab';
-import { ExpenseCard} from 'components/ExpenseCard';
+import { ExpenseCard } from 'components/ExpenseCard';
 import { UserCard } from 'components/UserCard';
 import { GroupHistory } from 'components/GroupHistory';
 // @ts-ignore
@@ -177,10 +178,11 @@ export default function GroupPage() {
   });
 
   const [editGroup] = useMutation(EDIT_GROUP, {
-    update(_, { data: { editGroup: userData } }) {
-      console.log(userData);
+    update(_, { data: { editGroup: groupData } }) {
+      setGroup(groupData);
+      console.log(groupData);
       setEditOpen(false);
-      router.reload();
+      // router.reload();
     },
     onError: (error) => {
       console.log(JSON.stringify(error, null, 2));
@@ -357,6 +359,7 @@ export default function GroupPage() {
 const GROUP_INFO = gql`
   query Query($getGroupByIdGroupId: ID!) {
     getGroupById(groupId: $getGroupByIdGroupId) {
+      id
       title
       description
       bannerImg
@@ -415,6 +418,12 @@ const EDIT_GROUP = gql`
       code
       locked
       active
+      users {
+        email
+        profileImg
+        firstName
+        lastName
+      }
     }
   }
 `;
