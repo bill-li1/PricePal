@@ -22,6 +22,10 @@ import { ExpenseCard } from 'components/ExpenseCard';
 import { UserCard } from 'components/UserCard';
 import { GroupHistory } from 'components/GroupHistory';
 // @ts-ignore
+import { Loading } from 'components/Loading';
+import { CreateExpenseButton } from 'components/Expenses/CreateExpenseButton';
+import { CreateExpenseForm } from 'components/Expenses/CreateExpenseForm';
+
 const useStyles = makeStyles((theme) => ({
   mainWrapper: {
     margin: '0 auto',
@@ -150,6 +154,15 @@ export default function GroupPage() {
     router.query[queryKey] ||
     router.asPath.match(new RegExp(`[&?]${queryKey}=(.*)(&|$)`));
   const context = useContext(AuthContext);
+
+  const [createExpense, setCreateExpense] = useState(false);
+
+  const handleCreateExpenseClick = () => {
+    setCreateExpense(true);
+  };
+  const handleCreateExpenseClose = () => {
+    setCreateExpense(false);
+  };
 
   // const { loading } = useQuery(GROUP_TRANSACTIONS, {
   //   variables: { getTransactionsByGroupIdGroupId: groupId },
@@ -349,7 +362,31 @@ export default function GroupPage() {
           )}
         </div>
         <div className={styles.mainAnnouncements}>
-        <GroupHistory groupId = {groupId}/>
+          <div style={{ textAlign: 'right', marginBottom: 10 }}>
+            <CreateExpenseButton
+              onClick={handleCreateExpenseClick}
+            ></CreateExpenseButton>
+            <Dialog
+              open={createExpense}
+              onClose={handleCreateExpenseClose}
+              maxWidth="lg"
+              PaperProps={{
+                style: {
+                  borderRadius: 40,
+                  boxShadow: '5px 5px 5px rgb(76, 81, 89)',
+                },
+              }}
+              scroll={'paper'}
+            >
+              <CreateExpenseForm
+                users={group.users}
+                group={group}
+                open={createExpense}
+                onClose={handleCreateExpenseClose}
+              />
+            </Dialog>
+          </div>
+          <GroupHistory groupId={groupId} />
         </div>
       </div>
     </div>
@@ -367,6 +404,7 @@ const GROUP_INFO = gql`
       locked
       active
       users {
+        id
         email
         profileImg
         firstName
@@ -375,38 +413,6 @@ const GROUP_INFO = gql`
     }
   }
 `;
-
-// const GROUP_TRANSACTIONS = gql`
-//   query Query($getTransactionsByGroupIdGroupId: ID!) {
-//     getTransactionsByGroupId(groupId: $getTransactionsByGroupIdGroupId) {
-//       title
-//       type
-//       date
-//       description
-//       img
-//       payer {
-//         id
-//         email
-//         firstName
-//         profileImg
-//         lastName
-//       }
-//       owerIds
-//       owerInfos {
-//         id
-//         user {
-//           id
-//           email
-//           profileImg
-//           firstName
-//           lastName
-//         }
-//         notes
-//         amount
-//       }
-//     }
-//   }
-// `;
 
 const EDIT_GROUP = gql`
   mutation Mutation($editGroupGroupId: ID!, $editGroupGroupInput: GroupInput!) {
