@@ -71,7 +71,7 @@ export function ExpenseCard({ transaction }) {
     },
     title: {
       color: 'white',
-      backgroundColor: '#5DB8FF',
+      backgroundColor: transaction.type == 'payment' ? '#00a5ff' : '#a05de8',
     },
     subheader: {
       color: 'white',
@@ -81,6 +81,10 @@ export function ExpenseCard({ transaction }) {
   const classes = useStyles();
 
   console.log('transaction', transaction);
+  if (!transaction) {
+    return <div></div>;
+  }
+
   return (
     <Grid container spacing={2}>
       <Grid item xs={12}>
@@ -90,10 +94,15 @@ export function ExpenseCard({ transaction }) {
             className={classes.title}
             title={<h1 style={styles.title}>{transaction.title}</h1>}
             subheader={
-              'Paid by ' +
-              transaction.payer.firstName +
-              ' ' +
-              transaction.payer.lastName
+              transaction.type === 'payment'
+                ? 'Direct Payment from ' +
+                  transaction.owerInfos[0].user.firstName +
+                  ' to ' +
+                  transaction.payer.firstName
+                : 'Paid by ' +
+                  transaction.payer.firstName +
+                  ' ' +
+                  transaction.payer.lastName
             }
             style={styles.cardTop}
           >
