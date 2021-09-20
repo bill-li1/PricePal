@@ -53,21 +53,21 @@ export function PersonalHistory(props) {
         return new Date(t2.date) - new Date(t1.date);
       };
 
-      // // const filterByUser = (transaction) => {
-      // //   if (!transaction.payer.id || !transaction.owerIds){
-      // //     return false;
-      // //   }
-      // //   if ((transaction.payer.id == user1.id &&
-      // //     transaction.owerIds.includes(user2.id)) ||
-      // //     (transaction.payer.id == user2.id &&
-      // //       transaction.owerIds.includes(user1.id))) {
-      // //         return true;
-      // //       }
-      // //       else {
-      // //         return false;
-      // //       }
-      // // }
-      // filteredTransactions.filter(filterByUser);
+      const filterByUser = (transaction) => {
+        if (!transaction.payer.id || !transaction.owerIds){
+          return false;
+        }
+        if ((transaction.payer.id == user1.id &&
+          transaction.owerIds.includes(user2.id)) ||
+          (transaction.payer.id == user2.id &&
+            transaction.owerIds.includes(user1.id))) {
+              return true;
+            }
+            else {
+              return false;
+            }
+      }
+      filteredTransactions.filter(filterByUser);
 
       filteredTransactions.sort(compareDates);
 
