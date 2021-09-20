@@ -58,16 +58,15 @@ export function ExpenseCard({ transaction, user }) {
     }),
   }));
 
-  let expenseColor = '#00dea3'
-  if (user.id === transaction.payer.id){
-    expenseColor = '#00dea3' //green 
-  } else if (transaction.owerIds.includes(user.id)){
-    expenseColor = '#e80078' //red 
+  let expenseColor = '#00dea3';
+  if (user.id === transaction.payer.id) {
+    expenseColor = '#00dea3'; //green
+  } else if (transaction.owerIds.includes(user.id)) {
+    expenseColor = '#e80078'; //red
   } else {
-    expenseColor ='#636363'//grey
+    expenseColor = '#636363'; //grey
     // expenseColor ='#5BEC98'//purple
   }
-  console.log('user, payer, ower, color',user.id, transaction.payer.id, transaction.owerIds, expenseColor)
 
   const useStyles = makeStyles(() => ({
     typography: {
@@ -77,7 +76,7 @@ export function ExpenseCard({ transaction, user }) {
     },
     title: {
       color: 'white',
-      backgroundColor: transaction.type == 'payment' ? '#00a5ff' :  expenseColor,
+      backgroundColor: transaction.type == 'payment' ? '#00a5ff' : expenseColor,
     },
     subheader: {
       color: 'white',
@@ -143,7 +142,7 @@ export function ExpenseCard({ transaction, user }) {
             <CardContent>
               <Grid container spacing={2}>
                 <Grid item xs={9}>
-                  <Typography paragraph>{transaction.description}</Typography>
+                  <p style={styles.bodyText}>{transaction.description}</p>
                   <Table sx={{ width: '100%' }}>
                     <TableRow sx={{ width: '100%' }}>
                       {transaction.owerInfos.map((owerInfo, idx) => (
@@ -175,59 +174,6 @@ export function ExpenseCard({ transaction, user }) {
             </CardContent>
           </Collapse>
         </Card>
-
-        {/* <Card className ="shadow-sm" style= {{borderRadius: '10px'}}>
-            <Card.Header style={{ backgroundColor: '#55525a', borderRadius: '10px 10px 0px 0px' }}>
-              <Row>
-                <Col style={{ color: 'white' }}><h5>{transaction.title}</h5></Col>
-                <Col style={{ textAlign: 'right', color: 'white' }}>
-                  {transaction.date} {transaction.payer.firstName}
-                </Col>
-              </Row>
-            </Card.Header>
-            <Card.Body>
-              <Row>
-                {transaction.owerInfos.map((owerInfo) => {
-                  return (
-                    <Col style={{ textAlign: 'center' }}>
-                      <img style={styles.img}src= {"https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg"}/>{owerInfo.user.firstName} {owerInfo.amount}
-                    </Col>
-                  );
-                })}
-              </Row>
-            </Card.Body>
-          </Card> */}
-        {/* <Card style= {{ backgroundColor: '#2596be'}}>
-          <CardContent>
-            <TableContainer component={Paper} elevation={2}></TableContainer>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
-              <TableHead>
-                <TableRow>
-                  <TableCell style={{ fontSize: '22' }}>
-                    {transaction.title}
-                  </TableCell>
-                  <TableCell align="right">{transaction.date}</TableCell>
-                  <TableCell align="right">
-                    {transaction.payer.firstName +
-                      ' ' +
-                      transaction.payer.lastName}
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody style={{ backgroundColor: 'white', marginBottom: '30' }}>
-                <TableRow>
-                {transaction.owerInfos.map((owerInfo, idx) => (
-                    <TableCell key = {idx }component="th" scope="row">
-                    {owerInfo.user.firstName} {owerInfo.amount}
-                    </TableCell>
-                ))}
-  
-                </TableRow>
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
-      </div> */}
       </Grid>
     </Grid>
   );
@@ -243,6 +189,10 @@ const styles = {
   title: {
     color: 'white',
     fontSize: 20,
+  },
+  bodyText: {
+    color: 'grey',
+    marginLeft: '1rem'
   },
   cardBottom: { borderRadius: '0px 0px 10px 10px', marginBottom: '1rem' },
   cardTop: { borderRadius: '10px 10px 0px 0px' },

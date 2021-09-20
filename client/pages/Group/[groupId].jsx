@@ -21,6 +21,7 @@ import { Alert } from '@material-ui/lab';
 import { ExpenseCard } from 'components/ExpenseCard';
 import { UserCard } from 'components/UserCard';
 import { GroupHistory } from 'components/GroupHistory';
+import { PersonalHistory } from 'components/PersonalHistory';
 // @ts-ignore
 const useStyles = makeStyles((theme) => ({
   mainWrapper: {
@@ -349,6 +350,7 @@ export default function GroupPage() {
           )}
         </div>
         <div className={styles.mainAnnouncements}>
+        {/* <PersonalHistory groupId = {groupId} user2 = {group.users[0]}></PersonalHistory> */}
         <GroupHistory groupId = {groupId}/>
         </div>
       </div>
