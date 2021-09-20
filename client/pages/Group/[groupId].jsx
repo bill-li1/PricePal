@@ -19,7 +19,7 @@ import { LockRounded } from '@material-ui/icons';
 import { Alert } from '@material-ui/lab';
 import { ExpenseCard} from 'components/ExpenseCard';
 import { UserCard } from 'components/UserCard';
-
+import { GroupHistory } from 'components/GroupHistory';
 // @ts-ignore
 const useStyles = makeStyles((theme) => ({
   mainWrapper: {
@@ -142,7 +142,7 @@ export default function GroupPage() {
   const [values, setValues] = useState({});
   const [errors, setErrors] = useState({});
   const [editOpen, setEditOpen] = useState(false);
-  const [transactions, setTransactions] = useState([]);
+  // const [transactions, setTransactions] = useState([]);
   const router = useRouter();
   const queryKey = 'groupId';
   const groupId =
@@ -150,12 +150,12 @@ export default function GroupPage() {
     router.asPath.match(new RegExp(`[&?]${queryKey}=(.*)(&|$)`));
   const context = useContext(AuthContext);
 
-  const { loading } = useQuery(GROUP_TRANSACTIONS, {
-    variables: { getTransactionsByGroupIdGroupId: groupId },
-    onCompleted: (data) => {
-      setTransactions(data.getTransactionsByGroupId);
-    },
-  });
+  // const { loading } = useQuery(GROUP_TRANSACTIONS, {
+  //   variables: { getTransactionsByGroupIdGroupId: groupId },
+  //   onCompleted: (data) => {
+  //     setTransactions(data.getTransactionsByGroupId);
+  //   },
+  // });
 
   useQuery(GROUP_INFO, {
     variables: { getGroupByIdGroupId: groupId },
@@ -347,14 +347,7 @@ export default function GroupPage() {
           )}
         </div>
         <div className={styles.mainAnnouncements}>
-          {transactions?.map((transaction) => {
-            console.log(transactions);
-            return (
-              <div style={{ margin: '100' }}>
-                <ExpenseCard transaction={transaction} />
-              </div>
-            );
-          })}
+        <GroupHistory groupId = {groupId}/>
         </div>
       </div>
     </div>
@@ -380,37 +373,37 @@ const GROUP_INFO = gql`
   }
 `;
 
-const GROUP_TRANSACTIONS = gql`
-  query Query($getTransactionsByGroupIdGroupId: ID!) {
-    getTransactionsByGroupId(groupId: $getTransactionsByGroupIdGroupId) {
-      title
-      type
-      date
-      description
-      img
-      payer {
-        id
-        email
-        firstName
-        profileImg
-        lastName
-      }
-      owerIds
-      owerInfos {
-        id
-        user {
-          id
-          email
-          profileImg
-          firstName
-          lastName
-        }
-        notes
-        amount
-      }
-    }
-  }
-`;
+// const GROUP_TRANSACTIONS = gql`
+//   query Query($getTransactionsByGroupIdGroupId: ID!) {
+//     getTransactionsByGroupId(groupId: $getTransactionsByGroupIdGroupId) {
+//       title
+//       type
+//       date
+//       description
+//       img
+//       payer {
+//         id
+//         email
+//         firstName
+//         profileImg
+//         lastName
+//       }
+//       owerIds
+//       owerInfos {
+//         id
+//         user {
+//           id
+//           email
+//           profileImg
+//           firstName
+//           lastName
+//         }
+//         notes
+//         amount
+//       }
+//     }
+//   }
+// `;
 
 const EDIT_GROUP = gql`
   mutation Mutation($editGroupGroupId: ID!, $editGroupGroupInput: GroupInput!) {
