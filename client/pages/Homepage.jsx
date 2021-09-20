@@ -8,11 +8,15 @@ import { Alert } from '@material-ui/lab';
 import { AuthContext } from '../src/context/auth';
 // import { ExpenseCard } from 'components/Expenses/ExpenseCard';
 import { ExpensePreview } from 'components/Expenses/ExpensePreview';
+import { CreateExpenseButton } from 'components/Expenses/CreateExpenseButton';
+import { CreateExpenseForm } from 'components/Expenses/CreateExpenseForm';
 // import { useEffect } from 'react';
 
 export default function register() {
   const styles = useStyles();
-  const [group, setGroup] = useState({});
+  const [group, setGroup] = useState({
+    users: []
+  });
   const [transactions, setTransactions] = useState([]);
   const groupId = '6145666142748e62305a65ff';
   const context = useContext(AuthContext);
@@ -42,6 +46,15 @@ export default function register() {
 
   const [showInput, setShowInput] = useState(false);
   const [inputValue, setInput] = useState('');
+
+  const [createExpense, setCreateExpense] = useState(false);
+
+  const handleCreateExpenseClick = () => {
+    setCreateExpense(true);
+  };
+  const handleCreateExpenseClose = () => {
+    setCreateExpense(false);
+  };
 
   return (
     <div className={styles.mainWrapper}>
@@ -75,7 +88,6 @@ export default function register() {
               console.log('transactions', transactions);
             }}
           >
-            ASDF
           </p>
           <p
             onClick={() => {
@@ -83,6 +95,10 @@ export default function register() {
             }}
           >
             group
+            <div>
+              <CreateExpenseButton users={group.users} onClick={handleCreateExpenseClick}></CreateExpenseButton>
+              <CreateExpenseForm open={createExpense} onClose={handleCreateExpenseClose}></CreateExpenseForm>
+            </div>
           </p>
           {transactions?.map((transaction) => {
             console.log(transactions);
