@@ -145,7 +145,11 @@ export function ExpenseCard({ transaction }) {
                 <Grid item xs={3}>
                   <img
                     style={styles.infoImg}
-                    src={transaction.img ? transaction.img : "https://designshack.net/wp-content/uploads/placeholder-image.png"}
+                    src={
+                      transaction.img
+                        ? transaction.img
+                        : 'https://designshack.net/wp-content/uploads/placeholder-image.png'
+                    }
                   />
                 </Grid>
               </Grid>
