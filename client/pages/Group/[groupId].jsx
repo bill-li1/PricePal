@@ -1,3 +1,4 @@
+// @ts-nocheck
 import {
   Button,
   Checkbox,
@@ -18,7 +19,6 @@ import { AuthContext } from '../../src/context/auth';
 import { LockRounded } from '@material-ui/icons';
 import { Alert } from '@material-ui/lab';
 
-// @ts-ignore
 const useStyles = makeStyles((theme) => ({
   mainWrapper: {
     margin: '0 auto',
@@ -173,10 +173,11 @@ export default function GroupPage() {
   });
 
   const [editGroup] = useMutation(EDIT_GROUP, {
-    update(_, { data: { editGroup: userData } }) {
-      console.log(userData);
+    update(_, { data: { editGroup: groupData } }) {
+      setGroup(groupData);
+      console.log(groupData);
       setEditOpen(false);
-      router.reload();
+      // router.reload();
     },
     onError: (error) => {
       console.log(JSON.stringify(error, null, 2));
