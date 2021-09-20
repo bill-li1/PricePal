@@ -34,7 +34,7 @@ module.exports = {
         code = generateCode()
         existingGroup = await Group.findOne({ code: code });
       }
-      // const user = checkAuth(context);
+      const user = checkAuth(context);
       const newGroup = new Group({
         title: groupInput.title,
         description: groupInput.description ? groupInput.description : "",

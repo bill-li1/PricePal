@@ -61,13 +61,13 @@ module.exports = {
         throw new UserInputError('Wrong credentials', { errors });
       }
 
-      // const token = generateToken(user);
+      const token = generateToken(user);
 
       return {
         ...user._doc,
         id: user._id,
         groups: multiGroupsHelper.bind(this, user._doc.groups),
-        // token,
+        token,
       };
     },
     async register(_, { registerInput: { firstName, lastName, email, password, profileImg } }) {
@@ -99,15 +99,15 @@ module.exports = {
       newUser.groups = [];
 
       const res = await newUser.save();
-      // const token = generateToken(res);
+      const token = generateToken(res);
 
-      // console.log(res);
+      console.log(res);
 
       return {
         ...res._doc,
         id: res._id,
         groups: [],
-        // token,
+        token,
       };
     },
     async addGroupUser(_, { groupId, userId }) {
@@ -125,13 +125,13 @@ module.exports = {
         await group.save();
       }
 
-      // const token = generateToken(user);
+      const token = generateToken(user);
 
       return {
         ...user._doc,
         id: user._id,
         groups: multiGroupsHelper.bind(this, user._doc.groups),
-        // token,
+        token,
       };
     },
 
@@ -153,13 +153,13 @@ module.exports = {
         group.users.push(userId);
         await group.save();
       }
-      // const token = generateToken(user);
+      const token = generateToken(user);
 
       return {
         ...user._doc,
         id: user._id,
         groups: multiGroupsHelper.bind(this, user._doc.groups),
-        // token,
+        token,
       };
     },
     async editUser(_, { editUserInput: { userId, firstName, lastName, password, profileImg } }) {
@@ -173,13 +173,13 @@ module.exports = {
       res.profileImg = profileImg;
       await res.save();
 
-      // const token = generateToken(res);
+      const token = generateToken(res);
 
       return {
         ...res._doc,
         id: res._id,
         groups: multiGroupsHelper.bind(this, res._doc.groups),
-        // token,
+        token,
       };
     },
   },

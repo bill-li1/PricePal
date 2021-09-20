@@ -69,7 +69,7 @@ module.exports = {
   },
   Mutation: {
     async createTransaction(_, { transactionInput }, context) {
-      // const user = checkAuth(context);
+      const user = checkAuth(context);
       console.log('transactionInput', transactionInput.owerIds);
 
       const newTransaction = new Transaction({
@@ -95,7 +95,7 @@ module.exports = {
       };
     },
     async editTransaction(_, { transactionId, transactionInput }, context) {
-      // const user = checkAuth(context);
+      const user = checkAuth(context);
       const transaction = await Transaction.findById(transactionId);
 
       transaction.title = transactionInput.title;
@@ -115,7 +115,7 @@ module.exports = {
       };
     },
     async deleteTransaction(_, { transactionId }, context) {
-      // const user = checkAuth(context);
+      const user = checkAuth(context);
 
       try {
         const transaction = await Transaction.findById(transactionId);

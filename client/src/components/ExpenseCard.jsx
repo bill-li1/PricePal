@@ -35,19 +35,13 @@ import { FaAngleDown } from 'react-icons/fa';
 import { AuthContext } from 'context/auth';
 import { useContext, useState } from 'react';
 
-export function ExpenseCard({ transaction }) {
-  const context = useContext(AuthContext);
-  const { user } = context;
-  //   const [values, setValues] = useState({
-  //     title: '',
-  //     description: '',
-  //     bannerImg: 'google.ca',
-  //     locked: false,
-  //     active: true,
-  //     users: user ? [user.id] : null,
-  //   });
+export function ExpenseCard({ transaction, user }) {
+  // const context = useContext(AuthContext);
+  // const { user } = context;
+
   const [errors, setErrors] = useState({});
   const [expanded, setExpanded] = useState(false);
+  // const [expenseColor, setExpenseColor] = useState(''#636363'')
 
   const handleExpandClick = () => {
     setExpanded(!expanded);
@@ -63,6 +57,18 @@ export function ExpenseCard({ transaction }) {
       duration: theme.transitions.duration.shortest,
     }),
   }));
+
+  let expenseColor = '#00dea3'
+  if (user.id === transaction.payer.id){
+    expenseColor = '#00dea3' //green 
+  } else if (transaction.owerIds.includes(user.id)){
+    expenseColor = '#e80078' //red 
+  } else {
+    expenseColor ='#636363'//grey
+    // expenseColor ='#5BEC98'//purple
+  }
+  console.log('user, payer, ower, color',user.id, transaction.payer.id, transaction.owerIds, expenseColor)
+
   const useStyles = makeStyles(() => ({
     typography: {
       h1: {
@@ -71,7 +77,7 @@ export function ExpenseCard({ transaction }) {
     },
     title: {
       color: 'white',
-      backgroundColor: transaction.type == 'payment' ? '#00a5ff' : '#a05de8',
+      backgroundColor: transaction.type == 'payment' ? '#00a5ff' :  expenseColor,
     },
     subheader: {
       color: 'white',
@@ -80,7 +86,7 @@ export function ExpenseCard({ transaction }) {
   }));
   const classes = useStyles();
 
-  console.log('transaction', transaction);
+  // console.log('transaction', transaction);
   if (!transaction) {
     return <div></div>;
   }
@@ -98,11 +104,15 @@ export function ExpenseCard({ transaction }) {
                 ? 'Direct Payment from ' +
                   transaction.owerInfos[0].user.firstName +
                   ' to ' +
-                  transaction.payer.firstName
+                  transaction.payer.firstName +
+                  ', ' +
+                  new Date(transaction.date).toDateString()
                 : 'Paid by ' +
                   transaction.payer.firstName +
                   ' ' +
-                  transaction.payer.lastName
+                  transaction.payer.lastName +
+                  ', ' +
+                  new Date(transaction.date).toDateString()
             }
             style={styles.cardTop}
           >

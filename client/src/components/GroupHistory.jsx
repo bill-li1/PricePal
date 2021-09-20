@@ -32,25 +32,31 @@ export function GroupHistory(props) {
   const { loading } = useQuery(GROUP_TRANSACTIONS, {
     variables: { getTransactionsByGroupIdGroupId: groupId },
     onCompleted: (data) => {
-    const filteredTransactions = data.getTransactionsByGroupId
-    filteredTransactions.sort(function(t1, t2){
-        // Turn your strings into dates, and then subtract them
-        // to get a value that is either negative, positive, or zero.
-        return new Date(t2.date) - new Date(t2.date);
-      });
-      setTransactions(data.getTransactionsByGroupId);
+    const filteredTransactions = [ ...data.getTransactionsByGroupId]
+
+    const compareDates = (t1,t2) => {
+        if ( !new Date(t1.date) || !new Date(t2.date)){
+            console.log('invalid dates', t1,t2)
+            return 0;
+        }
+        return new Date(t2.date) - new Date(t1.date);
+    }
+    filteredTransactions.sort(compareDates)
+
+      console.log('filtered',filteredTransactions)
+      setTransactions(filteredTransactions);
     },
   });
 
 
-
+  console.log('context',context)
 
   return (
       <div>
 {    transactions.map((transaction) => {
         return (
           <div style={{ margin: '100' }}>
-            <ExpenseCard transaction={transaction} />
+            <ExpenseCard transaction={transaction} user ={context.user} />
           </div>
         );
       })}
