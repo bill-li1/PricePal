@@ -57,8 +57,8 @@ const useStyles = makeStyles((theme) => ({
   },
   profileImg: {
     borderRadius: '50%',
-    height: 300,
-    width: 300,
+    height: 250,
+    width: 250,
   },
 }));
 
@@ -192,7 +192,7 @@ export function AccountIcon() {
         ))}
       </Menu>
       <Dialog open={editOpen} onClose={onEditClose}>
-        <DialogTitle>
+        <DialogTitle style={{ textAlign: 'center' }}>
           <Typography variant="h1">Edit Profile</Typography>
         </DialogTitle>
         <form noValidate onSubmit={onSubmit}>
