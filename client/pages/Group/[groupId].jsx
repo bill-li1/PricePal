@@ -18,6 +18,8 @@ import { useQuery, gql, useMutation } from '@apollo/client';
 import { AuthContext } from '../../src/context/auth';
 import { LockRounded } from '@material-ui/icons';
 import { Alert } from '@material-ui/lab';
+import { ExpenseCard} from 'components/ExpenseCard';
+import { UserCard } from 'components/UserCard';
 
 const useStyles = makeStyles((theme) => ({
   mainWrapper: {
@@ -45,6 +47,7 @@ const useStyles = makeStyles((theme) => ({
     position: 'absolute',
     top: '0',
     width: '100%',
+    marginBottom: '2rem',
   },
   mainEmptyStyles: {
     display: 'block',
@@ -84,10 +87,11 @@ const useStyles = makeStyles((theme) => ({
     display: 'flex',
     justifyContent: 'center',
     flexShrink: '0',
-    marginTop: '1rem',
+    marginTop: '2rem',
   },
   mainAnnouncements: {
-    padding: '1rem',
+    // padding: '1rem',
+    paddingLeft: '1rem',
     overflow: 'hidden',
     marginLeft: '1rem',
     width: '100%',
@@ -217,7 +221,7 @@ export default function GroupPage() {
     setEditOpen(false);
   };
 
-  console.log(values);
+  // console.log(transactions);
 
   return (
     <div className={styles.mainWrapper}>
@@ -242,12 +246,7 @@ export default function GroupPage() {
       <div className={styles.mainAnnounce}>
         <div>
           <div className={styles.mainStatus}>
-            <p>Members</p>
-            <ul>
-              {group.users?.map((user) => {
-                return <li>{user.firstName + ' ' + user.lastName}</li>;
-              })}
-            </ul>
+            <UserCard users={group.users} />
           </div>
           {context.user && (
             <div className={styles.editContainer}>
@@ -349,12 +348,14 @@ export default function GroupPage() {
           )}
         </div>
         <div className={styles.mainAnnouncements}>
-          <ul>
-            {transactions?.map((transaction) => {
-              console.log(transactions);
-              return <li>{transaction.title}</li>;
-            })}
-          </ul>
+          {transactions?.map((transaction) => {
+            console.log(transactions);
+            return (
+              <div style={{ margin: '100' }}>
+                <ExpenseCard transaction={transaction} />
+              </div>
+            );
+          })}
         </div>
       </div>
     </div>
@@ -384,6 +385,30 @@ const GROUP_TRANSACTIONS = gql`
   query Query($getTransactionsByGroupIdGroupId: ID!) {
     getTransactionsByGroupId(groupId: $getTransactionsByGroupIdGroupId) {
       title
+      type
+      date
+      description
+      img
+      payer {
+        id
+        email
+        firstName
+        profileImg
+        lastName
+      }
+      owerIds
+      owerInfos {
+        id
+        user {
+          id
+          email
+          profileImg
+          firstName
+          lastName
+        }
+        notes
+        amount
+      }
     }
   }
 `;
