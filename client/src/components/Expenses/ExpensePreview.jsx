@@ -1,14 +1,21 @@
 import {
+  styled,
   Button,
   Checkbox,
-  // Card,
+  Card,
+  CardActions,
   CardContent,
+  CardHeader,
+  CardMedia,
+  Collapse,
+  Avatar,
+  IconButton,
   Dialog,
   DialogContent,
   DialogTitle,
   FormControlLabel,
   Grid,
-  // Table,
+  Table,
   TableBody,
   TableCell,
   TableContainer,
@@ -19,7 +26,12 @@ import {
   Typography,
 } from '@material-ui/core';
 
-import { Card, Table, Row, Col } from 'react-bootstrap';
+import { makeStyles } from '@material-ui/styles';
+
+import { FaAngleDown } from 'react-icons/fa';
+
+// import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+// import { Card, Table, Row, Col } from 'react-bootstrap';
 import { AuthContext } from 'context/auth';
 import { useContext, useState } from 'react';
 
@@ -35,13 +47,116 @@ export function ExpensePreview({ transaction }) {
   //     users: user ? [user.id] : null,
   //   });
   const [errors, setErrors] = useState({});
-  const [total, setTotal] = useState(0);
+  const [expanded, setExpanded] = useState(false);
+
+  const handleExpandClick = () => {
+    setExpanded(!expanded);
+  };
+
+  const ExpandMore = styled((props) => {
+    const { expand, ...other } = props;
+    return <IconButton {...other} />;
+  })(({ theme, expand }) => ({
+    transform: !expand ? 'rotate(0deg)' : 'rotate(180deg)',
+    marginLeft: 'auto',
+    transition: theme.transitions.create('transform', {
+      duration: theme.transitions.duration.shortest,
+    }),
+  }));
+  const useStyles = makeStyles(() => ({
+    typography: {
+      h1: {
+        color: 'white',
+      },  
+    },
+    title: {
+      color: 'white',
+      backgroundColor: '#5DB8FF',
+    },
+    subheader: {
+      color: 'white',
+      backgroundColor: '#5DB8FF',
+    },
+  }));
+  const classes = useStyles();
 
   console.log('transaction.owerInfos', transaction.owerInfos);
   return (
-    <Grid container spacing = {2}>
-      <Grid item xs = {12}>
-        <Card className ="shadow-sm" style= {{borderRadius: '10px'}}>
+    <Grid container spacing={2}>
+      <Grid item xs={12}>
+        <Card>
+          <CardHeader
+            disableTypography={true}
+            className={classes.title}
+            title={
+              <h1 style={styles.title}>
+                {transaction.title}
+              </h1>
+            }
+            subheader={
+              'Paid by ' +
+              transaction.payer.firstName +
+              ' ' +
+              transaction.payer.lastName
+            }
+          >
+            <h6>Hello</h6>
+          </CardHeader>
+          <CardContent>
+            <Table sx={{ width: '100%' }}>
+              <TableRow sx={{ width: '100%' }}>
+                {transaction.owerInfos.map((owerInfo, idx) => (
+                  <TableCell key={idx} component="th" scope="row">
+                    {owerInfo.user.firstName} {owerInfo.amount}
+                  </TableCell>
+                ))}
+                <ExpandMore
+                  expand={expanded}
+                  onClick={handleExpandClick}
+                  aria-expanded={expanded}
+                  aria-label="show more"
+                >
+                  <FaAngleDown />
+                  {/* <ExpandMoreIcon /> */}
+                </ExpandMore>
+              </TableRow>
+            </Table>
+          </CardContent>
+
+          <Collapse in={expanded} timeout="auto" unmountOnExit>
+            <CardContent>
+              <Grid container spacing={2}>
+                <Grid item xs={9}>
+                  <Typography paragraph>{transaction.description}</Typography>
+                  <Table sx={{ width: '100%' }}>
+                    <TableRow sx={{ width: '100%' }}>
+                      {transaction.owerInfos.map((owerInfo, idx) => (
+                        <TableCell key={idx} component="th" scope="row">
+                          <h4>
+                            {owerInfo.user.firstName +
+                              ' ' +
+                              owerInfo.user.lastName}
+                          </h4>
+                          <p>{'Owes: $' + owerInfo.amount}</p>
+                          <p>{'Notes: '+owerInfo.notes}</p>
+                        </TableCell>
+                      ))}
+                    </TableRow>
+                  </Table>
+                </Grid>
+
+                <Grid item xs={3}>
+                  <img
+                    style={styles.infoImg}
+                    src="https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?cs=srgb&dl=pexels-ella-olsson-1640777.jpg&fm=jpg"
+                  />
+                </Grid>
+              </Grid>
+            </CardContent>
+          </Collapse>
+        </Card>
+
+        {/* <Card className ="shadow-sm" style= {{borderRadius: '10px'}}>
           <Card.Header style={{ backgroundColor: '#55525a', borderRadius: '10px 10px 0px 0px' }}>
             <Row>
               <Col style={{ color: 'white' }}><h5>{transaction.title}</h5></Col>
@@ -61,7 +176,7 @@ export function ExpensePreview({ transaction }) {
               })}
             </Row>
           </Card.Body>
-        </Card>
+        </Card> */}
         {/* <Card style= {{ backgroundColor: '#2596be'}}>
         <CardContent>
           <TableContainer component={Paper} elevation={2}></TableContainer>
@@ -101,9 +216,15 @@ export function ExpensePreview({ transaction }) {
 const styles = {
   img: {
     height: '50px',
-  }
-}
-
+  },
+  infoImg: {
+    width: '100%',
+  },
+  title: {
+    color: 'white',
+    fontSize: 20,
+  },
+};
 
 // const GET_TRANSACTION_BY_ID = gql`
 // query Query($getTransactionByIdTransactionId: ID!) {

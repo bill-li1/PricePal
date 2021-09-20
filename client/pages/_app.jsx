@@ -9,7 +9,6 @@ import {
   createHttpLink,
   ApolloProvider,
 } from '@apollo/client';
-// import 'bootstrap/dist/css/bootstrap.min.css';
 
 const useStyles = makeStyles((theme) => ({
   root: {
