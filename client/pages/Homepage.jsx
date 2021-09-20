@@ -86,7 +86,7 @@ export default function register() {
           </p>
           {transactions?.map((transaction) => {
             console.log(transactions);
-            return <div style={{margin: '22'}}>
+            return <div style={{margin: '100'}}>
             <ExpensePreview transaction={transaction} />
             </div>;
           })}

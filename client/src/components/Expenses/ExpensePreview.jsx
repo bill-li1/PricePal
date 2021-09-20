@@ -1,14 +1,14 @@
 import {
   Button,
   Checkbox,
-  Card,
+  // Card,
   CardContent,
   Dialog,
   DialogContent,
   DialogTitle,
   FormControlLabel,
   Grid,
-  Table,
+  // Table,
   TableBody,
   TableCell,
   TableContainer,
@@ -18,6 +18,8 @@ import {
   Paper,
   Typography,
 } from '@material-ui/core';
+
+import { Card, Table, Row, Col } from 'react-bootstrap';
 import { AuthContext } from 'context/auth';
 import { useContext, useState } from 'react';
 
@@ -33,17 +35,34 @@ export function ExpensePreview({ transaction }) {
   //     users: user ? [user.id] : null,
   //   });
   const [errors, setErrors] = useState({});
+  const [total, setTotal] = useState(0);
 
-  function createData(name, calories, fat, carbs, protein) {
-    return { name, calories, fat, carbs, protein };
-  }
-
-  const rows = [createData('Frozen yoghurt', 159, 6.0, 24, 4.0)];
-  console.log('transaction', transaction)
-
+  console.log('transaction.owerInfos', transaction.owerInfos);
   return (
-    <div>
-      <Card style= {{ backgroundColor: '#2596be'}}>
+    <Grid container spacing = {2}>
+      <Grid item xs = {12}>
+        <Card className ="shadow-sm" style= {{borderRadius: '10px'}}>
+          <Card.Header style={{ backgroundColor: '#55525a', borderRadius: '10px 10px 0px 0px' }}>
+            <Row>
+              <Col style={{ color: 'white' }}><h5>{transaction.title}</h5></Col>
+              <Col style={{ textAlign: 'right', color: 'white' }}>
+                {transaction.date} {transaction.payer.firstName}
+              </Col>
+            </Row>
+          </Card.Header>
+          <Card.Body>
+            <Row>
+              {transaction.owerInfos.map((owerInfo) => {
+                return (
+                  <Col style={{ textAlign: 'center' }}>
+                    <img style={styles.img}src= {"https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg"}/>{owerInfo.user.firstName} {owerInfo.amount}
+                  </Col>
+                );
+              })}
+            </Row>
+          </Card.Body>
+        </Card>
+        {/* <Card style= {{ backgroundColor: '#2596be'}}>
         <CardContent>
           <TableContainer component={Paper} elevation={2}></TableContainer>
           <Table sx={{ minWidth: 650 }} aria-label="simple table">
@@ -73,9 +92,18 @@ export function ExpensePreview({ transaction }) {
           </Table>
         </CardContent>
       </Card>
-    </div>
+    </div> */}
+      </Grid>
+    </Grid>
   );
 }
+
+const styles = {
+  img: {
+    height: '50px',
+  }
+}
+
 
 // const GET_TRANSACTION_BY_ID = gql`
 // query Query($getTransactionByIdTransactionId: ID!) {
