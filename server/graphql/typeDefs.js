@@ -4,7 +4,7 @@ module.exports = gql`
   type OwerInfo {
     id: ID!
     user: User!
-    amount: String!
+    amount: Float!
     notes: String
   }
 
