@@ -89,8 +89,8 @@ export default function register() {
         <DialogTitle>
           <Typography variant="h1">PricePal</Typography>
         </DialogTitle>
-        <DialogContent>
-          <form noValidate onSubmit={onSubmit}>
+        <form noValidate onSubmit={onSubmit}>
+          <DialogContent>
             <TextField
               label="Email"
               placeholder="john.doe@gmail.com"
@@ -170,8 +170,8 @@ export default function register() {
                 </Grid>
               </Grid>
             </Grid>
-          </form>
-        </DialogContent>
+          </DialogContent>
+        </form>
       </Dialog>
     </main>
   );

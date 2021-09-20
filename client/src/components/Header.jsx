@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/styles';
 import { AuthContext } from 'context/auth';
 import Link from 'next/link';
 import { useContext } from 'react';
+import { AccountIcon } from './AccountIcon';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -32,9 +33,7 @@ export function Header() {
             </Link>
             <div className={styles.space} />
             {user ? (
-              <Link href="/">
-                <Button onClick={logout}>Logout</Button>
-              </Link>
+              <AccountIcon />
             ) : (
               <Link href="/">
                 <Button>Login</Button>
