@@ -7,6 +7,7 @@ import { JoinGroupForm } from 'components/JoinGroupForm';
 import { AuthContext } from 'context/auth';
 import gql from 'graphql-tag';
 import { useContext, useEffect, useState } from 'react';
+import { ExpensePreview } from 'components/ExpenseCard';
 
 const useStyles = makeStyles((theme) => ({
   root: {
