@@ -21,8 +21,6 @@ import {
   Typography,
 } from '@material-ui/core';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import AddIcon from '@material-ui/icons/Add';
-import PageviewIcon from '@material-ui/icons/Pageview';
 import { AuthContext } from 'context/auth';
 import gql from 'graphql-tag';
 import { useMutation } from '@apollo/client';
