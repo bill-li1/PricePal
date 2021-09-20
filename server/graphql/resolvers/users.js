@@ -179,7 +179,7 @@ module.exports = {
         ...res._doc,
         id: res._id,
         groups: multiGroupsHelper.bind(this, res._doc.groups),
-        token,
+        // token,
       };
     },
   },

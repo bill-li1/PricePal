@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
   },
   button: {
     position: 'sticky',
-    bottom: 16,
+    bottom: theme.spacing(8),
     float: 'right',
     zIndex: 100,
     marginTop: theme.spacing(3),
@@ -57,11 +57,10 @@ export default function Dashboard() {
   if (!user) {
     return <h1>Login to view your dashboard</h1>;
   }
-  console.log(groups);
 
   return (
     <section className={styles.root}>
-      <Grid container alignItems="center" justifyContent="center">
+      <Grid container>
         <Grid item xs={12} md={4}>
           tBD
         </Grid>
