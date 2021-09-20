@@ -1,8 +1,7 @@
-
 // @ts-ignore
 import { Button, makeStyles, TextField } from '@material-ui/core';
 import { useRouter } from 'next/router';
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { useQuery, gql } from '@apollo/client';
 import { Alert } from '@material-ui/lab';
 import { AuthContext } from '../src/context/auth';
@@ -10,13 +9,12 @@ import { AuthContext } from '../src/context/auth';
 import { ExpensePreview } from 'components/Expenses/ExpensePreview';
 import { CreateExpenseButton } from 'components/Expenses/CreateExpenseButton';
 import { CreateExpenseForm } from 'components/Expenses/CreateExpenseForm';
+import { UserCard } from 'components/UserCard';
 // import { useEffect } from 'react';
 
 export default function register() {
   const styles = useStyles();
-  const [group, setGroup] = useState({
-    users: []
-  });
+  const [group, setGroup] = useState({});
   const [transactions, setTransactions] = useState([]);
   const groupId = '6145666142748e62305a65ff';
   const context = useContext(AuthContext);
@@ -37,6 +35,7 @@ export default function register() {
     variables: { getGroupByIdGroupId: groupId },
     onCompleted: (data) => {
       setGroup(data.getGroupById);
+      console.log('onComplete',data.getGroupById)
     },
     onError: (error) => {
       console.log(error);
@@ -56,6 +55,10 @@ export default function register() {
     setCreateExpense(false);
   };
 
+  useEffect(() => {
+    console.log('group useEffect', group)
+  }, [group])
+  // console.log('group', group);
   return (
     <div className={styles.mainWrapper}>
       <div className={styles.mainContent}>
@@ -75,20 +78,14 @@ export default function register() {
       </div>
       <div className={styles.mainAnnounce}>
         <div className={styles.mainStatus}>
-          <p>Members</p>
-          <ul>
-            {group.users?.map((user, idx) => {
-              return <li key={idx}>{user.firstName + ' ' + user.lastName}</li>;
-            })}
-          </ul>
+          <UserCard users={group.users}/>
         </div>
         <div className={styles.mainAnnouncements}>
           <p
             onClick={() => {
               console.log('transactions', transactions);
             }}
-          >
-          </p>
+          ></p>
           <p
             onClick={() => {
               console.log('group', group);
@@ -96,15 +93,23 @@ export default function register() {
           >
             group
             <div>
-              <CreateExpenseButton users={group.users} onClick={handleCreateExpenseClick}></CreateExpenseButton>
-              <CreateExpenseForm open={createExpense} onClose={handleCreateExpenseClose}></CreateExpenseForm>
+              <CreateExpenseButton
+                users={group.users}
+                onClick={handleCreateExpenseClick}
+              ></CreateExpenseButton>
+              <CreateExpenseForm
+                open={createExpense}
+                onClose={handleCreateExpenseClose}
+              ></CreateExpenseForm>
             </div>
           </p>
           {transactions?.map((transaction) => {
             console.log(transactions);
-            return <div style={{margin: '100'}}>
-            <ExpensePreview transaction={transaction} />
-            </div>;
+            return (
+              <div style={{ margin: '100' }}>
+                <ExpensePreview transaction={transaction} />
+              </div>
+            );
           })}
         </div>
       </div>
@@ -246,7 +251,7 @@ const useStyles = makeStyles((theme) => ({
     border: '1.5px solid #dadce0',
     padding: '20px',
     borderRadius: '10px',
-    width: '20vw',
+    width: '30vw',
   },
   mainWrapper100: {
     display: 'flex!important',
