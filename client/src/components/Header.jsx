@@ -25,7 +25,7 @@ export function Header() {
       <div className={styles.root}>
         <AppBar position="relative">
           <Toolbar>
-            <Link href="/">
+            <Link href="/Dashboard">
               <Typography variant="h1" className={styles.logo}>
                 PricePal
               </Typography>

@@ -101,7 +101,7 @@ module.exports = {
       const res = await newUser.save();
       // const token = generateToken(res);
 
-      console.log(res);
+      // console.log(res);
 
       return {
         ...res._doc,
@@ -125,7 +125,6 @@ module.exports = {
         await group.save();
       }
 
-
       // const token = generateToken(user);
 
       return {
@@ -137,19 +136,18 @@ module.exports = {
     },
 
     async addGroupUserByCode(_, { code, userId }) {
-      const groupRes = await Group.find({code});
+      const groupRes = await Group.find({ code });
       const group = groupRes[0];
       if (!group) {
-        throw new Error('Code does not exist')
+        throw new Error('Code does not exist');
       }
       const user = await User.findById(userId);
 
       if (!user.groups.includes(group._id)) {
         user.groups.push(group._id);
         await user.save();
-      } 
-      else {
-        throw new Error('User already exists in group')
+      } else {
+        throw new Error('User already exists in group');
       }
       if (!group.users.includes(userId)) {
         group.users.push(userId);
