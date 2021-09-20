@@ -19,7 +19,7 @@ const userSchema = new Schema(
 const owerInfoSchema = new Schema(
   {
     user: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
-    amount: { type: String, required: true },
+    amount: { type: Number, required: true },
     notes: { type: String, required: false, trim: true },
   },
   { timestamps: true },
