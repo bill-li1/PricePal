@@ -68,11 +68,13 @@ export default function Dashboard() {
           <h1>Dashboard</h1>
           <Grid container direction="row" spacing={2}>
             {groups.map((group) => {
-              return (
-                <Grid item xs={12} md={4} key={group}>
-                  <GroupCard group={group} />
-                </Grid>
-              );
+              if (group.active) {
+                return (
+                  <Grid item xs={12} md={4} key={group}>
+                    <GroupCard group={group} />
+                  </Grid>
+                );
+              }
             })}
           </Grid>
           <div className={styles.button}>
