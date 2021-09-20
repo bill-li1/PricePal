@@ -32,9 +32,17 @@ export function GroupHistory(props) {
   const { loading } = useQuery(GROUP_TRANSACTIONS, {
     variables: { getTransactionsByGroupIdGroupId: groupId },
     onCompleted: (data) => {
+    const filteredTransactions = data.getTransactionsByGroupId
+    filteredTransactions.sort(function(t1, t2){
+        // Turn your strings into dates, and then subtract them
+        // to get a value that is either negative, positive, or zero.
+        return new Date(t2.date) - new Date(t2.date);
+      });
       setTransactions(data.getTransactionsByGroupId);
     },
   });
+
+
 
 
   return (
@@ -47,8 +55,6 @@ export function GroupHistory(props) {
         );
       })}
       </div>
-
-
   );
 }
 
