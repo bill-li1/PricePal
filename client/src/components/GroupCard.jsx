@@ -32,6 +32,10 @@ const useStyles = makeStyles((theme) => ({
 export function GroupCard(props) {
   const styles = useStyles();
   const { group } = props;
+
+  if (!group.active) {
+    return <></>;
+  }
   return (
     <Link href={`/Group/${group.id}`}>
       <Card className={styles.root}>
