@@ -1,7 +1,8 @@
 export function netGroup(userId, transactions) {
   const positiveTransactions = transactions.filter(
-    (transaction) => transaction.payer === userId
+    (transaction) => transaction.payer.id === userId
   );
+  console.log(positiveTransactions);
   const negativeTransactions = transactions.filter((transaction) =>
     transaction.owerIds.includes(userId)
   );
@@ -15,13 +16,15 @@ export function netGroup(userId, transactions) {
 }
 
 export function netUser(userOne, userTwo, transactions) {
+  console.log('user1', userOne);
+  console.log('user2', userTwo);
   const positiveTransactions = transactions.filter(
     (transaction) =>
-      transaction.payer === userOne && transaction.type !== 'payment'
+      transaction.payer.id === userOne && transaction.type !== 'payment'
   ); // money you are owed (will recieve) from user2
   const negativeTransactionsPayment = transactions.filter(
     (transaction) =>
-      transaction.payer === userOne && transaction.type === 'payment'
+      transaction.payer.id === userOne && transaction.type === 'payment'
   ); // money user2 has sent you (paid off)
   const negativeTransactions = transactions.filter(
     (transaction) =>
@@ -32,6 +35,11 @@ export function netUser(userOne, userTwo, transactions) {
     (transaction) =>
       transaction.owerIds.includes(userOne) && transaction.type === 'payment'
   ); // money you have paid to user2
+
+  console.log('positiveTransactions', positiveTransactions);
+  console.log('negativeTransactions', negativeTransactions);
+  console.log('positivePayments', positiveTransactionsPayment);
+  console.log('negativePayments', negativeTransactionsPayment);
   const totalPositive =
     positiveTransactions
       .map((transaction) => findOwerAmount(userTwo, transaction))
@@ -56,6 +64,10 @@ export function totalTransaction(transaction) {
 }
 
 export function findOwerAmount(userId, transaction) {
-  return transaction.owerInfos.find((owerInfo) => owerInfo.user.id === userId)
-    .amount;
+  console.log('userId', userId);
+  console.log('transaction', transaction);
+  return (transaction.owerInfos.find((owerInfo) => owerInfo.user.id === userId)
+    ? transaction.owerInfos.find((owerInfo) => owerInfo.user.id === userId)
+      .amount
+    : 0);
 }

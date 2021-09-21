@@ -13,11 +13,12 @@ import {
   Typography,
 } from '@material-ui/core';
 import { useRouter } from 'next/router';
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { useQuery, gql, useMutation } from '@apollo/client';
 import { AuthContext } from '../../src/context/auth';
 import { LockRounded } from '@material-ui/icons';
 import { Alert } from '@material-ui/lab';
+import { commonGroups } from '../../src/utils/functions';
 // import { ExpenseCard } from 'components/Expenses/ExpenseCard';
 import { UserCard } from 'components/UserCard';
 import { GroupHistory } from 'components/History/GroupHistory';
@@ -79,6 +80,7 @@ const useStyles = makeStyles((theme) => ({
     fontFamily: 'Google Sans, Roboto, Arial, sans - serif',
     fontSize: '1.375rem',
     lineHeight: '1.75rem',
+    marginTop: '0.6rem',
     color: '#fff',
   },
   mainWrapper2: {
@@ -145,15 +147,20 @@ const useStyles = makeStyles((theme) => ({
 export default function UserPage() {
   const styles = useStyles();
   const [user, setUser] = useState({});
+  const [group, setGroup] = useState({});
   // const [values, setValues] = useState({});
   const [errors, setErrors] = useState({});
   const [editOpen, setEditOpen] = useState(false);
   // const [transactions, setTransactions] = useState([]);
   const router = useRouter();
-  const queryKey = 'userId';
-  const userId =
-    router.query[queryKey] ||
-    router.asPath.match(new RegExp(`[&?]${queryKey}=(.*)(&|$)`));
+  const userQueryKey = 'userId';
+  const groupQueryKey = 'groupId';
+  const [userId, setUserId] = useState(router.query[userQueryKey] ||
+    router.asPath.match(new RegExp(`[&?]${userQueryKey}=(.*)(&|$)`)));
+  const groupId =
+    router.query[groupQueryKey] ||
+    router.asPath.match(new RegExp(`[&?]${groupQueryKey}=(.*)(&|$)`));
+
   const context = useContext(AuthContext);
 
   const [createExpense, setCreateExpense] = useState(false);
@@ -161,9 +168,20 @@ export default function UserPage() {
   const handleCreateExpenseClick = () => {
     setCreateExpense(true);
   };
+
   const handleCreateExpenseClose = () => {
     setCreateExpense(false);
   };
+
+  useQuery(GROUP_INFO, {
+    variables: { getGroupByIdGroupId: groupId },
+    onCompleted: (data) => {
+      setGroup(data.getGroupById);
+    },
+    onError: (error) => {
+      setErrors(error.graphQLErrors[0].extensions.errors);
+    },
+  });
 
   // const { loading } = useQuery(GROUP_TRANSACTIONS, {
   //   variables: { getTransactionsByGroupIdGroupId: groupId },
@@ -175,6 +193,7 @@ export default function UserPage() {
   useQuery(USER_INFO, {
     variables: { getUserByIdUserId: userId },
     onCompleted: (data) => {
+      console.log('user 2 query', data.getUserById);
       setUser(data.getUserById);
       // setValues({
       //   title: data.getGroupById.title,
@@ -244,121 +263,32 @@ export default function UserPage() {
         <div className={styles.mainWrapper1}>
           <div
             className={styles.mainBgImage}
-            style={{ backgroundImage: `url(${group.bannerImg})` }}
+            style={{ backgroundImage: `url(https://skunkapetreestands.com/wp-content/uploads/2019/08/Dark-Woods-Banner.jpg)` }}
           >
             <div className={styles.mainEmptyStyles} />
           </div>
           <div className={styles.mainText}>
-            <h1 className={styles.mainHeading}>{group.title}</h1>
-            <div className={styles.mainSection}>{group.description}</div>
-            <div className={styles.mainWrapper2}>
-              <em className={styles.mainCode}>Group Code:</em>
-              <div className={styles.mainCode}>{group.code}</div>
-            </div>
+            <h1 className={styles.mainHeading}>{"Payment History"}</h1>
+            <div className={styles.mainSection}>{user.firstName + " " + user.lastName}</div>
           </div>
         </div>
       </div>
       <div className={styles.mainAnnounce}>
         <div>
           <div className={styles.mainStatus}>
-            <UserCard users={group.users} />
+            <UserCard users={group.users} group={group} />
           </div>
           {context.user && (
             <div className={styles.editContainer}>
               <Button
                 color="primary"
                 className={styles.editButton}
-                onClick={() => setEditOpen(true)}
+                onClick={() => {
+                  router.push(`/Group/${group.id}`);
+                }}
               >
-                <Typography variant="h5">Edit Group</Typography>
+                <Typography variant="h5">Return to Group</Typography>
               </Button>
-              <Dialog open={editOpen} onClose={onEditClose}>
-                <DialogTitle style={{ textAlign: 'center' }}>
-                  <Typography variant="h1">Edit Group</Typography>
-                </DialogTitle>
-                <form noValidate onSubmit={onSubmit}>
-                  <DialogContent style={{ textAlign: 'center' }}>
-                    <TextField
-                      label="Banner Image Link"
-                      placeholder="https://media.istockphoto.com/vectors/user-icon-flat-isolated-on-white-background-user-symbol-vector-vector-id1300845620?b=1&k=20&m=1300845620&s=170667a&w=0&h=JbOeyFgAc6-3jmptv6mzXpGcAd_8xqkQa_oUK2viFr8="
-                      variant="outlined"
-                      margin="normal"
-                      type="text"
-                      name="bannerImg"
-                      error={
-                        errors && errors.hasOwnProperty('bannerImg')
-                          ? true
-                          : false
-                      }
-                      value={values.bannerImg}
-                      onChange={onChange}
-                    />
-                    <TextField
-                      label="Title"
-                      placeholder="Expense Sheet"
-                      variant="outlined"
-                      margin="normal"
-                      type="text"
-                      name="title"
-                      error={
-                        errors && errors.hasOwnProperty('title') ? true : false
-                      }
-                      value={values.title}
-                      onChange={onChange}
-                    />
-                    <TextField
-                      label="Description"
-                      placeholder="This is an expense sheet description."
-                      variant="outlined"
-                      margin="normal"
-                      type="text"
-                      name="description"
-                      value={values.description}
-                      onChange={onChange}
-                    />
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          color="primary"
-                          checked={values.locked}
-                          onChange={onChange}
-                          name="locked"
-                        />
-                      }
-                      label="locked"
-                    />
-                    <FormControlLabel
-                      control={
-                        <Checkbox
-                          color="primary"
-                          checked={values.active}
-                          onChange={onChange}
-                          name="active"
-                        />
-                      }
-                      label="active"
-                    />
-                    <Grid container>
-                      <Grid item xs={12}>
-                        {errors &&
-                          Object.keys(errors).length > 0 &&
-                          Object.values(errors).map((err) => {
-                            return (
-                              <Alert severity="error" key={err}>
-                                {err.message}
-                              </Alert>
-                            );
-                          })}
-                      </Grid>
-                    </Grid>
-                  </DialogContent>
-                  <DialogActions>
-                    <Button color="primary" type="submit">
-                      Submit Changes
-                    </Button>
-                  </DialogActions>
-                </form>
-              </Dialog>
             </div>
           )}
         </div>
@@ -387,8 +317,7 @@ export default function UserPage() {
               />
             </Dialog>
           </div>
-          <GroupHistory groupId={groupId} />
-          {/* <PersonalHistory groupId = {groupId} user2 = {group.users[0]}></PersonalHistory> */}
+          {<PersonalHistory groupId={groupId} user2={user} user2Id={userId}></PersonalHistory>}
         </div>
       </div>
     </div>
@@ -398,7 +327,6 @@ export default function UserPage() {
 const USER_INFO = gql`
   query Query($getUserByIdUserId: ID!) {
     getUserById(userId: $getUserByIdUserId) {
-      id
       email
       profileImg
       firstName
@@ -407,9 +335,9 @@ const USER_INFO = gql`
   }
 `;
 
-const EDIT_GROUP = gql`
-  mutation Mutation($editGroupGroupId: ID!, $editGroupGroupInput: GroupInput!) {
-    editGroup(groupId: $editGroupGroupId, groupInput: $editGroupGroupInput) {
+const GROUP_INFO = gql`
+  query Query($getGroupByIdGroupId: ID!) {
+    getGroupById(groupId: $getGroupByIdGroupId) {
       id
       title
       description
@@ -418,6 +346,7 @@ const EDIT_GROUP = gql`
       locked
       active
       users {
+        id
         email
         profileImg
         firstName

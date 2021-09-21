@@ -21,8 +21,6 @@ import { Alert } from '@material-ui/lab';
 // import { ExpenseCard } from 'components/Expenses/ExpenseCard';
 import { UserCard } from 'components/UserCard';
 import { GroupHistory } from 'components/History/GroupHistory';
-import { PersonalHistory } from 'components/PersonalHistory';
-// @ts-ignore
 import { Loading } from 'components/Loading';
 import { CreateExpenseButton } from 'components/Expenses/CreateExpenseButton';
 import { CreateExpenseForm } from 'components/Expenses/CreateExpenseForm';
@@ -261,7 +259,7 @@ export default function GroupPage() {
       <div className={styles.mainAnnounce}>
         <div>
           <div className={styles.mainStatus}>
-            <UserCard users={group.users} />
+            <UserCard users={group.users} group={group} />
           </div>
           {context.user && (
             <div className={styles.editContainer}>
@@ -364,7 +362,7 @@ export default function GroupPage() {
         </div>
         <div className={styles.mainAnnouncements}>
           <div style={{ textAlign: 'right', marginBottom: 10 }}>
-          
+
             <CreateExpenseButton
               onClick={handleCreateExpenseClick}
             ></CreateExpenseButton>
@@ -389,7 +387,7 @@ export default function GroupPage() {
             </Dialog>
           </div>
           <GroupHistory groupId={groupId} />
-           {/* <PersonalHistory groupId = {groupId} user2 = {group.users[0]}></PersonalHistory> */}
+          {/* <PersonalHistory groupId = {groupId} user2 = {group.users[0]}></PersonalHistory> */}
         </div>
       </div>
     </div>

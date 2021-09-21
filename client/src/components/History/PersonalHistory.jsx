@@ -12,9 +12,10 @@ import { makeStyles } from '@material-ui/styles';
 import gql from 'graphql-tag';
 import { useState, useContext } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
-import { AuthContext } from '../../src/context/auth';
+import { AuthContext } from '../../../src/context/auth';
 import { ExpenseCard } from 'components/Expenses/ExpenseCard';
 import { StyleRounded } from '@material-ui/icons';
+import { netUser } from '../../utils/functions';
 import { style } from 'dom-helpers';
 
 // const useStyles = makeStyles((theme) => ({
@@ -36,8 +37,7 @@ import { style } from 'dom-helpers';
 export function PersonalHistory(props) {
   //   const styles = useStyles();
   const context = useContext(AuthContext);
-  const { groupId, users } = props;
-  const user2 = users[0]
+  const { groupId, user2, user2Id } = props;
   const user1 = context.user;
   const [transactions, setTransactions] = useState([]);
 
@@ -55,29 +55,27 @@ export function PersonalHistory(props) {
       };
 
       const filterByUser = (transaction) => {
-        if (!transaction.payer.id || !transaction.owerIds){
+        if (!transaction.payer.id || !transaction.owerIds) {
           return false;
         }
         if ((transaction.payer.id == user1.id &&
-          transaction.owerIds.includes(user2.id)) ||
-          (transaction.payer.id == user2.id &&
+          transaction.owerIds.includes(user2Id)) ||
+          (transaction.payer.id == user2Id &&
             transaction.owerIds.includes(user1.id))) {
-              return true;
-            }
-            else {
-              return false;
-            }
+          return true;
+        }
+        else {
+          return false;
+        }
       }
-      filteredTransactions.filter(filterByUser);
+      const temp = filteredTransactions.filter(filterByUser);
 
-      filteredTransactions.sort(compareDates);
+      const temp2 = temp.sort(compareDates);
 
-      console.log('filtered', filteredTransactions);
-      setTransactions(filteredTransactions);
+      console.log('filtered', temp2);
+      setTransactions(temp2);
     },
   });
-
-  console.log('context', context);
 
   return (
     <div>
@@ -92,16 +90,15 @@ export function PersonalHistory(props) {
               </p>
             </TableCell>
             <TableCell>
-              <p style={styles.headerText}>Your Current Balance is:</p>
+              <p style={styles.headerText}>Your Current Balance is: {netUser(user1.id, user2Id, transactions)}</p>
             </TableCell>
           </TableRow>
         </Table>
       </Paper>
-
       {transactions.map((transaction) => {
         return (
           <div style={{ margin: '100' }}>
-          <p>{transaction.payer.firstName}</p>
+            <p>{transaction.payer.firstName}</p>
             <ExpenseCard transaction={transaction} user={context.user} />
           </div>
         );
