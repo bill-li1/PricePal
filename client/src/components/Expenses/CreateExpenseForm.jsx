@@ -293,7 +293,7 @@ export function CreateExpenseForm(props) {
             </div>
           ) : (
             <div>
-              <TableContainer component={Paper}>
+              <TableContainer>
                 <Table>
                   <TableHead>
                     <TableRow>
