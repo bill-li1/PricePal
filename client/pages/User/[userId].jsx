@@ -21,7 +21,7 @@ import { Alert } from '@material-ui/lab';
 // import { ExpenseCard } from 'components/Expenses/ExpenseCard';
 import { UserCard } from 'components/UserCard';
 import { GroupHistory } from 'components/History/GroupHistory';
-import { PersonalHistory } from 'components/PersonalHistory';
+import { PersonalHistory } from 'components/History/PersonalHistory';
 // @ts-ignore
 import { Loading } from 'components/Loading';
 import { CreateExpenseButton } from 'components/Expenses/CreateExpenseButton';
@@ -142,16 +142,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function GroupPage() {
+export default function UserPage() {
   const styles = useStyles();
-  const [group, setGroup] = useState({});
-  const [values, setValues] = useState({});
+  const [user, setUser] = useState({});
+  // const [values, setValues] = useState({});
   const [errors, setErrors] = useState({});
   const [editOpen, setEditOpen] = useState(false);
   // const [transactions, setTransactions] = useState([]);
   const router = useRouter();
-  const queryKey = 'groupId';
-  const groupId =
+  const queryKey = 'userId';
+  const userId =
     router.query[queryKey] ||
     router.asPath.match(new RegExp(`[&?]${queryKey}=(.*)(&|$)`));
   const context = useContext(AuthContext);
@@ -172,17 +172,17 @@ export default function GroupPage() {
   //   },
   // });
 
-  useQuery(GROUP_INFO, {
-    variables: { getGroupByIdGroupId: groupId },
+  useQuery(USER_INFO, {
+    variables: { getUserByIdUserId: userId },
     onCompleted: (data) => {
-      setGroup(data.getGroupById);
-      setValues({
-        title: data.getGroupById.title,
-        description: data.getGroupById.description,
-        bannerImg: data.getGroupById.bannerImg,
-        active: data.getGroupById.active,
-        locked: data.getGroupById.locked,
-      });
+      setUser(data.getUserById);
+      // setValues({
+      //   title: data.getGroupById.title,
+      //   description: data.getGroupById.description,
+      //   bannerImg: data.getGroupById.bannerImg,
+      //   active: data.getGroupById.active,
+      //   locked: data.getGroupById.locked,
+      // });
     },
     onError: (error) => {
       console.log('here', JSON.stringify(error, null, 2));
@@ -191,50 +191,50 @@ export default function GroupPage() {
     },
   });
 
-  const [editGroup] = useMutation(EDIT_GROUP, {
-    update(_, { data: { editGroup: groupData } }) {
-      setGroup(groupData);
-      console.log(groupData);
-      setEditOpen(false);
-      // router.reload();
-    },
-    onError: (error) => {
-      console.log(JSON.stringify(error, null, 2));
-      // console.log('error', error.graphQLErrors[0].extensions.exception.errors);
-      if (error.graphQLErrors[0]) {
-        setErrors(error.graphQLErrors[0].extensions.exception.errors);
-      }
-    },
-  });
+  // const [editGroup] = useMutation(EDIT_GROUP, {
+  //   update(_, { data: { editGroup: groupData } }) {
+  //     setGroup(groupData);
+  //     console.log(groupData);
+  //     setEditOpen(false);
+  //     // router.reload();
+  //   },
+  //   onError: (error) => {
+  //     console.log(JSON.stringify(error, null, 2));
+  //     // console.log('error', error.graphQLErrors[0].extensions.exception.errors);
+  //     if (error.graphQLErrors[0]) {
+  //       setErrors(error.graphQLErrors[0].extensions.exception.errors);
+  //     }
+  //   },
+  // });
 
-  const onChange = (event) => {
-    setValues({
-      ...values,
-      [event.target.name]:
-        event.target.name === 'locked' || event.target.name === 'active'
-          ? event.target.checked
-          : event.target.value,
-    });
-  };
+  // const onChange = (event) => {
+  //   setValues({
+  //     ...values,
+  //     [event.target.name]:
+  //       event.target.name === 'locked' || event.target.name === 'active'
+  //         ? event.target.checked
+  //         : event.target.value,
+  //   });
+  // };
 
-  const onSubmit = (event) => {
-    event.preventDefault();
-    setErrors({});
-    try {
-      editGroup({
-        variables: {
-          editGroupGroupId: groupId,
-          editGroupGroupInput: values,
-        },
-      });
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  // const onSubmit = (event) => {
+  //   event.preventDefault();
+  //   setErrors({});
+  //   try {
+  //     editGroup({
+  //       variables: {
+  //         editGroupGroupId: groupId,
+  //         editGroupGroupInput: values,
+  //       },
+  //     });
+  //   } catch (err) {
+  //     console.log(err);
+  //   }
+  // };
 
-  const onEditClose = () => {
-    setEditOpen(false);
-  };
+  // const onEditClose = () => {
+  //   setEditOpen(false);
+  // };
 
   // console.log(transactions);
 
@@ -364,7 +364,6 @@ export default function GroupPage() {
         </div>
         <div className={styles.mainAnnouncements}>
           <div style={{ textAlign: 'right', marginBottom: 10 }}>
-          
             <CreateExpenseButton
               onClick={handleCreateExpenseClick}
             ></CreateExpenseButton>
@@ -389,30 +388,21 @@ export default function GroupPage() {
             </Dialog>
           </div>
           <GroupHistory groupId={groupId} />
-           {/* <PersonalHistory groupId = {groupId} user2 = {group.users[0]}></PersonalHistory> */}
+          {/* <PersonalHistory groupId = {groupId} user2 = {group.users[0]}></PersonalHistory> */}
         </div>
       </div>
     </div>
   );
 }
 
-const GROUP_INFO = gql`
-  query Query($getGroupByIdGroupId: ID!) {
-    getGroupById(groupId: $getGroupByIdGroupId) {
+const USER_INFO = gql`
+  query Query($getUserByIdUserId: ID!) {
+    getUserById(userId: $getUserByIdUserId) {
       id
-      title
-      description
-      bannerImg
-      code
-      locked
-      active
-      users {
-        id
-        email
-        profileImg
-        firstName
-        lastName
-      }
+      email
+      profileImg
+      firstName
+      lastName
     }
   }
 `;

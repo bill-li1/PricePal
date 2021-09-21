@@ -65,6 +65,7 @@ import {
           {users?.map((user) => {
             return (
               <div>
+              <Link href={`/User/${user.id}`}>
                 <ListItem key={user.id} className={styles.userCard}>
                   <ListItemAvatar>
                     <Avatar
@@ -78,6 +79,7 @@ import {
                     {user.firstName + " " + user.lastName}
                   </h3>
                 </ListItem>
+                </Link>
                 {user !== users[users.length - 1] ? <Divider /> : null}
               </div>
             );
