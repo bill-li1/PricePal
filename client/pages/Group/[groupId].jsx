@@ -18,10 +18,17 @@ import { useQuery, gql, useMutation } from '@apollo/client';
 import { AuthContext } from '../../src/context/auth';
 import { LockRounded } from '@material-ui/icons';
 import { Alert } from '@material-ui/lab';
-import { ExpenseCard } from 'components/ExpenseCard';
+// import { ExpenseCard } from 'components/Expenses/ExpenseCard';
 import { UserCard } from 'components/UserCard';
-import { GroupHistory } from 'components/GroupHistory';
+import { GroupHistory } from 'components/History/GroupHistory';
+import { PersonalHistory } from 'components/History/PersonalHistory';
 // @ts-ignore
+import { Loading } from 'components/Loading';
+import { CreateExpenseButton } from 'components/Expenses/CreateExpenseButton';
+import { CreateExpenseForm } from 'components/Expenses/CreateExpenseForm';
+import { CreatePaymentButton } from 'components/Payments/CreatePaymentButton';
+import { CreatePaymentForm } from 'components/Payments/CreatePaymentForm';
+
 const useStyles = makeStyles((theme) => ({
   mainWrapper: {
     margin: '0 auto',
@@ -151,6 +158,22 @@ export default function GroupPage() {
     router.asPath.match(new RegExp(`[&?]${queryKey}=(.*)(&|$)`));
   const context = useContext(AuthContext);
 
+  const [createExpense, setCreateExpense] = useState(false);
+  const handleCreateExpenseClick = () => {
+    setCreateExpense(true);
+  };
+  const handleCreateExpenseClose = () => {
+    setCreateExpense(false);
+  };
+
+  const [createPayment, setCreatePayment] = useState(false);
+  const handleCreatePaymentClick = () => {
+    setCreatePayment(true);
+  };
+  const handleCreatePaymentClose = () => {
+    setCreatePayment(false);
+  };
+
   // const { loading } = useQuery(GROUP_TRANSACTIONS, {
   //   variables: { getTransactionsByGroupIdGroupId: groupId },
   //   onCompleted: (data) => {
@@ -247,7 +270,7 @@ export default function GroupPage() {
       <div className={styles.mainAnnounce}>
         <div>
           <div className={styles.mainStatus}>
-            <UserCard users={group.users} />
+            <UserCard users={group.users} group={group} />
           </div>
           {context.user && (
             <div className={styles.editContainer}>
@@ -349,7 +372,59 @@ export default function GroupPage() {
           )}
         </div>
         <div className={styles.mainAnnouncements}>
-        <GroupHistory groupId = {groupId}/>
+          <div style={{ textAlign: 'right', marginBottom: 10 }}>
+            <Grid container spacing={1} justify="flex-end">
+              <Grid item xs={7}></Grid>
+              <Grid item>
+                <CreateExpenseButton
+                  onClick={handleCreateExpenseClick}
+                ></CreateExpenseButton>
+              </Grid>
+              <Grid item>
+                <CreatePaymentButton
+                  onClick={handleCreatePaymentClick}
+                ></CreatePaymentButton>
+              </Grid>
+            </Grid>
+            <Dialog
+              open={createExpense}
+              onClose={handleCreateExpenseClose}
+              maxWidth="lg"
+              PaperProps={{
+                style: {
+                  borderRadius: 40,
+                  boxShadow: '5px 5px 5px rgb(76, 81, 89)',
+                },
+              }}
+              scroll={'paper'}
+            >
+              <CreateExpenseForm
+                onClose={handleCreateExpenseClose}
+                users={group.users}
+                group={group}
+              />
+            </Dialog>
+            <Dialog
+              open={createPayment}
+              onClose={handleCreatePaymentClose}
+              maxWidth="lg"
+              PaperProps={{
+                style: {
+                  borderRadius: 40,
+                  boxShadow: '5px 5px 5px rgb(76, 81, 89)',
+                },
+              }}
+              scroll={'paper'}
+            >
+              <CreatePaymentForm
+                onClose={handleCreatePaymentClose}
+                users={group.users}
+                group={group}
+              />
+            </Dialog>
+          </div>
+          <GroupHistory groupId={groupId} />
+          {/* <PersonalHistory groupId = {groupId} user2 = {group.users[0]}></PersonalHistory> */}
         </div>
       </div>
     </div>
@@ -367,6 +442,7 @@ const GROUP_INFO = gql`
       locked
       active
       users {
+        id
         email
         profileImg
         firstName
@@ -375,38 +451,6 @@ const GROUP_INFO = gql`
     }
   }
 `;
-
-// const GROUP_TRANSACTIONS = gql`
-//   query Query($getTransactionsByGroupIdGroupId: ID!) {
-//     getTransactionsByGroupId(groupId: $getTransactionsByGroupIdGroupId) {
-//       title
-//       type
-//       date
-//       description
-//       img
-//       payer {
-//         id
-//         email
-//         firstName
-//         profileImg
-//         lastName
-//       }
-//       owerIds
-//       owerInfos {
-//         id
-//         user {
-//           id
-//           email
-//           profileImg
-//           firstName
-//           lastName
-//         }
-//         notes
-//         amount
-//       }
-//     }
-//   }
-// `;
 
 const EDIT_GROUP = gql`
   mutation Mutation($editGroupGroupId: ID!, $editGroupGroupInput: GroupInput!) {
