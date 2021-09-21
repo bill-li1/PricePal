@@ -24,7 +24,7 @@ module.exports = gql`
   type User {
     id: ID!
     email: String!
-    # token: String!
+    token: String!
     profileImg: String!
     firstName: String!
     lastName: String!
@@ -94,32 +94,28 @@ module.exports = gql`
     getTransactionsByUserId(userId: ID!): [Transaction] # completed, tested
     getTransactionsByGroupId(groupId: ID!): [Transaction] # completed, tested
     getTransactionById(transactionId: ID!): Transaction # completed, tested
-
-    getOwerInfos: [OwerInfo] 
-    getOwerInfoById(owerInfoId: ID!) : OwerInfo
+    getOwerInfos: [OwerInfo]
+    getOwerInfoById(owerInfoId: ID!): OwerInfo
 
     getUserById(userId: ID!): User!
 
     getGroupById(groupId: ID!): Group
   }
-    
+
   type Mutation {
     register(registerInput: RegisterInput): User! #completed, tested
     login(loginInput: LoginInput): User! #completed, tested
     editUser(editUserInput: EditUserInput): User! #completed, tested
     addGroupUser(groupId: ID, userId: ID): User! #completed, tested
     addGroupUserByCode(code: String, userId: ID): User! #completed, tested
-
     createTransaction(transactionInput: TransactionInput!): Transaction! #completed, tested
     editTransaction(transactionId: ID!, transactionInput: TransactionInput!): Transaction! #completed, tested
     deleteTransaction(transactionId: ID!): String! #completed?
-
     createOwerInfo(owerInfoInput: OwerInfoInput!): OwerInfo! #completed, tested
     editOwerInfo(owerInfoId: ID!, owerInfoInput: OwerInfoInput!): OwerInfo! #completed, tested
     deleteOwerInfo(owerInfoId: ID!): String! #completed, tested
-
     createGroup(groupInput: GroupInput!): Group! #completed, tested
     editGroup(groupId: ID!, groupInput: GroupInput!): Group! #completed, tested
     setGroupActive(groupId: ID!, active: Boolean!): Group! #completed, tested
   }
-`
+`;

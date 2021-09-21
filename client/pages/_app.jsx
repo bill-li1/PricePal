@@ -9,6 +9,7 @@ import {
   createHttpLink,
   ApolloProvider,
 } from '@apollo/client';
+import { setContext } from 'apollo-link-context';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,8 +42,18 @@ const httpLink = createHttpLink({
   uri: 'http://localhost:8000',
 });
 
+const authLink = setContext(() => {
+  const token = localStorage.getItem('jwtToken');
+  return {
+    headers: {
+      Authorization: token ? `Bearer ${token}` : '',
+    },
+  };
+});
+
 const client = new ApolloClient({
-  link: httpLink,
+  // @ts-ignore
+  link: authLink.concat(httpLink),
   cache: new InMemoryCache(),
 });
 

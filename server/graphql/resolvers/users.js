@@ -15,6 +15,7 @@ function generateToken(user) {
       email: user.email,
       firstName: user.firstName,
       lastName: user.lastName,
+      profileImg: user.profileImg,
     },
     SECRET_KEY,
     { expiresIn: '9h' },
@@ -61,13 +62,14 @@ module.exports = {
         throw new UserInputError('Wrong credentials', { errors });
       }
 
-      // const token = generateToken(user);
+      const token = generateToken(user);
+      console.log(token);
 
       return {
         ...user._doc,
         id: user._id,
         groups: multiGroupsHelper.bind(this, user._doc.groups),
-        // token,
+        token,
       };
     },
     async register(_, { registerInput: { firstName, lastName, email, password, profileImg } }) {
