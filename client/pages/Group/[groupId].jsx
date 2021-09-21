@@ -21,9 +21,13 @@ import { Alert } from '@material-ui/lab';
 // import { ExpenseCard } from 'components/Expenses/ExpenseCard';
 import { UserCard } from 'components/UserCard';
 import { GroupHistory } from 'components/History/GroupHistory';
+import { PersonalHistory } from 'components/History/PersonalHistory';
+// @ts-ignore
 import { Loading } from 'components/Loading';
 import { CreateExpenseButton } from 'components/Expenses/CreateExpenseButton';
 import { CreateExpenseForm } from 'components/Expenses/CreateExpenseForm';
+import { CreatePaymentButton } from 'components/Payments/CreatePaymentButton';
+import { CreatePaymentForm } from 'components/Payments/CreatePaymentForm';
 
 const useStyles = makeStyles((theme) => ({
   mainWrapper: {
@@ -155,12 +159,19 @@ export default function GroupPage() {
   const context = useContext(AuthContext);
 
   const [createExpense, setCreateExpense] = useState(false);
-
   const handleCreateExpenseClick = () => {
     setCreateExpense(true);
   };
   const handleCreateExpenseClose = () => {
     setCreateExpense(false);
+  };
+
+  const [createPayment, setCreatePayment] = useState(false);
+  const handleCreatePaymentClick = () => {
+    setCreatePayment(true);
+  };
+  const handleCreatePaymentClose = () => {
+    setCreatePayment(false);
   };
 
   // const { loading } = useQuery(GROUP_TRANSACTIONS, {
@@ -362,10 +373,19 @@ export default function GroupPage() {
         </div>
         <div className={styles.mainAnnouncements}>
           <div style={{ textAlign: 'right', marginBottom: 10 }}>
-
-            <CreateExpenseButton
-              onClick={handleCreateExpenseClick}
-            ></CreateExpenseButton>
+            <Grid container>
+              <Grid item xs={8}></Grid>
+              <Grid item xs={2}>
+                <CreateExpenseButton
+                  onClick={handleCreateExpenseClick}
+                ></CreateExpenseButton>
+              </Grid>
+              <Grid item xs={2}>
+                <CreatePaymentButton
+                  onClick={handleCreatePaymentClick}
+                ></CreatePaymentButton>
+              </Grid>
+            </Grid>
             <Dialog
               open={createExpense}
               onClose={handleCreateExpenseClose}
@@ -379,10 +399,27 @@ export default function GroupPage() {
               scroll={'paper'}
             >
               <CreateExpenseForm
+                onClose={handleCreateExpenseClose}
                 users={group.users}
                 group={group}
-                open={createExpense}
-                onClose={handleCreateExpenseClose}
+              />
+            </Dialog>
+            <Dialog
+              open={createPayment}
+              onClose={handleCreatePaymentClose}
+              maxWidth="lg"
+              PaperProps={{
+                style: {
+                  borderRadius: 40,
+                  boxShadow: '5px 5px 5px rgb(76, 81, 89)',
+                },
+              }}
+              scroll={'paper'}
+            >
+              <CreatePaymentForm
+                onClose={handleCreatePaymentClose}
+                users={group.users}
+                group={group}
               />
             </Dialog>
           </div>
