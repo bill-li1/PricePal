@@ -98,7 +98,6 @@ export function PersonalHistory(props) {
       {transactions.map((transaction) => {
         return (
           <div style={{ margin: '100' }}>
-            <p>{transaction.payer.firstName}</p>
             <ExpenseCard transaction={transaction} user={context.user} />
           </div>
         );

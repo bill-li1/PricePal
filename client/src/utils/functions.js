@@ -1,10 +1,10 @@
 export function netGroup(userId, transactions) {
   const positiveTransactions = transactions.filter(
-    (transaction) => transaction.payer.id === userId
+    (transaction) => transaction.payer.id === userId && transaction.type !== 'payment'
   );
   console.log(positiveTransactions);
   const negativeTransactions = transactions.filter((transaction) =>
-    transaction.owerIds.includes(userId)
+    transaction.owerIds.includes(userId) && transaction.type !== 'payment'
   );
   const totalPositive = positiveTransactions
     .map((transaction) => totalTransaction(transaction))
@@ -45,14 +45,14 @@ export function netUser(userOne, userTwo, transactions) {
       .map((transaction) => findOwerAmount(userTwo, transaction))
       .reduce((a, b) => a + b, 0) +
     positiveTransactionsPayment
-      .map((transaction) => findOwerAmount(userTwo, transaction))
+      .map((transaction) => findOwerAmount(userOne, transaction))
       .reduce((a, b) => a + b, 0);
   const totalNegative =
     negativeTransactions
       .map((transaction) => findOwerAmount(userOne, transaction))
       .reduce((a, b) => a + b, 0) +
     negativeTransactionsPayment
-      .map((transaction) => findOwerAmount(userOne, transaction))
+      .map((transaction) => findOwerAmount(userTwo, transaction))
       .reduce((a, b) => a + b, 0);
   return totalPositive - totalNegative;
 }

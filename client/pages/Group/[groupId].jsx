@@ -373,14 +373,14 @@ export default function GroupPage() {
         </div>
         <div className={styles.mainAnnouncements}>
           <div style={{ textAlign: 'right', marginBottom: 10 }}>
-            <Grid container>
-              <Grid item xs={8}></Grid>
-              <Grid item xs={2}>
+            <Grid container spacing={1} justify="flex-end">
+              <Grid item xs={7}></Grid>
+              <Grid item>
                 <CreateExpenseButton
                   onClick={handleCreateExpenseClick}
                 ></CreateExpenseButton>
               </Grid>
-              <Grid item xs={2}>
+              <Grid item>
                 <CreatePaymentButton
                   onClick={handleCreatePaymentClick}
                 ></CreatePaymentButton>
