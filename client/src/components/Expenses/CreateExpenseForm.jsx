@@ -47,7 +47,6 @@ export function CreateExpenseForm(props) {
   const [dateInput, setDateInput] = useState(
     now.getMonth() + 1 + '/' + now.getDate() + '/' + now.getFullYear()
   );
-  console.log(dateInput);
   const [owersId, setOwersId] = useState([]);
   const [owers, setOwers] = useState([]);
   const [firstPage, setFirstPage] = useState(true);
@@ -276,13 +275,11 @@ export function CreateExpenseForm(props) {
                 </Typography>
                 <ToggleButtonGroup value={owersId} onChange={onClickOwersId}>
                   {props.users?.map((user) => {
-                    if (values.payer && user.id != values.payer) {
-                      return (
-                        <ToggleButton value={user.id}>
-                          {user.firstName + ' ' + user.lastName}
-                        </ToggleButton>
-                      );
-                    }
+                    return (
+                      <ToggleButton value={user.id}>
+                        {user.firstName + ' ' + user.lastName}
+                      </ToggleButton>
+                    );
                   })}
                 </ToggleButtonGroup>
               </div>
