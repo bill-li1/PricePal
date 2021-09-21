@@ -149,6 +149,7 @@ const LOGIN_USER = gql`
       profileImg
       firstName
       lastName
+      token
     }
   }
 `;

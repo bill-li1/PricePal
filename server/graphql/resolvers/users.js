@@ -15,6 +15,7 @@ function generateToken(user) {
       email: user.email,
       firstName: user.firstName,
       lastName: user.lastName,
+      profileImg: user.profileImg,
     },
     SECRET_KEY,
     { expiresIn: '9h' },

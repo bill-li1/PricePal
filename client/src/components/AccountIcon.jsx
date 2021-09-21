@@ -63,7 +63,6 @@ const useStyles = makeStyles((theme) => ({
 export function AccountIcon() {
   const styles = useStyles();
   const { user, logout } = useContext(AuthContext);
-  const { push } = useRouter();
   const [anchorEl, setAnchorEl] = useState(null);
   const [editLoading, setEditLoading] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
@@ -197,7 +196,7 @@ export function AccountIcon() {
           <DialogContent style={{ textAlign: 'center' }}>
             <img
               src={
-                values.profileImg.length === 0
+                values.profileImg && values.profileImg.length === 0
                   ? 'https://media.istockphoto.com/vectors/user-icon-flat-isolated-on-white-background-user-symbol-vector-vector-id1300845620?b=1&k=20&m=1300845620&s=170667a&w=0&h=JbOeyFgAc6-3jmptv6mzXpGcAd_8xqkQa_oUK2viFr8='
                   : values.profileImg
               }

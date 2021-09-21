@@ -34,7 +34,7 @@ const transactionHelper = async (transactionId) => {
 const userHelper = async (userId) => {
   try {
     const user = await User.findById(userId);
-    console.log('userHelper id + User', userId, user)
+    console.log('userHelper id + User', userId, user);
 
     return {
       ...user._doc,
@@ -49,8 +49,8 @@ const userHelper = async (userId) => {
 const multiUsersHelper = async (userIds) => {
   try {
     return await userIds.map(async (user) => {
-      const newUser = await userHelper(user)
-      return newUser
+      const newUser = await userHelper(user);
+      return newUser;
     });
   } catch (err) {
     throw new Error(err);
@@ -60,7 +60,7 @@ const multiUsersHelper = async (userIds) => {
 const groupHelper = async (groupId) => {
   try {
     const group = await Group.findById(groupId);
-    console.log('groupHelper group: ', group)
+    // console.log('groupHelper group: ', group)
     return {
       ...group._doc,
       id: group._doc._id,
@@ -76,7 +76,7 @@ const multiGroupsHelper = async (groupIds) => {
 
   try {
     return await groupIds.map(async (groupId) => {
-      return await groupHelper(groupId); 
+      return await groupHelper(groupId);
     });
   } catch (err) {
     throw new Error(err);

@@ -24,6 +24,7 @@ import {
 import { ToggleButtonGroup, ToggleButton } from '@material-ui/lab';
 import { AuthContext } from 'context/auth';
 import gql from 'graphql-tag';
+import router from 'next/router';
 import { useContext, useEffect, useState } from 'react';
 
 export function CreateExpenseForm(props) {
@@ -112,7 +113,14 @@ export function CreateExpenseForm(props) {
   });
 
   const [createTransaction] = useMutation(CREATE_TRANSACTION, {
-    update(_, { data: { createTransaction: transactionData } }) {},
+    update(_, { data: { createTransaction: transactionData } }) {
+      router
+        .push({
+          pathname: '/LoadingPage',
+          query: { redirectToGroup: props.group.id },
+        })
+        .then(() => router.reload());
+    },
     onError: (error) => {
       console.log(JSON.stringify(error, null, 2));
       if (error.graphQLErrors[0].extensions) {
