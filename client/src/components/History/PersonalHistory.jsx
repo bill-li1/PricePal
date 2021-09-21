@@ -12,7 +12,7 @@ import { makeStyles } from '@material-ui/styles';
 import gql from 'graphql-tag';
 import { useState, useContext } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
-import { AuthContext } from '../../src/context/auth';
+import { AuthContext } from '../../../src/context/auth';
 import { ExpenseCard } from 'components/Expenses/ExpenseCard';
 import { StyleRounded } from '@material-ui/icons';
 import { style } from 'dom-helpers';
@@ -37,7 +37,7 @@ export function PersonalHistory(props) {
   //   const styles = useStyles();
   const context = useContext(AuthContext);
   const { groupId, users } = props;
-  const user2 = users[0]
+  const user2 = users[0];
   const user1 = context.user;
   const [transactions, setTransactions] = useState([]);
 
@@ -55,19 +55,20 @@ export function PersonalHistory(props) {
       };
 
       const filterByUser = (transaction) => {
-        if (!transaction.payer.id || !transaction.owerIds){
+        if (!transaction.payer.id || !transaction.owerIds) {
           return false;
         }
-        if ((transaction.payer.id == user1.id &&
-          transaction.owerIds.includes(user2.id)) ||
+        if (
+          (transaction.payer.id == user1.id &&
+            transaction.owerIds.includes(user2.id)) ||
           (transaction.payer.id == user2.id &&
-            transaction.owerIds.includes(user1.id))) {
-              return true;
-            }
-            else {
-              return false;
-            }
-      }
+            transaction.owerIds.includes(user1.id))
+        ) {
+          return true;
+        } else {
+          return false;
+        }
+      };
       filteredTransactions.filter(filterByUser);
 
       filteredTransactions.sort(compareDates);
@@ -101,7 +102,7 @@ export function PersonalHistory(props) {
       {transactions.map((transaction) => {
         return (
           <div style={{ margin: '100' }}>
-          <p>{transaction.payer.firstName}</p>
+            <p>{transaction.payer.firstName}</p>
             <ExpenseCard transaction={transaction} user={context.user} />
           </div>
         );

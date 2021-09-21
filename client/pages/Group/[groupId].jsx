@@ -21,7 +21,7 @@ import { Alert } from '@material-ui/lab';
 // import { ExpenseCard } from 'components/Expenses/ExpenseCard';
 import { UserCard } from 'components/UserCard';
 import { GroupHistory } from 'components/History/GroupHistory';
-import { PersonalHistory } from 'components/PersonalHistory';
+import { PersonalHistory } from 'components/History/PersonalHistory';
 // @ts-ignore
 import { Loading } from 'components/Loading';
 import { CreateExpenseButton } from 'components/Expenses/CreateExpenseButton';
