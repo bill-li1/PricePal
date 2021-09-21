@@ -1,5 +1,5 @@
 import { useQuery } from '@apollo/client';
-import { Grid, makeStyles } from '@material-ui/core';
+import { Grid, makeStyles, Typography } from '@material-ui/core';
 import { CreateGroupButton } from 'components/CreateGroupButton';
 import { CreateGroupForm } from 'components/CreateGroupForm';
 import { GroupCard } from 'components/GroupCard';
@@ -62,16 +62,24 @@ export default function Dashboard() {
   return (
     <section className={styles.root}>
       <Grid container>
-        <Grid item xs={12} md={4}>
-          tBD
-        </Grid>
-        <Grid item xs={12} md={8}>
-          <h1>Dashboard</h1>
+        <Grid item xs={12}>
+          <div style={{ textAlign: 'center' }}>
+            <Typography
+              variant="h1"
+              style={{
+                marginBottom: '2rem',
+                fontSize: '3rem',
+                marginTop: '1rem',
+              }}
+            >
+              Dashboard
+            </Typography>
+          </div>
           <Grid container direction="row" spacing={2}>
             {groups.map((group) => {
               if (group.active) {
                 return (
-                  <Grid item xs={12} md={4} key={group}>
+                  <Grid item xs={12} sm={4} md={3} lg={2} key={group}>
                     <GroupCard group={group} />
                   </Grid>
                 );

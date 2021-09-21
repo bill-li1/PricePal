@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme) => ({
   },
   test: {
     border: '3px solid red',
-  }
+  },
 }));
 
 export function UserCard(props) {
@@ -55,28 +55,21 @@ export function UserCard(props) {
   const { users, group } = props;
   return (
     <div>
-      <h2 className={styles.titleText}>
-        Group Members
-        </h2>
+      <h2 className={styles.titleText}>Group Members</h2>
       <List
         dense
         sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}
       >
         {users?.map((user) => {
           return (
-            <div>
+            <div style={{ cursor: 'pointer' }}>
               <Link href={`/${group.id}/${user.id}`}>
                 <ListItem key={user.id} className={styles.userCard}>
                   <ListItemAvatar>
-                    <Avatar
-                      alt={`Avatar n°${3}`}
-                      src={`/static/images/avatar/${3}.jpg`}
-                    />
+                    <Avatar alt={`Avatar n°${3}`} src={user.profileImg} />
                   </ListItemAvatar>
-                  <h3
-                    className={styles.listItemText}
-                  >
-                    {user.firstName + " " + user.lastName}
+                  <h3 className={styles.listItemText}>
+                    {user.firstName + ' ' + user.lastName}
                   </h3>
                 </ListItem>
               </Link>
@@ -84,7 +77,7 @@ export function UserCard(props) {
             </div>
           );
         })}
-      </List >
+      </List>
     </div>
   );
 }

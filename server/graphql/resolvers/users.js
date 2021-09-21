@@ -63,10 +63,6 @@ module.exports = {
       }
 
       const token = generateToken(user);
-<<<<<<< HEAD
-      console.log(token);
-=======
->>>>>>> origin/main
 
       return {
         ...user._doc,
