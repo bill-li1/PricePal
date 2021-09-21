@@ -141,9 +141,9 @@ export function ExpenseCard({ transaction, user }) {
           <Collapse in={expanded} timeout="auto" unmountOnExit>
             <CardContent>
               <Grid container spacing={2}>
-                <Grid item xs={9}>
+                <Grid item xs={transaction.type !== 'payment' ? 9 : 12}>
                   <p style={styles.bodyText}>{transaction.description}</p>
-                  <Table sx={{ width: '100%' }}>
+                  {transaction.type !== 'payment' && <Table sx={{ width: '100%' }}>
                     <TableRow sx={{ width: '100%' }}>
                       {transaction.owerInfos.map((owerInfo, idx) => (
                         <TableCell key={idx} component="th" scope="row">
@@ -157,10 +157,10 @@ export function ExpenseCard({ transaction, user }) {
                         </TableCell>
                       ))}
                     </TableRow>
-                  </Table>
+                  </Table>}
                 </Grid>
 
-                <Grid item xs={3}>
+                {transaction.type !== 'payment' && <Grid item xs={3}>
                   <img
                     style={styles.infoImg}
                     src={
@@ -169,7 +169,7 @@ export function ExpenseCard({ transaction, user }) {
                         : 'https://designshack.net/wp-content/uploads/placeholder-image.png'
                     }
                   />
-                </Grid>
+                </Grid>}
               </Grid>
             </CardContent>
           </Collapse>

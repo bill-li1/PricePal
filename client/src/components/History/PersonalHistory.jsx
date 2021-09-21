@@ -13,7 +13,7 @@ import gql from 'graphql-tag';
 import { useState, useContext } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
 import { AuthContext } from '../../src/context/auth';
-import { ExpenseCard } from 'components/ExpenseCard';
+import { ExpenseCard } from 'components/Expenses/ExpenseCard';
 import { StyleRounded } from '@material-ui/icons';
 import { style } from 'dom-helpers';
 
@@ -33,12 +33,13 @@ import { style } from 'dom-helpers';
 //   },
 // }));
 
-export function GroupHistory(props) {
+export function PersonalHistory(props) {
   //   const styles = useStyles();
-  const { groupId } = props;
-  const [transactions, setTransactions] = useState([]);
-
   const context = useContext(AuthContext);
+  const { groupId, users } = props;
+  const user2 = users[0]
+  const user1 = context.user;
+  const [transactions, setTransactions] = useState([]);
 
   const { loading } = useQuery(GROUP_TRANSACTIONS, {
     variables: { getTransactionsByGroupIdGroupId: groupId },
@@ -52,6 +53,23 @@ export function GroupHistory(props) {
         }
         return new Date(t2.date) - new Date(t1.date);
       };
+
+      const filterByUser = (transaction) => {
+        if (!transaction.payer.id || !transaction.owerIds){
+          return false;
+        }
+        if ((transaction.payer.id == user1.id &&
+          transaction.owerIds.includes(user2.id)) ||
+          (transaction.payer.id == user2.id &&
+            transaction.owerIds.includes(user1.id))) {
+              return true;
+            }
+            else {
+              return false;
+            }
+      }
+      filteredTransactions.filter(filterByUser);
+
       filteredTransactions.sort(compareDates);
 
       console.log('filtered', filteredTransactions);
@@ -68,7 +86,9 @@ export function GroupHistory(props) {
           <TableRow>
             <TableCell>
               <p style={styles.headerText}>
-                Hi, {context.user.firstName + ' ' + context.user.lastName}
+                Personal History between{' '}
+                {context.user.firstName + ' ' + context.user.lastName} and{' '}
+                {user2.firstName + ' ' + user2.lastName}
               </p>
             </TableCell>
             <TableCell>
@@ -78,14 +98,11 @@ export function GroupHistory(props) {
         </Table>
       </Paper>
 
-      {transactions.map((transaction, idx) => {
+      {transactions.map((transaction) => {
         return (
           <div style={{ margin: '100' }}>
-            <ExpenseCard
-              key={idx}
-              transaction={transaction}
-              user={context.user}
-            />
+          <p>{transaction.payer.firstName}</p>
+            <ExpenseCard transaction={transaction} user={context.user} />
           </div>
         );
       })}

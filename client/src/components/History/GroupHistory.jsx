@@ -12,10 +12,11 @@ import { makeStyles } from '@material-ui/styles';
 import gql from 'graphql-tag';
 import { useState, useContext } from 'react';
 import { useQuery, useMutation } from '@apollo/client';
-import { AuthContext } from '../../src/context/auth';
-import { ExpenseCard } from 'components/ExpenseCard';
+import { AuthContext } from '../../context/auth';
+import { ExpenseCard } from 'components/Expenses/ExpenseCard';
 import { StyleRounded } from '@material-ui/icons';
 import { style } from 'dom-helpers';
+import { netGroup } from 'utils/functions';
 
 // const useStyles = makeStyles((theme) => ({
 //   root: {
@@ -33,12 +34,14 @@ import { style } from 'dom-helpers';
 //   },
 // }));
 
-export function PersonalHistory(props) {
+export function GroupHistory(props) {
   //   const styles = useStyles();
-  const context = useContext(AuthContext);
-  const { groupId, user2 } = props;
-  const user1 = context.user;
+  const { groupId } = props;
   const [transactions, setTransactions] = useState([]);
+
+  const context = useContext(AuthContext);
+
+  const total = netGroup(context.user.id, transactions);
 
   const { loading } = useQuery(GROUP_TRANSACTIONS, {
     variables: { getTransactionsByGroupIdGroupId: groupId },
@@ -52,23 +55,6 @@ export function PersonalHistory(props) {
         }
         return new Date(t2.date) - new Date(t1.date);
       };
-
-      const filterByUser = (transaction) => {
-        if (!transaction.payer.id || !transaction.owerIds){
-          return false;
-        }
-        if ((transaction.payer.id == user1.id &&
-          transaction.owerIds.includes(user2.id)) ||
-          (transaction.payer.id == user2.id &&
-            transaction.owerIds.includes(user1.id))) {
-              return true;
-            }
-            else {
-              return false;
-            }
-      }
-      filteredTransactions.filter(filterByUser);
-
       filteredTransactions.sort(compareDates);
 
       console.log('filtered', filteredTransactions);
@@ -85,23 +71,24 @@ export function PersonalHistory(props) {
           <TableRow>
             <TableCell>
               <p style={styles.headerText}>
-                Personal History between{' '}
-                {context.user.firstName + ' ' + context.user.lastName} and{' '}
-                {user2.firstName + ' ' + user2.lastName}
+                Hi, {context.user.firstName + ' ' + context.user.lastName}
               </p>
             </TableCell>
             <TableCell>
-              <p style={styles.headerText}>Your Current Balance is:</p>
+              <p style={styles.headerText}>Your Current Balance is: {total}</p>
             </TableCell>
           </TableRow>
         </Table>
       </Paper>
 
-      {transactions.map((transaction) => {
+      {transactions.map((transaction, idx) => {
         return (
           <div style={{ margin: '100' }}>
-          <p>{transaction.payer.firstName}</p>
-            <ExpenseCard transaction={transaction} user={context.user} />
+            <ExpenseCard
+              key={idx}
+              transaction={transaction}
+              user={context.user}
+            />
           </div>
         );
       })}
