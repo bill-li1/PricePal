@@ -1,5 +1,3 @@
-
-  
 <h1 align="center">
   <br>
 <!-- <img src="=" alt="PricePal" width="200"> -->
@@ -16,6 +14,8 @@
   <a href="#credits">Credits</a> •
   <a href="#license">License</a>
 </p>
+
+![image](https://user-images.githubusercontent.com/38056522/134572873-232139e4-15cb-4713-8d59-fe25a6a5685e.png)
 
 ## Key Features
 
