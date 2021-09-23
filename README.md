@@ -1,7 +1,4 @@
 <h1 align="center">
-  <br>
-<!-- <img src="=" alt="PricePal" width="200"> -->
-  <br>
   PricePal
   <br>
 </h1>
