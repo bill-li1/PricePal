@@ -15,7 +15,7 @@
   <a href="#license">License</a>
 </p>
 
-![image](https://user-images.githubusercontent.com/38056522/134573112-9647410b-fc36-407c-b16a-4f654bd163fa.png)
+![image](https://user-images.githubusercontent.com/38056522/134573169-0c2bb5f9-28a9-48aa-b5d6-fe2eb2372d0b.png)
 ![image](https://user-images.githubusercontent.com/38056522/134572873-232139e4-15cb-4713-8d59-fe25a6a5685e.png)
 
 ## Key Features
