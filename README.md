@@ -3,7 +3,7 @@
   <br>
 </h1>
 
-<h4 align="center">An intuitive app to track expenses between friends. Check it out <a href="https://price-pal-client.vercel.app/">here!</a> | Username: testuser | Password: 123</h4>
+<h4 align="center">An intuitive app to track expenses between friends. Check it out <a href="https://price-pal-client.vercel.app/">here!</a> </br> Username: testuser | Password: 123</h4>
 
 <p align="center">
   <a href="#key-features">Key Features</a> •
